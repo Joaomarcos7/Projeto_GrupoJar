@@ -1,0 +1,12 @@
+package br.edu.ifpb.pweb2.Jar.model;
+
+public enum Habilidade {
+    PROGRAMACAO_PYTHON,
+    DESIGN_CSS,
+    ESPECIALISTA_UX,
+    PROGRAMADOR_TESTES,
+    DESENVOLVIMENTO_WEB,
+    BANCO_DE_DADOS,
+    INTELIGENCIA_ARTIFICIAL,
+    MACHINE_LEARNING
+}
