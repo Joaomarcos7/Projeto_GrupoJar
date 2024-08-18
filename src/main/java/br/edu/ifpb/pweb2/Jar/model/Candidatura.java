@@ -26,11 +26,9 @@ public class Candidatura implements Serializable {
     @Column(nullable = false)
     private EstadoCandidatura estado;
 
-    /*
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aluno_id", nullable = false)
     private Aluno aluno;
-    */
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "oferta_id", nullable = false)
