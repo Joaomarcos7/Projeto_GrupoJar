@@ -37,11 +37,9 @@ public class Oferta implements Serializable {
     @Column(nullable = false)
     private StatusOferta status;
 
-    /*
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;
-    */
 
     @OneToMany(mappedBy = "oferta", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Candidatura> candidaturas = new HashSet<>();
