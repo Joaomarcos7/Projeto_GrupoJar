@@ -24,7 +24,7 @@ public class EmpresaController {
     @GetMapping("/cadastro")
     public ModelAndView showCadastroForm(ModelAndView modelAndView) {
         modelAndView.addObject("empresa", new Empresa());
-        modelAndView.setViewName("empresa/cadastro");
+        modelAndView.setViewName("empresas/form");
         return modelAndView;
     }
 
@@ -32,7 +32,7 @@ public class EmpresaController {
     public ModelAndView cadastrarEmpresa(@Validated @ModelAttribute("empresa") Empresa empresa,
                                    BindingResult result, ModelAndView modelAndView) {
         if (result.hasErrors()) {
-            modelAndView.setViewName("empresa/cadastro");
+            modelAndView.setViewName("form");
             return modelAndView;
         }
         empresaService.save(empresa);
@@ -44,7 +44,7 @@ public class EmpresaController {
     public ModelAndView listarEmpresas(ModelAndView modelAndView) {
         List<Empresa> empresas = empresaService.findAll();
         modelAndView.addObject("empresas", empresas);
-        modelAndView.setViewName("empresa/list");
+        modelAndView.setViewName("empresas/list");
         return modelAndView;
     }
 

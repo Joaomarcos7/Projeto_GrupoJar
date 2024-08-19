@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,7 +43,7 @@ public class Empresa implements Serializable {
     private String atividadePrincipal;
 
     @Column(nullable = false)
-    private String url;
+    private URL url;
 
     @Column(nullable = false)
     private byte[] documentoComprovacaoEndereco;
