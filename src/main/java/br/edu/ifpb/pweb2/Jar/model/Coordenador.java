@@ -1,4 +1,4 @@
-package model;
+package br.edu.ifpb.pweb2.Jar.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,10 +26,4 @@ public class Coordenador implements Serializable {
     @Column(nullable = false, unique = true)
     private String email;
 
-
-    // @OneToMany(mappedBy = "coordenador", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    // private List<Oferta> acompanharOfertas;
-
-    // @OneToMany(mappedBy = "coordenador", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    // private List<Estagio> acompanharEstagio;
 }
