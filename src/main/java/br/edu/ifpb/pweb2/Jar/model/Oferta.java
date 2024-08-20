@@ -6,8 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -26,6 +28,31 @@ public class Oferta implements Serializable {
 
     @Column(nullable = false)
     private String descricao;
+
+    @Column(nullable = false)
+    private String atividadePrincipal;
+
+    @Column(nullable = false)
+    private Integer ch;
+
+    private BigDecimal valorPago;
+
+    private Double valeTransporte;
+
+    @Column(nullable = false)
+    private String preRequisitos;
+
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "habilidades_necessarias", joinColumns = @JoinColumn(name = "oferta_id"))
+    @Column(name = "habilidade")
+    private List<Habilidade> habilidadesNecessarias;
+
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "habilidades_desejaveis", joinColumns = @JoinColumn(name = "oferta_id"))
+    @Column(name = "habilidade")
+    private List<Habilidade> habilidadesDesejaveis;
 
     @Column(nullable = false)
     private LocalDate dataPublicacao;
