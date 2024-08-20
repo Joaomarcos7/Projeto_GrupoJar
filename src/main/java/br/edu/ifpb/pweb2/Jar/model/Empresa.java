@@ -44,7 +44,6 @@ public class Empresa implements Serializable {
     @Column(nullable = false)
     private String url;
 
-    @Lob
     @Column(nullable = false)
     private byte[] documentoComprovacaoEndereco;
 
