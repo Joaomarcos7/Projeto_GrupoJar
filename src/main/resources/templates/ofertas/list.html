@@ -10,12 +10,10 @@
 <div class="container">
     <h1>Listagem de Ofertas de Estágio</h1>
 
-    <!-- Mensagem de sucesso após cadastro -->
     <div th:if="${mensagem}" class="alert alert-success">
         <p th:text="${mensagem}"></p>
     </div>
 
-    <!-- Tabela de ofertas -->
     <table class="table">
         <thead>
         <tr>
@@ -64,7 +62,6 @@
         </tbody>
     </table>
 
-    <!-- Botão para cadastrar nova oferta -->
     <a th:href="@{/ofertas/{empresaId}/cadastro(empresaId=${empresaId})}" class="btn btn-success">Cadastrar Nova Oferta</a>
 </div>
 
