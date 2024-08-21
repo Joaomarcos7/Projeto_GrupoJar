@@ -1,38 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Lista de Empresas</title>
+    <title>Lista de Alunos</title>
 </head>
 <body>
-<h1>Empresas Cadastradas</h1>
+<h1>Alunos Cadastrados</h1>
 
 <table>
     <thead>
     <tr>
-        <th>Nome</th>
-        <th>CNPJ</th>
-        <th>Endereço</th>
-        <th>Telefone</th>
+        <th>Nome Completo</th>
+        <th>Username</th>
         <th>Email</th>
-        <th>Pessoa de Contato</th>
-        <th>Atividade Principal</th>
-        <th>URL</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="empresa : ${empresas}">
-        <td th:text="${empresa.nome}">Nome da Empresa</td>
-        <td th:text="${empresa.cnpj}">CNPJ</td>
-        <td th:text="${empresa.endereco}">Endereço</td>
-        <td th:text="${empresa.telefoneContato}">Telefone</td>
-        <td th:text="${empresa.emailContato}">Email</td>
-        <td th:text="${empresa.pessoaContato}">Pessoa de Contato</td>
-        <td th:text="${empresa.atividadePrincipal}">Atividade Principal</td>
-        <td th:text="${empresa.url}">URL</td>
+    <tr th:each="aluno : ${alunos}">
+        <td th:text="${aluno.nomeCompleto}">Nome do Aluno</td>
+        <td th:text="${aluno.username}">Username</td>
+        <td th:text="${aluno.email}">E-mail</td>
     </tr>
     </tbody>
 </table>
 
-<a th:href="@{/empresas/cadastro}">Cadastrar Nova Empresa</a>
+<a th:href="@{/alunos/cadastro}">Cadastrar Novo Aluno</a>
 </body>
 </html>

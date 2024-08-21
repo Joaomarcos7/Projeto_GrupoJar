@@ -1,55 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Cadastro de Empresa</title>
+    <title>Cadastro de Aluno</title>
 </head>
 <body>
-<h1>Cadastro de Empresa</h1>
+<h1>Cadastro de Aluno</h1>
 
-<form th:action="@{/empresas/cadastro}" th:object="${empresa}" method="post">
+<form th:action="@{/alunos/cadastro}" th:object="${aluno}" method="post">
     <div>
-        <label for="nome">Nome da Empresa:</label>
-        <input type="text" id="nome" th:field="*{nome}" required/>
+        <label for="nomeCompleto">Nome Completo:</label>
+        <input type="text" id="nomeCompleto" th:field="*{nomeCompleto}" required/>
     </div>
 
     <div>
-        <label for="cnpj">CNPJ:</label>
-        <input type="text" id="cnpj" th:field="*{cnpj}" required/>
+        <label for="username">Username:</label>
+        <input type="text" id="username" th:field="*{username}" required/>
     </div>
 
     <div>
-        <label for="endereco">Endereço:</label>
-        <input type="text" id="endereco" th:field="*{endereco}" required/>
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" th:field="*{senha}" required/>
     </div>
 
     <div>
-        <label for="telefone">Telefone de Contato:</label>
-        <input type="text" id="telefone" th:field="*{telefoneContato}" required/>
-    </div>
-
-    <div>
-        <label for="email">Email de Contato:</label>
-        <input type="email" id="email" th:field="*{emailContato}" required/>
-    </div>
-
-    <div>
-        <label for="pessoaContato">Pessoa de Contato:</label>
-        <input type="text" id="pessoaContato" th:field="*{pessoaContato}" required/>
-    </div>
-
-    <div>
-        <label for="atividadePrincipal">Atividade Principal:</label>
-        <input type="text" id="atividadePrincipal" th:field="*{atividadePrincipal}" required/>
-    </div>
-
-    <div>
-        <label for="url">URL da Empresa:</label>
-        <input type="url" id="url" th:field="*{url}" required/>
-    </div>
-
-    <div>
-        <label for="documentoComprovacaoEndereco">Documento de Comprovação de Endereço:</label>
-        <input type="file" id="documentoComprovacaoEndereco" th:field="*{documentoComprovacaoEndereco}" required/>
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" th:field="*{email}" required/>
     </div>
 
     <button type="submit">Cadastrar</button>
