@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ofertas da Empresa</title>
+    <link rel="stylesheet" href="/path/to/bootstrap.css">
+</head>
+<body>
+<div class="container">
+    <h1>Oferta cadastrada com sucesso!</h1>
+    <p>Agora você pode cadastrar outra oferta ou visualizar suas ofertas.</p>
+    <a th:href="@{'/empresas/' + ${idEmpresa} + '/ofertas'}" class="btn btn-primary">Ver Ofertas</a>
+    <a th:href="@{'/empresas/' + ${idEmpresa} + '/ofertas/nova'}" class="btn btn-success">Cadastrar Nova Oferta</a>
+</div>
+</body>
+</html>

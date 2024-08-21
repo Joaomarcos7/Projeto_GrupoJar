@@ -49,5 +49,5 @@ public class Empresa implements Serializable {
     private byte[] documentoComprovacaoEndereco;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Oferta> ofertas = new HashSet<>();
+    private Set<OfertaEstagio> ofertaEstagios = new HashSet<>();
 }

@@ -9,14 +9,13 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Oferta implements Serializable {
+public class OfertaEstagio implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -42,17 +41,17 @@ public class Oferta implements Serializable {
     @Column(nullable = false)
     private String preRequisitos;
 
+    @ElementCollection(targetClass = Habilidade.class)
     @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "habilidades_necessarias", joinColumns = @JoinColumn(name = "oferta_id"))
-    @Column(name = "habilidade")
-    private List<Habilidade> habilidadesNecessarias;
+    @Column(name = "habilidade_necessaria")
+    private Set<Habilidade> habilidadesNecessarias = new HashSet<>();
 
+    @ElementCollection(targetClass = Habilidade.class)
     @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "habilidades_desejaveis", joinColumns = @JoinColumn(name = "oferta_id"))
-    @Column(name = "habilidade")
-    private List<Habilidade> habilidadesDesejaveis;
+    @Column(name = "habilidade_desejavel")
+    private Set<Habilidade> habilidadesDesejaveis = new HashSet<>();
 
     @Column(nullable = false)
     private LocalDate dataPublicacao;
@@ -62,13 +61,13 @@ public class Oferta implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatusOferta status;
+    private StatusOferta u;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;
 
-    @OneToMany(mappedBy = "oferta", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "ofertaEstagio", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Candidatura> candidaturas = new HashSet<>();
 
 }

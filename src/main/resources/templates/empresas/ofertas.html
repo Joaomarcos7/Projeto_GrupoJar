@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Ofertas</title>
+    <link rel="stylesheet" href="/path/to/bootstrap.css">
+</head>
+<body>
+<div class="container">
+    <h1>Ofertas de Estágio da Empresa <span th:text="${empresa.getNome()}"></span></h1>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Título</th>
+            <th>Descrição</th>
+            <th>Data de Publicação</th>
+            <th>Data de Validade</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+
+            <tr th:each="oferta : ${empresa.ofertaEstagios}">
+                <td th:text="${oferta.titulo}">Título</td>
+                <td th:text="${oferta.descricao}">Descrição</td>
+                <td th:text="${oferta.dataPublicacao}">Data de Publicação</td>
+                <td th:text="${oferta.dataValidade}">Data de Validade</td>
+                <td th:text="${oferta.status}">Status</td>
+                <td>
+                    <a  class="btn btn-primary">Editar</a>
+                    <a  class="btn btn-danger">Excluir</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{'/empresas/' + ${empresa.id} + '/ofertas/nova'}" class="btn btn-success">Cadastrar Nova Oferta</a>
+</div>
+</body>
+</html>
