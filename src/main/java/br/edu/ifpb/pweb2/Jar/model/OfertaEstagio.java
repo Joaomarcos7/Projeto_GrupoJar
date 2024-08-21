@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,15 +60,29 @@ public class OfertaEstagio implements Serializable {
     @Column(nullable = false)
     private LocalDate dataValidade;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private StatusOferta u;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;
 
     @OneToMany(mappedBy = "ofertaEstagio", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Candidatura> candidaturas = new HashSet<>();
+
+    public String getDataPublicacaoFormatada() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return this.dataPublicacao.format(formatter);
+    }
+
+    public String getDataValidadeFormatada() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return this.dataValidade.format(formatter);
+    }
+
+    public String getFormatadoValorPago() {
+        return valorPago != null ? String.format("R$ %.2f", this.valorPago) : "N/A";
+    }
+
+    public String getFormatadoValeTransporte() {
+        return valeTransporte != null ? String.format("R$ %.2f", this.valeTransporte) : "N/A";
+    }
 
 }

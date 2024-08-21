@@ -11,7 +11,7 @@
     <p th:text="${mensagem}"></p>
 </div>
 
-<form th:action="@{/ofertas/{empresaId}/cadastrar(empresaId=${empresaId})}" th:object="${oferta}" method="post">
+<form th:action="@{/ofertas/empresa/{empresaId}/cadastro(empresaId=${empresaId})}" th:object="${oferta}" method="post">
     <input type="hidden" th:field="${empresa.id}" value="${empresa.id}" />
 
     <div>
@@ -60,23 +60,12 @@
     </div>
 
     <div>
-        <label for="status">Status:</label>
-        <select id="status" th:field="*{status}" required>
-            <option th:each="statusOferta : ${T(br.edu.ifpb.pweb2.Jar.model.StatusOferta).values()}"
-                    th:value="${statusOferta}"
-                    th:text="${statusOferta.description}">
-            </option>
-        </select>
-    </div>
-
-    <div>
         <label>Habilidades Necessárias:</label>
         <div th:each="habilidade : ${T(br.edu.ifpb.pweb2.Jar.model.Habilidade).values()}">
             <input type="checkbox"
                    th:field="*{habilidadesNecessarias}"
                    th:value="${habilidade}"
                    th:text="${habilidade}" />
-            <label th:text="${habilidade}"></label>
         </div>
     </div>
 
@@ -87,7 +76,6 @@
                    th:field="*{habilidadesDesejaveis}"
                    th:value="${habilidade}"
                    th:text="${habilidade}" />
-            <label th:text="${habilidade}"></label>
         </div>
     </div>
 

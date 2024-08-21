@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Listagem de Ofertas de Estágio</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<div class="container">
+    <h1>Listagem de Ofertas de Estágio</h1>
+
+    <!-- Mensagem de sucesso após cadastro -->
+    <div th:if="${mensagem}" class="alert alert-success">
+        <p th:text="${mensagem}"></p>
+    </div>
+
+    <!-- Tabela de ofertas -->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Descrição</th>
+            <th>Atividade Principal</th>
+            <th>Carga Horária</th>
+            <th>Valor Pago</th>
+            <th>Vale Transporte</th>
+            <th>Pré-requisitos</th>
+            <th>Habilidades Necessárias</th>
+            <th>Habilidades Desejáveis</th>
+            <th>Data de Publicação</th>
+            <th>Data de Validade</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="oferta : ${ofertas}">
+            <td th:text="${oferta.id}"></td>
+            <td th:text="${oferta.titulo}"></td>
+            <td th:text="${oferta.descricao}"></td>
+            <td th:text="${oferta.atividadePrincipal}"></td>
+            <td th:text="${oferta.ch}"></td>
+            <td th:text="${oferta.formatadoValorPago}"></td>
+            <td th:text="${oferta.formatadoValeTransporte}"></td>
+            <td th:text="${oferta.preRequisitos}"></td>
+            <td>
+                <ul>
+                    <li th:each="habilidade : ${oferta.habilidadesNecessarias}" th:text="${habilidade}"></li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li th:each="habilidade : ${oferta.habilidadesDesejaveis}" th:text="${habilidade}"></li>
+                </ul>
+            </td>
+            <td th:text="${oferta.dataPublicacaoFormatada}" />
+            <td th:text="${oferta.dataValidadeFormatada}" />
+            <td>
+                <a th:href="@{/ofertas/{empresaId}/editar/{ofertaId}(empresaId=${oferta.empresa.id}, ofertaId=${oferta.id})}" class="btn btn-primary">Editar</a>
+                <a th:href="@{/ofertas/{empresaId}/remover/{ofertaId}(empresaId=${oferta.empresa.id}, ofertaId=${oferta.id})}" class="btn btn-danger">Remover</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Botão para cadastrar nova oferta -->
+    <a th:href="@{/ofertas/{empresaId}/cadastro(empresaId=${empresaId})}" class="btn btn-success">Cadastrar Nova Oferta</a>
+</div>
+
+</body>
+</html>

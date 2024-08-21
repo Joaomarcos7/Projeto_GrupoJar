@@ -25,9 +25,6 @@ public class EmpresaController {
     @Autowired
     private EmpresaService empresaService;
 
-    @Autowired
-    private OfertaEstagioService ofertaEstagioService;
-
     @GetMapping("/cadastro")
     public ModelAndView showCadastroForm(ModelAndView modelAndView) {
         modelAndView.addObject("empresa", new Empresa());
@@ -43,36 +40,42 @@ public class EmpresaController {
             return modelAndView;
         }
         Empresa empresaSalva = empresaService.save(empresa);
-        modelAndView.setViewName("redirect:/ofertas/" + empresaSalva.getId() + "/cadastro");
+        modelAndView.setViewName("redirect:/empresas/" + empresaSalva.getId() + "/detalhes");
         return modelAndView;
     }
 
-    @GetMapping("/{id}/ofertas")
-    public ModelAndView listarOfertas(@PathVariable("id") Long id, ModelAndView modelAndView) {
+    @GetMapping("/{id}/detalhes")
+    public ModelAndView detalhesEmpresa(@PathVariable Long id, ModelAndView modelAndView) {
         Optional<Empresa> empresaOptional = empresaService.findById(id);
+        modelAndView.setViewName("empresas/form");
 
         if (empresaOptional.isPresent()) {
-            Empresa empresa = empresaOptional.get();
-            modelAndView.addObject("empresa", empresa);
-            modelAndView.setViewName("empresas/ofertas");
-        } else {
-            // Lógica para tratar quando a empresa não é encontrada
-            modelAndView.setViewName("empresas/list");
+            modelAndView.addObject("empresa", empresaOptional.get());
+            modelAndView.setViewName("empresas/detalhes");
         }
 
         return modelAndView;
     }
 
-    @GetMapping("{id}/ofertas/nova")
-    public ModelAndView showOfertaForm(@PathVariable("id") Long id, ModelAndView modelAndView) {
-        modelAndView.addObject("oferta", new OfertaEstagio());
-        modelAndView.addObject("idEmpresa", id);
-        modelAndView.setViewName("ofertas/cadastro");
+    @GetMapping("/{id}/ofertas")
+    public ModelAndView listarOfertas(@PathVariable("id") Long id, ModelAndView modelAndView) {
+        modelAndView.setViewName("empresas/ofertas");
+        Optional<Empresa> empresaOptional = empresaService.findById(id);
+
+        if (empresaOptional.isPresent()) {
+            Empresa empresa = empresaOptional.get();
+            modelAndView.addObject("empresa", empresa);
+            modelAndView.addObject("ofertas", empresa.getOfertaEstagios());
+        } else {
+            modelAndView.setViewName("empresas/detalhes");
+            modelAndView.addObject("mensagem", "Empresa não encontrada.");
+        }
+
         return modelAndView;
     }
 
 
-    @GetMapping("/list")
+    @GetMapping()
     public ModelAndView listarEmpresas(ModelAndView modelAndView) {
         List<Empresa> empresas = empresaService.findAll();
         modelAndView.addObject("empresas", empresas);

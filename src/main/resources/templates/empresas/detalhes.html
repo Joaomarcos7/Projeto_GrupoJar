@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detalhes da Empresa</title>
+</head>
+<body>
+<h1>Detalhes da Empresa <span th:text="${empresa.getId()}"></span></h1>
+
+<div th:if="${mensagem}" class="alert alert-success">
+    <p th:text="${mensagem}"></p>
+</div>
+
+<div>
+    <p><strong>Nome:</strong> <span th:text="${empresa.nome}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${empresa.emailContato}"></span></p>
+    <p><strong>Telefone:</strong> <span th:text="${empresa.telefoneContato}"></span></p>
+    <!-- Adicione outros detalhes da empresa conforme necessário -->
+</div>
+
+<div>
+    <h2>Opções</h2>
+    <!-- Link para cadastrar uma nova oferta -->
+    <a th:href="@{/empresas/{id}/ofertas(id=${empresa.id})}">Ver suas Ofertas</a>
+    <a th:href="@{/ofertas/empresa/{id}/cadastro(id=${empresa.id})}">Cadastrar Nova Oferta</a>
+</div>
+</body>
+</html>
