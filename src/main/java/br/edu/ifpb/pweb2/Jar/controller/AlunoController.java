@@ -23,6 +23,33 @@ public class AlunoController {
     @Autowired
     private AlunoService alunoService;
 
+    @GetMapping("/login")
+    public ModelAndView login(ModelAndView modelAndView) {
+        modelAndView.setViewName("alunos/login");
+        return modelAndView;
+    }
+
+    @PostMapping("/login")
+    public ModelAndView login(@RequestParam("username") String username,
+                        @RequestParam("password") String password,
+                        ModelAndView model) {
+
+        Aluno aluno = alunoService.findByUsername(username);
+
+        if (aluno != null) {
+            if (aluno.getSenha().equals(password)) {
+                model.setViewName("redirect:/alunos/" + aluno.getId() + "/menu");
+            } else {
+                model.addObject("error", "Senha incorreta.");
+                model.setViewName("alunos/login");
+            }
+        } else {
+            model.addObject("error", "Nome de usuário não encontrado.");
+            model.setViewName("alunos/login");
+        }
+        return model;
+    }
+
     @GetMapping("/cadastro")
     public ModelAndView exibirFormularioDeCadastro(ModelAndView modelAndView) {
         modelAndView.addObject("aluno", new Aluno());

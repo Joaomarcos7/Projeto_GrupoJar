@@ -25,4 +25,6 @@ public class EmpresaService {
     public Optional<Empresa> findById(Long id) {
         return empresaRepository.findById(id);
     }
+
+    public Empresa findByCnpj(String cnpj) { return empresaRepository.findByCnpj(cnpj); }
 }
