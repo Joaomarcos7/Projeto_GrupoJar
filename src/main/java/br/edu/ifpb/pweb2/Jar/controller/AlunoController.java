@@ -1,9 +1,14 @@
 package br.edu.ifpb.pweb2.Jar.controller;
 
 import br.edu.ifpb.pweb2.Jar.model.Aluno;
+import br.edu.ifpb.pweb2.Jar.model.Candidatura;
 import br.edu.ifpb.pweb2.Jar.model.Empresa;
+import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
+import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
 import br.edu.ifpb.pweb2.Jar.service.AlunoService;
+import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
 import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
+import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +27,12 @@ public class AlunoController {
 
     @Autowired
     private AlunoService alunoService;
+
+    @Autowired
+    private OfertaEstagioService ofertaEstagioService;
+
+    @Autowired
+    private CandidaturaService candidaturaService;
 
     @GetMapping("/login")
     public ModelAndView login(ModelAndView modelAndView) {
@@ -81,6 +92,51 @@ public class AlunoController {
         } else {
             modelAndView.setViewName("redirect:/alunos/form");
         }
+        return modelAndView;
+    }
+
+    @GetMapping("/{id}/ofertas")
+    public ModelAndView listarOfertasDisponiveis(@PathVariable("id") Long id, ModelAndView modelAndView) {
+        Optional<Aluno> alunoOptional = alunoService.findById(id);
+
+        if (alunoOptional.isPresent()) {
+            Aluno aluno = alunoOptional.get();
+
+            List<OfertaEstagio> ofertasDisponiveis = ofertaEstagioService.buscarOfertasDisponiveis();
+            List<OfertaEstagioDTO> ofertasDTO = ofertasDisponiveis.stream()
+                    .map(oferta -> {
+                        OfertaEstagioDTO dto = new OfertaEstagioDTO(oferta);
+                        boolean jaCandidatou = candidaturaService.existsByAlunoIdAndOfertaId(aluno.getId(), oferta.getId());
+                        dto.setJaCandidatou(jaCandidatou);
+                        return dto;
+                    })
+                    .toList();
+
+            modelAndView.addObject("aluno", aluno);
+            modelAndView.addObject("ofertas", ofertasDTO);
+            modelAndView.setViewName("alunos/ofertas");
+        } else {
+            modelAndView.setViewName("redirect:/alunos/login");
+        }
+        return modelAndView;
+
+    }
+
+    @GetMapping("/{id}/candidaturas")
+    public ModelAndView listarCandidaturas(@PathVariable("id") Long id, ModelAndView modelAndView) {
+        Optional<Aluno> alunoOptional = alunoService.findById(id);
+        if (alunoOptional.isPresent()) {
+            Aluno aluno = alunoOptional.get();
+
+            List<Candidatura> candidaturas = candidaturaService.buscarPorAluno(aluno);
+
+            modelAndView.addObject("candidaturas", candidaturas);
+            modelAndView.addObject("aluno", aluno);
+            modelAndView.setViewName("alunos/candidaturas");
+        } else {
+            modelAndView.setViewName("redirect:/alunos/login");
+        }
+
         return modelAndView;
     }
 
