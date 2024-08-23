@@ -1,22 +1,16 @@
 package br.edu.ifpb.pweb2.Jar.controller;
 
 import br.edu.ifpb.pweb2.Jar.model.Empresa;
-import br.edu.ifpb.pweb2.Jar.model.Habilidade;
-import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
-import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/empresas")
@@ -24,6 +18,27 @@ public class EmpresaController {
 
     @Autowired
     private EmpresaService empresaService;
+
+    @GetMapping("/login")
+    public ModelAndView login(ModelAndView modelAndView) {
+        modelAndView.setViewName("empresas/login");
+        return modelAndView;
+    }
+
+    @PostMapping("/login")
+    public ModelAndView login(@RequestParam("cnpj") String cnpj,
+                              ModelAndView model) {
+
+        Empresa empresa = empresaService.findByCnpj(cnpj);
+
+        if (empresa != null) {
+                model.setViewName("redirect:/empresas/" + empresa.getId() + "/menu");
+        } else {
+            model.addObject("error", "Empresa não encontrada.");
+            model.setViewName("alunos/login");
+        }
+        return model;
+    }
 
     @GetMapping("/cadastro")
     public ModelAndView showCadastroForm(ModelAndView modelAndView) {
@@ -44,14 +59,14 @@ public class EmpresaController {
         return modelAndView;
     }
 
-    @GetMapping("/{id}/detalhes")
+    @GetMapping("/{id}/menu")
     public ModelAndView detalhesEmpresa(@PathVariable Long id, ModelAndView modelAndView) {
         Optional<Empresa> empresaOptional = empresaService.findById(id);
         modelAndView.setViewName("empresas/form");
 
         if (empresaOptional.isPresent()) {
             modelAndView.addObject("empresa", empresaOptional.get());
-            modelAndView.setViewName("empresas/detalhes");
+            modelAndView.setViewName("empresas/menu");
         }
 
         return modelAndView;
@@ -67,7 +82,7 @@ public class EmpresaController {
             modelAndView.addObject("empresa", empresa);
             modelAndView.addObject("ofertas", empresa.getOfertaEstagios());
         } else {
-            modelAndView.setViewName("empresas/detalhes");
+            modelAndView.setViewName("menu");
             modelAndView.addObject("mensagem", "Empresa não encontrada.");
         }
 
