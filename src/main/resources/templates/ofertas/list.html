@@ -29,6 +29,7 @@
             <th>Habilidades Desejáveis</th>
             <th>Data de Publicação</th>
             <th>Data de Validade</th>
+            <th>Status</th>
             <th>Ações</th>
         </tr>
         </thead>
@@ -54,6 +55,7 @@
             </td>
             <td th:text="${oferta.dataPublicacaoFormatada}" />
             <td th:text="${oferta.dataValidadeFormatada}" />
+            <td th:each=" status : ${oferta.getStatusName()}" th:text="${oferta.getStatusName()}"></td>
             <td>
                 <a th:href="@{/ofertas/{empresaId}/editar/{ofertaId}(empresaId=${oferta.empresa.id}, ofertaId=${oferta.id})}" class="btn btn-primary">Editar</a>
                 <a th:href="@{/ofertas/{empresaId}/remover/{ofertaId}(empresaId=${oferta.empresa.id}, ofertaId=${oferta.id})}" class="btn btn-danger">Remover</a>
@@ -62,7 +64,6 @@
         </tbody>
     </table>
 
-    <a th:href="@{/ofertas/{empresaId}/cadastro(empresaId=${empresaId})}" class="btn btn-success">Cadastrar Nova Oferta</a>
 </div>
 
 </body>
