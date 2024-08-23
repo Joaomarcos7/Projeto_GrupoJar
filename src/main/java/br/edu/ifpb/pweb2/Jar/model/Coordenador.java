@@ -12,7 +12,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Coordenador")
 public class Coordenador implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -25,5 +24,8 @@ public class Coordenador implements Serializable {
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
+    private String senha;
 
 }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Coordenadores</title>
+</head>
+<body>
+<h1>Coordenadores Cadastrados</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Senha</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="coordenador : ${coordenadores}">
+        <td th:text="${coordenador.nome}">Nome do Coordenador</td>
+        <td th:text="${coordenador.email}">E-mail</td>
+        <td th:text="${coordenador.senha}">Senha</td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/coordenadores/cadastro}">Cadastrar Novo Coordenador</a>
+</body>
+</html>
