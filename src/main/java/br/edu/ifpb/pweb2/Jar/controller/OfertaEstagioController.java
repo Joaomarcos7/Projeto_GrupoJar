@@ -2,6 +2,8 @@ package br.edu.ifpb.pweb2.Jar.controller;
 
 import br.edu.ifpb.pweb2.Jar.model.Empresa;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
+import br.edu.ifpb.pweb2.Jar.model.StatusOfertaEstagio;
+import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
 import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/ofertas")
@@ -28,10 +32,21 @@ public class OfertaEstagioController {
     @Autowired
     private EmpresaService empresaService;
 
-    @GetMapping()
+    @GetMapping("")
     public ModelAndView listarTodasOfertas(ModelAndView modelAndView) {
-        modelAndView.addObject("ofertas", ofertaEstagioService.findAll());
+
+        // Obtém a lista de ofertas
+        List<OfertaEstagio> ofertas = ofertaEstagioService.findAll();
+
+        // Converte cada oferta para DTO
+        List<OfertaEstagioDTO> ofertasDTO = ofertas.stream()
+                .map(OfertaEstagioDTO::new) // Usa o construtor que aplica a conversão
+                .collect(Collectors.toList());
+
+        // Adiciona a lista de DTOs ao modelo
+        modelAndView.addObject("ofertas", ofertasDTO);
         modelAndView.setViewName("ofertas/list");
+
         return modelAndView;
     }
 
@@ -45,6 +60,17 @@ public class OfertaEstagioController {
         return modelAndView;
     }
 
+
+    @PostMapping("{ofertaId}/atualizar")
+    public ModelAndView atualizarStatusOferta(@PathVariable Long ofertaId,OfertaEstagio ofertaEstagio,ModelAndView modelAndView,
+                                              RedirectAttributes redirectAttributes){
+        OfertaEstagio oferta = ofertaEstagioService.buscarPorId(ofertaId);
+        oferta.setStatus(ofertaEstagio.getStatus());
+        ofertaEstagioService.save(oferta);
+        redirectAttributes.addFlashAttribute("mensagem", "Oferta atualizada com sucesso!");
+        modelAndView.setViewName("redirect:/ofertas");
+        return modelAndView;
+    }
     @PostMapping("empresa/{empresaId}/cadastro")
     public ModelAndView cadastrarOferta(@PathVariable Long empresaId,
                                         OfertaEstagio ofertaEstagio, ModelAndView modelAndView,
@@ -54,7 +80,7 @@ public class OfertaEstagioController {
         if (empresaOptional.isPresent()) {
             Empresa empresa = empresaOptional.get();
             ofertaEstagio.setEmpresa(empresa);
-
+            ofertaEstagio.setStatus(StatusOfertaEstagio.PENDENTE.getStatus());
             ofertaEstagioService.save(ofertaEstagio);
 
             redirectAttributes.addFlashAttribute("mensagem", "Oferta cadastrada com sucesso!");
