@@ -13,6 +13,11 @@
     </div>
 
     <div>
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" th:field="*{email}" required/>
+    </div>
+
+    <div>
         <label for="username">Username:</label>
         <input type="text" id="username" th:field="*{username}" required/>
     </div>
@@ -23,8 +28,13 @@
     </div>
 
     <div>
-        <label for="email">E-mail:</label>
-        <input type="email" id="email" th:field="*{email}" required/>
+        <label>Habilidades Necessárias:</label>
+        <div th:each="habilidade : ${T(br.edu.ifpb.pweb2.Jar.model.Habilidade).values()}">
+            <input type="checkbox"
+                   th:field="*{habilidades}"
+                   th:value="${habilidade}"
+                   th:text="${habilidade.description}" />
+        </div>
     </div>
 
     <button type="submit">Cadastrar</button>

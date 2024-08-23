@@ -1,17 +1,7 @@
 package br.edu.ifpb.pweb2.Jar.controller;
 
-import br.edu.ifpb.pweb2.Jar.model.Aluno;
-import br.edu.ifpb.pweb2.Jar.model.Candidatura;
-import br.edu.ifpb.pweb2.Jar.model.EstadoCandidatura;
-import br.edu.ifpb.pweb2.Jar.model.Oferta;
-import br.edu.ifpb.pweb2.Jar.service.AlunoService;
-import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
-import br.edu.ifpb.pweb2.Jar.service.OfertaService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/candidaturas")

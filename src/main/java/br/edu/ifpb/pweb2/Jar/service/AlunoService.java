@@ -21,4 +21,6 @@ public class AlunoService {
     public List<Aluno> findAll() {
         return alunoRepository.findAll();
     }
+
+    public Optional<Aluno> findById(Long id) { return alunoRepository.findById(id); }
 }

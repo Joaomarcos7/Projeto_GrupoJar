@@ -20,4 +20,8 @@ public class OfertaEstagioService {
     public List<OfertaEstagio> findAll() {
         return ofertaEstagioRepository.findAll();
     }
+
+    public OfertaEstagio buscarPorId(Long id) {
+        return ofertaEstagioRepository.findById(id).orElse(null);
+    }
 }

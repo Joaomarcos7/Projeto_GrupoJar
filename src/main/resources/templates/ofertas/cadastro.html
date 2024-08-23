@@ -65,7 +65,7 @@
             <input type="checkbox"
                    th:field="*{habilidadesNecessarias}"
                    th:value="${habilidade}"
-                   th:text="${habilidade}" />
+                   th:text="${habilidade.description}" />
         </div>
     </div>
 
@@ -75,7 +75,7 @@
             <input type="checkbox"
                    th:field="*{habilidadesDesejaveis}"
                    th:value="${habilidade}"
-                   th:text="${habilidade}" />
+                   th:text="${habilidade.description}" />
         </div>
     </div>
 
