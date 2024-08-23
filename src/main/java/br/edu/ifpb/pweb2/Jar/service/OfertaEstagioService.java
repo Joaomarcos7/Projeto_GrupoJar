@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OfertaEstagioService {
@@ -22,8 +23,10 @@ public class OfertaEstagioService {
         return ofertaEstagioRepository.findAll();
     }
 
-    public OfertaEstagio buscarPorId(Long id) {
-        return ofertaEstagioRepository.findById(id).orElse(null);
+    public Optional<OfertaEstagio> findById(Long id) { return ofertaEstagioRepository.findById(id); }
+
+    public List<OfertaEstagio> buscarOfertasDisponiveis() {
+        return ofertaEstagioRepository.findByStatus(1);
     }
 
     public String convertStatus(int statusCode) {

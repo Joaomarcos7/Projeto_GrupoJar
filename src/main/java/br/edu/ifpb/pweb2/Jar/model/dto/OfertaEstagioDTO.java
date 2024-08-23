@@ -46,6 +46,8 @@ public class OfertaEstagioDTO {
 
     private Set<Candidatura> candidaturas = new HashSet<>();
 
+    private boolean jaCandidatou;
+
     public String getDataPublicacaoFormatada() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return this.dataPublicacao.format(formatter);

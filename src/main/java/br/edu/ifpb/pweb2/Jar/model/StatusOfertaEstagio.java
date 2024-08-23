@@ -1,5 +1,8 @@
 package br.edu.ifpb.pweb2.Jar.model;
 
+import lombok.Getter;
+
+@Getter
 public enum StatusOfertaEstagio {
     APROVADO(1),
     PENDENTE(2),
@@ -11,7 +14,4 @@ public enum StatusOfertaEstagio {
         this.status = status;
     }
 
-    public int getStatus() {
-        return status;
-    }
 }

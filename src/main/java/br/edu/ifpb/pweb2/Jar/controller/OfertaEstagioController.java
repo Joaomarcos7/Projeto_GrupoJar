@@ -64,10 +64,17 @@ public class OfertaEstagioController {
     @PostMapping("{ofertaId}/atualizar")
     public ModelAndView atualizarStatusOferta(@PathVariable Long ofertaId,OfertaEstagio ofertaEstagio,ModelAndView modelAndView,
                                               RedirectAttributes redirectAttributes){
-        OfertaEstagio oferta = ofertaEstagioService.buscarPorId(ofertaId);
-        oferta.setStatus(ofertaEstagio.getStatus());
-        ofertaEstagioService.save(oferta);
-        redirectAttributes.addFlashAttribute("mensagem", "Oferta atualizada com sucesso!");
+        Optional<OfertaEstagio> ofertaEstagioOptional = ofertaEstagioService.findById(ofertaId);
+
+        if (ofertaEstagioOptional.isPresent()) {
+            OfertaEstagio oferta = ofertaEstagioOptional.get();
+
+            oferta.setStatus(ofertaEstagio.getStatus());
+            ofertaEstagioService.save(oferta);
+            redirectAttributes.addFlashAttribute("mensagem", "Oferta atualizada com sucesso!");
+            modelAndView.setViewName("redirect:/ofertas");
+
+        }
         modelAndView.setViewName("redirect:/ofertas");
         return modelAndView;
     }

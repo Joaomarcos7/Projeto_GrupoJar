@@ -76,7 +76,7 @@
     </p>
 
     <!-- Botões de funcionalidades -->
-    <a th:href="@{/ofertas}" class="btn btn-primary">Ver Ofertas de Estágio</a>
+    <a th:href="@{/alunos/{id}/ofertas(id=${aluno.id})}" class="btn btn-primary">Ver Ofertas de Estágio</a>
     <a th:href="@{/alunos/{id}/candidaturas(id=${aluno.id})}" class="btn btn-secondary">Minhas Candidaturas</a>
 </div>
 

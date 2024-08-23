@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ofertas de Estágio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Ofertas de Estágio Disponíveis</h2>
+
+        <div th:if="${ofertas.isEmpty()}">
+            <p class="alert alert-warning">Não há ofertas disponíveis.</p>
+            <a th:href="@{/alunos/{id}/menu(id=${aluno.id})}" class="btn btn-secondary">Voltar ao Menu</a>
+        </div>
+
+        <div class="row" th:if="${!ofertas.isEmpty()}">
+            <th:block th:each="oferta : ${ofertas}">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title" th:text="${oferta.titulo}">Título da Oferta</h4>
+                            <h6 class="card-subtitle mb-2 text-muted" th:text="${oferta.empresa.nome}">Nome da Empresa</h6>
+                            <h5 class="card-text" th:text="${oferta.atividadePrincipal}">Atividade Principal</h5>
+                            <p class="card-text" th:text="${oferta.descricao}">Descrição da Oferta</p>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex align-items-center gap-1">
+                                    <label>CH:</label>
+                                    <span th:text="${oferta.ch}">Carga horária</span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center gap-1">
+                                    <label>Bolsa:</label>
+                                    <span th:text="${oferta.valorPago}">Valor pago</span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center gap-1" th:if="${oferta.valeTransporte}">
+                                    <label>Vale Transporte:</label>
+                                    <span th:text="${oferta.valeTransporte}">Vale Transporte</span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center gap-1">
+                                    <label>Pré Requisitos:</label>
+                                    <span th:text="${oferta.preRequisitos}">Pré Requisitos</span>
+                                </li>
+                            </ul>
+
+                            <div th:if="${!oferta.habilidadesNecessarias.isEmpty()}">
+                                <h6>Habilidades Necessárias</h6>
+                                <ul class="list-group mb-3">
+                                    <li class="list-group-item" th:each="habilidade : ${oferta.habilidadesNecessarias}" th:text="${habilidade.description}"></li>
+                                </ul>
+                            </div>
+                            <div th:if="${!oferta.habilidadesDesejaveis.isEmpty()}">
+                                <h6>Habilidades Desejáveis</h6>
+                                <ul class="list-group">
+                                    <li class="list-group-item" th:each="habilidade : ${oferta.habilidadesDesejaveis}" th:text="${habilidade.description}"></li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+                        <!-- Modal de Confirmação -->
+                        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmModalLabel">Confirmar Candidatura</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Você tem certeza de que deseja se candidatar a esta oferta?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <form th:action="@{/candidaturas/candidatar/{alunoId}/oferta/{ofertaId}(alunoId=${aluno.id}, ofertaId=${oferta.id})}" method="post">
+                                            <button type="submit" class="btn btn-primary">Candidatar-se</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-center">
+                            <th:block th:if="${oferta.jaCandidatou}">
+                                <p class="text-info">Você já se candidatou a esta oferta.</p>
+                            </th:block>
+                            <th:block th:unless="${oferta.jaCandidatou}">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal" data-offer-id="${oferta.id}">
+                                    Candidatar-se
+                                </button>
+                            </th:block>
+                        </div>
+
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
