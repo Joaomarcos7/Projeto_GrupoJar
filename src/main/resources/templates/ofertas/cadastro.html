@@ -12,7 +12,7 @@
 </div>
 
 <form th:action="@{/ofertas/empresa/{empresaId}/cadastro(empresaId=${empresaId})}" th:object="${oferta}" method="post">
-    <input type="hidden" th:field="${empresa.id}" value="${empresa.id}" />
+    <input type="hidden" th:field="${empresaId}" value="${empresa.id}" />
 
     <div>
         <label for="titulo">Título:</label>
@@ -47,16 +47,6 @@
     <div>
         <label for="preRequisitos">Pré-Requisitos:</label>
         <input type="text" id="preRequisitos" th:field="*{preRequisitos}" required />
-    </div>
-
-    <div>
-        <label for="dataPublicacao">Data de Publicação:</label>
-        <input type="date" id="dataPublicacao" th:field="*{dataPublicacao}" required />
-    </div>
-
-    <div>
-        <label for="dataValidade">Data de Validade:</label>
-        <input type="date" id="dataValidade" th:field="*{dataValidade}" required />
     </div>
 
     <div>

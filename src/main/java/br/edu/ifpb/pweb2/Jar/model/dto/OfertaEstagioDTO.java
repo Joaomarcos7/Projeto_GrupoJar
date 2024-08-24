@@ -40,8 +40,6 @@ public class OfertaEstagioDTO {
 
     private LocalDate dataPublicacao;
 
-    private LocalDate dataValidade;
-
     private Empresa empresa;
 
     private Set<Candidatura> candidaturas = new HashSet<>();
@@ -51,11 +49,6 @@ public class OfertaEstagioDTO {
     public String getDataPublicacaoFormatada() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return this.dataPublicacao.format(formatter);
-    }
-
-    public String getDataValidadeFormatada() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return this.dataValidade.format(formatter);
     }
 
     public String getFormatadoValorPago() {
@@ -80,7 +73,6 @@ public class OfertaEstagioDTO {
         this.habilidadesNecessarias = oferta.getHabilidadesNecessarias();
         this.habilidadesDesejaveis = oferta.getHabilidadesDesejaveis();
         this.dataPublicacao = oferta.getDataPublicacao();
-        this.dataValidade = oferta.getDataValidade();
         this.empresa = oferta.getEmpresa();
         this.candidaturas = oferta.getCandidaturas();
     }

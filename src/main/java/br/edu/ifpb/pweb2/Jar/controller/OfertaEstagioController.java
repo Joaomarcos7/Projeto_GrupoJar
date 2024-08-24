@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -60,6 +61,32 @@ public class OfertaEstagioController {
         return modelAndView;
     }
 
+    @PostMapping("empresa/{empresaId}/cadastro")
+    public ModelAndView cadastrarOferta(@PathVariable Long empresaId,
+                                        OfertaEstagio ofertaEstagio, ModelAndView modelAndView,
+                                        RedirectAttributes redirectAttributes) {
+        Optional<Empresa> empresaOptional = empresaService.findById(empresaId);
+
+        if (empresaOptional.isPresent()) {
+            Empresa empresa = empresaOptional.get();
+
+            ofertaEstagio.setEmpresa(empresa);
+            ofertaEstagio.setDataPublicacao(LocalDate.now());
+            ofertaEstagio.setStatus(StatusOfertaEstagio.PENDENTE.getStatus());
+
+            empresa.getOfertaEstagios().add(ofertaEstagio);
+
+            ofertaEstagioService.save(ofertaEstagio);
+
+            redirectAttributes.addFlashAttribute("mensagem", "Oferta cadastrada com sucesso!");
+
+            modelAndView.setViewName("redirect:/empresas/" + empresa.getId() + "/ofertas");
+        } else {
+            modelAndView.setViewName("ofertas/cadastro");
+        }
+
+        return modelAndView;
+    }
 
     @PostMapping("{ofertaId}/atualizar")
     public ModelAndView atualizarStatusOferta(@PathVariable Long ofertaId,OfertaEstagio ofertaEstagio,ModelAndView modelAndView,
@@ -76,27 +103,6 @@ public class OfertaEstagioController {
 
         }
         modelAndView.setViewName("redirect:/ofertas");
-        return modelAndView;
-    }
-    @PostMapping("empresa/{empresaId}/cadastro")
-    public ModelAndView cadastrarOferta(@PathVariable Long empresaId,
-                                        OfertaEstagio ofertaEstagio, ModelAndView modelAndView,
-                                        RedirectAttributes redirectAttributes) {
-        Optional<Empresa> empresaOptional = empresaService.findById(empresaId);
-
-        if (empresaOptional.isPresent()) {
-            Empresa empresa = empresaOptional.get();
-            ofertaEstagio.setEmpresa(empresa);
-            ofertaEstagio.setStatus(StatusOfertaEstagio.PENDENTE.getStatus());
-            ofertaEstagioService.save(ofertaEstagio);
-
-            redirectAttributes.addFlashAttribute("mensagem", "Oferta cadastrada com sucesso!");
-
-            modelAndView.setViewName("redirect:/empresas/" + empresa.getId() + "/ofertas");
-        } else {
-            modelAndView.setViewName("ofertas/cadastro");
-        }
-
         return modelAndView;
     }
 
