@@ -28,13 +28,12 @@
             <th>Habilidades Necessárias</th>
             <th>Habilidades Desejáveis</th>
             <th>Data de Publicação</th>
-            <th>Data de Validade</th>
             <th>Status</th>
             <th>Ações</th>
         </tr>
         </thead>
-        <tbody>
-        <tr th:each="oferta : ${ofertas}">
+        <tbody th:if="${ofertasPendente.size() > 0}">
+        <tr th:each="oferta : ${ofertasPendente}">
             <td th:text="${oferta.id}"></td>
             <td th:text="${oferta.titulo}"></td>
             <td th:text="${oferta.descricao}"></td>
@@ -44,24 +43,143 @@
             <td th:text="${oferta.formatadoValeTransporte}"></td>
             <td th:text="${oferta.preRequisitos}"></td>
             <td>
-                <ul>
+                <ul th:if="${(oferta.habilidadesNecessarias.size()>0)}">
                     <li th:each="habilidade : ${oferta.habilidadesNecessarias}" th:text="${habilidade}"></li>
                 </ul>
+                <div th:if="${oferta.habilidadesNecessarias.size() <= 0}" class="alert alert-success">
+                    <p>Sem Habilidades necessárias</p>
+                </div>
             </td>
             <td>
                 <ul>
                     <li th:each="habilidade : ${oferta.habilidadesDesejaveis}" th:text="${habilidade}"></li>
                 </ul>
             </td>
-            <td th:text="${oferta.dataPublicacaoFormatada}" />
-            <td th:each=" status : ${oferta.getStatusName()}" th:text="${oferta.getStatusName()}"></td>
+            <td th:text="${oferta.dataPublicacaoFormatada}"></td>
+            <td th:text="${oferta.getStatusName()}"></td>
             <td>
-                <a th:href="@{/ofertas/{empresaId}/editar/{ofertaId}(empresaId=${oferta.empresa.id}, ofertaId=${oferta.id})}" class="btn btn-primary">Editar</a>
-                <a th:href="@{/ofertas/{empresaId}/remover/{ofertaId}(empresaId=${oferta.empresa.id}, ofertaId=${oferta.id})}" class="btn btn-danger">Remover</a>
+                <!-- Botão para Aprovar -->
+                <form th:action="@{/ofertas/updateStatus/{ofertaId}/{statusOferta}(ofertaId=${oferta.id},statusOferta=${1})}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-primary">Aprovar</button>
+                </form>
+
+                <!-- Botão para Recusar -->
+                <form th:action="@{/ofertas/updateStatus/{ofertaId}/{statusOferta}(ofertaId=${oferta.id},statusOferta=${3})}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Recusar</button>
+                </form>
             </td>
         </tr>
         </tbody>
     </table>
+    <div th:if="${ofertasPendente.size() <= 0}" class="alert alert-success">
+        <p>Não Há ofertas pendentes no momento.</p>
+    </div>
+
+
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Descrição</th>
+            <th>Atividade Principal</th>
+            <th>Carga Horária</th>
+            <th>Valor Pago</th>
+            <th>Vale Transporte</th>
+            <th>Pré-requisitos</th>
+            <th>Habilidades Necessárias</th>
+            <th>Habilidades Desejáveis</th>
+            <th>Data de Publicação</th>
+            <th>Status</th>
+
+        </tr>
+        </thead>
+        <tbody th:if="${ofertasNegada.size() > 0}">
+        <tr th:each="oferta : ${ofertasNegada}">
+            <td th:text="${oferta.id}"></td>
+            <td th:text="${oferta.titulo}"></td>
+            <td th:text="${oferta.descricao}"></td>
+            <td th:text="${oferta.atividadePrincipal}"></td>
+            <td th:text="${oferta.ch}"></td>
+            <td th:text="${oferta.formatadoValorPago}"></td>
+            <td th:text="${oferta.formatadoValeTransporte}"></td>
+            <td th:text="${oferta.preRequisitos}"></td>
+            <td>
+                <ul th:if="${(oferta.habilidadesNecessarias.size()>0)}">
+                    <li th:each="habilidade : ${oferta.habilidadesNecessarias}" th:text="${habilidade}"></li>
+                </ul>
+                <div th:if="${oferta.habilidadesNecessarias.size() <= 0}" class="alert alert-success">
+                    <p>Sem Habilidades necessárias</p>
+                </div>
+            </td>
+            <td>
+                <ul>
+                    <li th:each="habilidade : ${oferta.habilidadesDesejaveis}" th:text="${habilidade}"></li>
+                </ul>
+            </td>
+            <td th:text="${oferta.dataPublicacaoFormatada}"></td>
+            <td th:text="${oferta.getStatusName()}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${ofertasNegada.size() <= 0}" class="alert alert-success">
+        <p>Não Há ofertas Negadas no momento.</p>
+    </div>
+
+
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Descrição</th>
+            <th>Atividade Principal</th>
+            <th>Carga Horária</th>
+            <th>Valor Pago</th>
+            <th>Vale Transporte</th>
+            <th>Pré-requisitos</th>
+            <th>Habilidades Necessárias</th>
+            <th>Habilidades Desejáveis</th>
+            <th>Data de Publicação</th>
+            <th>Status</th>
+
+        </tr>
+        </thead>
+        <tbody th:if="${ofertasAprovada.size() > 0}">
+        <tr th:each="oferta : ${ofertasAprovada}">
+            <td th:text="${oferta.id}"></td>
+            <td th:text="${oferta.titulo}"></td>
+            <td th:text="${oferta.descricao}"></td>
+            <td th:text="${oferta.atividadePrincipal}"></td>
+            <td th:text="${oferta.ch}"></td>
+            <td th:text="${oferta.formatadoValorPago}"></td>
+            <td th:text="${oferta.formatadoValeTransporte}"></td>
+            <td th:text="${oferta.preRequisitos}"></td>
+            <td>
+                <ul th:if="${(oferta.habilidadesNecessarias.size()>0)}" >
+                    <li th:each="habilidade : ${oferta.habilidadesNecessarias}" th:text="${habilidade}"></li>
+                </ul>
+                <div th:if="${oferta.habilidadesNecessarias.size() <= 0}" class="alert alert-success">
+                    <p>Sem Habilidades necessárias</p>
+                </div>
+            </td>
+            <td>
+                <ul>
+                    <li th:each="habilidade : ${oferta.habilidadesDesejaveis}" th:text="${habilidade}"></li>
+                </ul>
+            </td>
+            <td th:text="${oferta.dataPublicacaoFormatada}"></td>
+            <td th:text="${oferta.getStatusName()}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${ofertasAprovada.size() <= 0}" class="alert alert-success">
+        <p>Não Há ofertas Aprovadas no momento.</p>
+    </div>
 
 </div>
 

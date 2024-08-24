@@ -8,8 +8,35 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
     <div class="container mt-5">
         <h2 class="mb-4">Ofertas de Estágio Disponíveis</h2>
+
+
+        <div class="container mt-4">
+            <h4>Filtrar Ofertas</h4>
+            <div class="mb-3">
+                <form id="filterForm">
+                    <div class="form-row">
+
+                        <div class="col-md-4">
+                            <label for="maxValue">Valor Bolsa Máximo</label>
+                            <input type="number" id="maxValue" class="form-control" placeholder="R$ Max">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="minValue">Valor Bolsa Mínimo</label>
+                            <input type="number" id="minValue" class="form-control" placeholder="R$ Bolsa Min">
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label>Habilidades Necessárias</label>
+                        <div id="skillsFilters" class="form-check">
+                            <!-- As habilidades serão inseridas aqui pelo JavaScript -->
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary mt-3" onclick="filterCards()">Filtrar</button>
+                </form>
+            </div>
 
         <div th:if="${ofertas.isEmpty()}">
             <p class="alert alert-warning">Não há ofertas disponíveis.</p>
@@ -98,5 +125,48 @@
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Lista de habilidades para o exemplo
+            const skillsList = ['Desenvolvimento web','Banco de Dados', 'HTML', 'CSS', 'React', 'Node','Programador Python','Spring Boot','Tailwind','Angular','Redis'];
+
+            // Preenche os checkboxes de habilidades
+            function populateSkillsFilters() {
+                const skillsFilters = document.getElementById('skillsFilters');
+                skillsList.forEach(skill => {
+                    const checkbox = document.createElement('div');
+                    checkbox.classList.add('form-check');
+                    checkbox.innerHTML = `
+                <input type="checkbox" class="form-check-input" id="skill-${skill}" value="${skill}">
+                <label class="form-check-label" for="skill-${skill}">${skill}</label>
+            `;
+                    skillsFilters.appendChild(checkbox);
+                });
+            }
+
+            // Gera a URL com os parâmetros de consulta
+            function buildQueryParams() {
+                const minValue = parseFloat(document.getElementById('minValue').value) || 0;
+                const maxValue = parseFloat(document.getElementById('maxValue').value) || Infinity;
+
+                const selectedSkills = Array.from(document.querySelectorAll('#skillsFilters input:checked'))
+                    .map(checkbox => checkbox.value);
+
+                const params = new URLSearchParams();
+                if (minValue > 0) params.append('minValue', minValue);
+                if (maxValue < Infinity) params.append('maxValue', maxValue);
+                if (selectedSkills.length > 0) params.append('habilidades', selectedSkills.join(','));
+
+                return params.toString();
+            }
+
+            // Filtra os cards com base nos critérios fornecidos
+            function filterCards() {
+                const queryParams = buildQueryParams();
+                window.location.search = queryParams; // Adiciona os parâmetros de consulta à URL
+            }
+
+            // Preenche os filtros de habilidades ao carregar a página
+            document.addEventListener('DOMContentLoaded', populateSkillsFilters);
+        </script>
 </body>
 </html>

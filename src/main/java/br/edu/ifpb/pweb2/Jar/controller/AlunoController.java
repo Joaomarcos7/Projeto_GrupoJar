@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/alunos")
@@ -96,13 +97,32 @@ public class AlunoController {
     }
 
     @GetMapping("/{id}/ofertas")
-    public ModelAndView listarOfertasDisponiveis(@PathVariable("id") Long id, ModelAndView modelAndView) {
+    public ModelAndView listarOfertasDisponiveis(@PathVariable("id") Long id,@RequestParam(required = false) Double minValue,
+                                                 @RequestParam(required = false) Double maxValue,
+                                                 @RequestParam(required = false) List<String> habilidades, ModelAndView modelAndView) {
         Optional<Aluno> alunoOptional = alunoService.findById(id);
+
 
         if (alunoOptional.isPresent()) {
             Aluno aluno = alunoOptional.get();
 
             List<OfertaEstagio> ofertasDisponiveis = ofertaEstagioService.buscarOfertasDisponiveis();
+            if (minValue != null) {
+                ofertasDisponiveis = ofertasDisponiveis.stream()
+                        .filter(oferta -> oferta.getValorPago().doubleValue() >= minValue)
+                        .collect(Collectors.toList());
+            }
+            if (maxValue != null) {
+                ofertasDisponiveis = ofertasDisponiveis.stream()
+                        .filter(oferta -> oferta.getValorPago().doubleValue() <= maxValue)
+                        .collect(Collectors.toList());
+            }
+            if (habilidades != null && !habilidades.isEmpty()) {
+                ofertasDisponiveis = ofertasDisponiveis.stream()
+                        .filter(oferta -> oferta.getHabilidadesNecessarias().stream()
+                                .anyMatch(habilidade -> habilidades.contains(habilidade.getDescription())))
+                        .collect(Collectors.toList());
+            }
             List<OfertaEstagioDTO> ofertasDTO = ofertasDisponiveis.stream()
                     .map(oferta -> {
                         OfertaEstagioDTO dto = new OfertaEstagioDTO(oferta);
@@ -111,6 +131,7 @@ public class AlunoController {
                         return dto;
                     })
                     .toList();
+
 
             modelAndView.addObject("aluno", aluno);
             modelAndView.addObject("ofertas", ofertasDTO);

@@ -39,6 +39,10 @@
                                 <span th:text="${oferta.getFormatadoValeTransporte()}">Vale Transporte</span>
                             </li>
                             <li class="list-group-item d-flex align-items-center gap-1">
+                                <label>Status da Oferta:</label>
+                                <span th:text="${oferta.getStatusName()}">Valor pago</span>
+                            </li>
+                            <li class="list-group-item d-flex align-items-center gap-1">
                                 <label>Pré Requisitos:</label>
                                 <span th:text="${oferta.preRequisitos}">Pré Requisitos</span>
                             </li>
@@ -56,6 +60,7 @@
                                 <li class="list-group-item" th:each="habilidade : ${oferta.habilidadesDesejaveis}" th:text="${habilidade.description}"></li>
                             </ul>
                         </div>
+
 
                     </div>
 
