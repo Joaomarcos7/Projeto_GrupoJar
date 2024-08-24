@@ -35,8 +35,8 @@ public class EmpresaController {
         if (empresa != null) {
                 model.setViewName("redirect:/empresas/" + empresa.getId() + "/menu");
         } else {
-            model.addObject("error", "Empresa não encontrada.");
-            model.setViewName("alunos/login");
+            model.addObject("error", "Empresa não encontrada. Tente Novamente!");
+            model.setViewName("empresas/login");
         }
         return model;
     }
