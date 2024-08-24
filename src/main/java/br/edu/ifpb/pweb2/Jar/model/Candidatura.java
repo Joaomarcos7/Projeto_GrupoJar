@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @NoArgsConstructor
@@ -33,4 +34,9 @@ public class Candidatura implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "oferta_id", nullable = false)
     private OfertaEstagio ofertaEstagio;
+
+    public String getDataCandidaturaFormatada() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return this.dataCandidatura.format(formatter);
+    }
 }
