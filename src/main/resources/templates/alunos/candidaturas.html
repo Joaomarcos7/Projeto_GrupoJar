@@ -22,7 +22,7 @@
                     <div class="card h-100">
                         <div class="card-body">
                             <h4 class="card-title" th:text="${candidatura.ofertaEstagio.titulo}">Título da Oferta</h4>
-                            <h6 class="card-subtitle mb-2 text-muted" th:text="${candidatura.dataCandidatura}">Data da Candidatura</h6>
+                            <h6 class="card-subtitle mb-2 text-muted" th:text="${candidatura.getDataCandidaturaFormatada()}">Data da Candidatura</h6>
                             <div class="d-flex flex-column justify-content-center align-items-center gap-1">
                                 <p class="card-text">Estado:</p>
                                 <span class="card-text fs-4 fw-bold" th:text="${candidatura.estado.description}">Estado da Candidatura</span>
