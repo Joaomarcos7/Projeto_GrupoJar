@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -45,23 +46,20 @@ public class OfertaEstagio implements Serializable {
     @Column(nullable = false)
     private int status;
 
-    @ElementCollection(targetClass = Habilidade.class)
+    @ElementCollection(targetClass = Habilidade.class, fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "habilidades_necessarias", joinColumns = @JoinColumn(name = "oferta_id"))
+    @CollectionTable(name = "habilidades_necessarias", joinColumns = @JoinColumn(name = "oferta_id", nullable = false))
     @Column(name = "habilidade_necessaria")
     private Set<Habilidade> habilidadesNecessarias = new HashSet<>();
 
-    @ElementCollection(targetClass = Habilidade.class)
+    @ElementCollection(targetClass = Habilidade.class, fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "habilidades_desejaveis", joinColumns = @JoinColumn(name = "oferta_id"))
+    @CollectionTable(name = "habilidades_desejaveis", joinColumns = @JoinColumn(name = "oferta_id", nullable = false))
     @Column(name = "habilidade_desejavel")
     private Set<Habilidade> habilidadesDesejaveis = new HashSet<>();
 
     @Column(nullable = false)
     private LocalDate dataPublicacao;
-
-    @Column(nullable = false)
-    private LocalDate dataValidade;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id", nullable = false)
@@ -75,17 +73,25 @@ public class OfertaEstagio implements Serializable {
         return this.dataPublicacao.format(formatter);
     }
 
-    public String getDataValidadeFormatada() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return this.dataValidade.format(formatter);
-    }
-
     public String getFormatadoValorPago() {
         return valorPago != null ? String.format("R$ %.2f", this.valorPago) : "N/A";
     }
 
     public String getFormatadoValeTransporte() {
         return valeTransporte != null ? String.format("R$ %.2f", this.valeTransporte) : "N/A";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        OfertaEstagio ofertaEstagio = (OfertaEstagio) obj;
+        return Objects.equals(id, ofertaEstagio.id);
     }
 
 }

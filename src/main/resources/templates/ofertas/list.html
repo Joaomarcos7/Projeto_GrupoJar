@@ -54,7 +54,6 @@
                 </ul>
             </td>
             <td th:text="${oferta.dataPublicacaoFormatada}" />
-            <td th:text="${oferta.dataValidadeFormatada}" />
             <td th:each=" status : ${oferta.getStatusName()}" th:text="${oferta.getStatusName()}"></td>
             <td>
                 <a th:href="@{/ofertas/{empresaId}/editar/{ofertaId}(empresaId=${oferta.empresa.id}, ofertaId=${oferta.id})}" class="btn btn-primary">Editar</a>
