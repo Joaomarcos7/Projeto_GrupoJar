@@ -45,7 +45,9 @@ public class OfertaEstagioController {
                 .collect(Collectors.toList());
 
         // Adiciona a lista de DTOs ao modelo
-        modelAndView.addObject("ofertas", ofertasDTO);
+        modelAndView.addObject("ofertasNegada", ofertasDTO.stream().filter(x-> x.getStatusName().equals("NEGADO")).toList());
+        modelAndView.addObject("ofertasPendente", ofertasDTO.stream().filter(x-> x.getStatusName().equals("PENDENTE")).toList());
+        modelAndView.addObject("ofertasAprovada", ofertasDTO.stream().filter(x-> x.getStatusName().equals("APROVADO")).toList());
         modelAndView.setViewName("ofertas/list");
 
         return modelAndView;
@@ -88,19 +90,18 @@ public class OfertaEstagioController {
         return modelAndView;
     }
 
-    @PostMapping("{ofertaId}/atualizar")
-    public ModelAndView atualizarStatusOferta(@PathVariable Long ofertaId,OfertaEstagio ofertaEstagio,ModelAndView modelAndView,
+    @PostMapping("updateStatus/{ofertaId}/{statusOferta}")
+    public ModelAndView atualizarStatusOferta(@PathVariable Long ofertaId,@PathVariable int statusOferta,ModelAndView modelAndView,
                                               RedirectAttributes redirectAttributes){
         Optional<OfertaEstagio> ofertaEstagioOptional = ofertaEstagioService.findById(ofertaId);
 
         if (ofertaEstagioOptional.isPresent()) {
             OfertaEstagio oferta = ofertaEstagioOptional.get();
 
-            oferta.setStatus(ofertaEstagio.getStatus());
+            oferta.setStatus(statusOferta);
             ofertaEstagioService.save(oferta);
             redirectAttributes.addFlashAttribute("mensagem", "Oferta atualizada com sucesso!");
             modelAndView.setViewName("redirect:/ofertas");
-
         }
         modelAndView.setViewName("redirect:/ofertas");
         return modelAndView;

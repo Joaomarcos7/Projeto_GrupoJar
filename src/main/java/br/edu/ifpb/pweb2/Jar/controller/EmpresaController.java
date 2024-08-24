@@ -1,6 +1,7 @@
 package br.edu.ifpb.pweb2.Jar.controller;
 
 import br.edu.ifpb.pweb2.Jar.model.Empresa;
+import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
 import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/empresas")
@@ -80,8 +82,11 @@ public class EmpresaController {
 
         if (empresaOptional.isPresent()) {
             Empresa empresa = empresaOptional.get();
+            List<OfertaEstagioDTO> ofertas = empresa.getOfertaEstagios().stream()
+                    .map(OfertaEstagioDTO::new) // Usa o construtor que aplica a conversão
+                    .collect(Collectors.toList());
             modelAndView.addObject("empresa", empresa);
-            modelAndView.addObject("ofertas", empresa.getOfertaEstagios());
+            modelAndView.addObject("ofertas", ofertas);
             modelAndView.setViewName("empresas/ofertas");
         } else {
             modelAndView.addObject("mensagem", "Empresa não encontrada.");
