@@ -86,8 +86,8 @@
 
                         </div>
 
-                        <!-- Modal de Confirmação -->
-                        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                        <!-- Modal de Confirmação com ID Dinâmico -->
+                        <div class="modal fade" th:id="'confirmModal' + ${oferta.id}" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -112,7 +112,7 @@
                                 <p class="text-info">Você já se candidatou a esta oferta.</p>
                             </th:block>
                             <th:block th:unless="${oferta.jaCandidatou}">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal" data-offer-id="${oferta.id}">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#confirmModal' + ${oferta.id}">
                                     Candidatar-se
                                 </button>
                             </th:block>
@@ -124,49 +124,66 @@
         </div>
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // Lista de habilidades para o exemplo
-            const skillsList = ['Desenvolvimento web','Banco de Dados', 'HTML', 'CSS', 'React', 'Node','Programador Python','Spring Boot','Tailwind','Angular','Redis'];
-
-            // Preenche os checkboxes de habilidades
-            function populateSkillsFilters() {
-                const skillsFilters = document.getElementById('skillsFilters');
-                skillsList.forEach(skill => {
-                    const checkbox = document.createElement('div');
-                    checkbox.classList.add('form-check');
-                    checkbox.innerHTML = `
-                <input type="checkbox" class="form-check-input" id="skill-${skill}" value="${skill}">
-                <label class="form-check-label" for="skill-${skill}">${skill}</label>
-            `;
-                    skillsFilters.appendChild(checkbox);
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Atualiza o modal target com o ID correto da oferta ao clicar no botão "Candidatar-se"
+            const applyButtons = document.querySelectorAll('[data-bs-toggle="modal"]');
+            applyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const ofertaId = button.getAttribute('data-offer-id');
+                    const modalId = 'confirmModal' + ofertaId;
+                    const modalElement = document.getElementById(modalId);
+                    if (modalElement) {
+                        const modal = new bootstrap.Modal(modalElement);
+                        modal.show();
+                    }
                 });
-            }
+            });
+        });
 
-            // Gera a URL com os parâmetros de consulta
-            function buildQueryParams() {
-                const minValue = parseFloat(document.getElementById('minValue').value) || 0;
-                const maxValue = parseFloat(document.getElementById('maxValue').value) || Infinity;
+        // Lista de habilidades para o exemplo
+        const skillsList = ['Desenvolvimento web','Banco de Dados', 'HTML', 'CSS', 'React', 'Node','Programador Python','Spring Boot','Tailwind','Angular','Redis'];
 
-                const selectedSkills = Array.from(document.querySelectorAll('#skillsFilters input:checked'))
-                    .map(checkbox => checkbox.value);
+        // Preenche os checkboxes de habilidades
+        function populateSkillsFilters() {
+            const skillsFilters = document.getElementById('skillsFilters');
+            skillsList.forEach(skill => {
+                const checkbox = document.createElement('div');
+                checkbox.classList.add('form-check');
+                checkbox.innerHTML = `
+                    <input type="checkbox" class="form-check-input" id="skill-${skill}" value="${skill}">
+                    <label class="form-check-label" for="skill-${skill}">${skill}</label>
+                `;
+                skillsFilters.appendChild(checkbox);
+            });
+        }
 
-                const params = new URLSearchParams();
-                if (minValue > 0) params.append('minValue', minValue);
-                if (maxValue < Infinity) params.append('maxValue', maxValue);
-                if (selectedSkills.length > 0) params.append('habilidades', selectedSkills.join(','));
+        // Gera a URL com os parâmetros de consulta
+        function buildQueryParams() {
+            const minValue = parseFloat(document.getElementById('minValue').value) || 0;
+            const maxValue = parseFloat(document.getElementById('maxValue').value) || Infinity;
 
-                return params.toString();
-            }
+            const selectedSkills = Array.from(document.querySelectorAll('#skillsFilters input:checked'))
+                .map(checkbox => checkbox.value);
 
-            // Filtra os cards com base nos critérios fornecidos
-            function filterCards() {
-                const queryParams = buildQueryParams();
-                window.location.search = queryParams; // Adiciona os parâmetros de consulta à URL
-            }
+            const params = new URLSearchParams();
+            if (minValue > 0) params.append('minValue', minValue);
+            if (maxValue < Infinity) params.append('maxValue', maxValue);
+            if (selectedSkills.length > 0) params.append('habilidades', selectedSkills.join(','));
 
-            // Preenche os filtros de habilidades ao carregar a página
-            document.addEventListener('DOMContentLoaded', populateSkillsFilters);
-        </script>
+            return params.toString();
+        }
+
+        // Filtra os cards com base nos critérios fornecidos
+        function filterCards() {
+            const queryParams = buildQueryParams();
+            window.location.search = queryParams; // Adiciona os parâmetros de consulta à URL
+        }
+
+        // Preenche os filtros de habilidades ao carregar a página
+        document.addEventListener('DOMContentLoaded', populateSkillsFilters);
+    </script>
+
 </body>
 </html>
