@@ -1,6 +1,7 @@
 package br.edu.ifpb.pweb2.Jar.controller;
 
 import br.edu.ifpb.pweb2.Jar.model.Aluno;
+import br.edu.ifpb.pweb2.Jar.model.Candidatura;
 import br.edu.ifpb.pweb2.Jar.model.Coordenador;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
@@ -24,7 +25,6 @@ public class CoordenadorController {
 
     @Autowired
     private CoordenadorService coordenadorService;
-
 
     @Autowired
     private CandidaturaService candidaturaService;
@@ -98,23 +98,52 @@ public class CoordenadorController {
         return modelAndView;
     }
 
-    @GetMapping("/{id}/alunos-nao-selecionados")
-    public ModelAndView listarAlunosNaoSelecionados(@PathVariable("id") Long id, ModelAndView modelAndView) {
+    @GetMapping("/{id}/candidatos")
+    public ModelAndView listarCandidatos(@PathVariable("id") Long id, ModelAndView modelAndView) {
         Optional<Coordenador> coordenadorOptional = coordenadorService.findById(id);
 
         if (coordenadorOptional.isPresent()) {
             Coordenador coordenador = coordenadorOptional.get();
-            List<Aluno> alunosNaoSelecionados = candidaturaService.buscarAlunosNaoSelecionados();
+            List<Candidatura> candidaturas = candidaturaService.buscarPorAlunosNaoSelecionados();
 
             modelAndView.addObject("coordenador", coordenador);
-            modelAndView.addObject("alunosNaoSelecionados", alunosNaoSelecionados);
+            modelAndView.addObject("candidaturas", candidaturas);
             modelAndView.setViewName("coordenadores/list-candidatos");
         } else {
+            modelAndView.addObject("error", "Coordenador não encontrado!");
             modelAndView.setViewName("redirect:/coordenadores/login");
         }
 
         return modelAndView;
-}
+    }
 
+    @GetMapping("/{id}/candidato/{candidaturaId}")
+    public ModelAndView verFichaCandidato(@PathVariable Long id, @PathVariable Long candidaturaId,
+                                          ModelAndView modelAndView) {
+        Optional<Coordenador> coordenadorOptional = coordenadorService.findById(id);
+        Optional<Candidatura> candidaturaOptional = candidaturaService.findById(candidaturaId);
+
+        if (coordenadorOptional.isPresent()) {
+            Coordenador coordenador = coordenadorOptional.get();
+
+            if (candidaturaOptional.isPresent()) {
+                Candidatura candidatura =  candidaturaOptional.get();
+
+                modelAndView.addObject("coordenador", coordenador);
+                modelAndView.addObject("candidatura", candidatura);
+                modelAndView.addObject("aluno", candidatura.getAluno());
+                modelAndView.addObject("empresa", candidatura.getOfertaEstagio().getEmpresa());
+                modelAndView.addObject("ofertaEstagio", candidatura.getOfertaEstagio());
+                modelAndView.setViewName("coordenadores/ficha-candidato");
+            } else {
+                modelAndView.setViewName("redirect:/coordenadores/list-candidatos");
+            }
+        } else {
+            modelAndView.addObject("error", "Coordenador não encontrado!");
+            modelAndView.setViewName("redirect:/coordenadores/login");
+        }
+
+        return modelAndView;
+    }
 
 }

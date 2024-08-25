@@ -73,7 +73,7 @@
     <p>Email: <span th:text="${coordenador.email}">email@example.com</span></p>
 
     <!-- Botões de funcionalidades -->
-    <a th:href="@{/candidaturas}" class="btn btn-primary">Ver Alunos Candidatos</a>
+    <a th:href="@{/coordenadores/{id}/candidatos(id=${coordenador.id})}" class="btn btn-primary">Ver Alunos Candidatos</a>
     <a th:href="@{/ofertas}" class="btn btn-primary">Ver Ofertas de Estágio</a>
 </div>
 
