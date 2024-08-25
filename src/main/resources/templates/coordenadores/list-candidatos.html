@@ -1,49 +1,38 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alunos Não Selecionados</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
-        h1 {
-            color: #343a40;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-        a {
-            color: #007bff;
-            text-decoration: none;
-            margin-left: 10px;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <title>Lista de Alunos Candidatos</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Alunos Não Selecionados</h1>
+<div class="container mt-5">
+    <h1 class="mb-4">Alunos Candidatos a Ofertas de Estágio</h1>
 
-    <ul>
-        <th:block th:each="aluno : ${alunosNaoSelecionados}">
-            <li>
-                <span th:text="${aluno.nome}">Nome do Aluno</span>
-                <a th:href="@{/coordenadores/{id}/aluno/{alunoId}/ficha(id=${coordenador.id}, alunoId=${aluno.id})}">
-                    Ver Ficha
-                </a>
-            </li>
-        </th:block>
-    </ul>
+    <div th:if="${candidaturas.isEmpty()}">
+        <p class="alert alert-warning">Não há candidaturas.</p>
+        <a th:href="@{/coordenadores/{id}/menu(id=${coordenador.id})}" class="btn btn-secondary">Voltar ao Menu</a>
+    </div>
 
-    <a th:href="@{/coordenadores/{id}/menu(id=${coordenador.id})}">Voltar ao Menu</a>
+    <table class="table table-striped table-hover" th:if="${!candidaturas.isEmpty()}">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Aluno</th>
+            <th scope="col">Email</th>
+            <th scope="col">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="candidatura : ${candidaturas}">
+            <td th:text="${candidatura.aluno.nomeCompleto}"></td>
+            <td th:text="${candidatura.aluno.email}"></td>
+            <td>
+                <a th:href="@{/coordenadores/{id}/candidato/{candidaturaId}(id=${coordenador.id}, candidaturaId=${candidatura.id})}" class="btn btn-primary btn-sm">Ver Ficha</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
