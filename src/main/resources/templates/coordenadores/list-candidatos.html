@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alunos Não Selecionados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        h1 {
+            color: #343a40;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Alunos Não Selecionados</h1>
+
+    <ul>
+        <th:block th:each="aluno : ${alunosNaoSelecionados}">
+            <li>
+                <span th:text="${aluno.nome}">Nome do Aluno</span>
+                <a th:href="@{/coordenadores/{id}/aluno/{alunoId}/ficha(id=${coordenador.id}, alunoId=${aluno.id})}">
+                    Ver Ficha
+                </a>
+            </li>
+        </th:block>
+    </ul>
+
+    <a th:href="@{/coordenadores/{id}/menu(id=${coordenador.id})}">Voltar ao Menu</a>
+</body>
+</html>
