@@ -83,7 +83,7 @@ public class EmpresaController {
         if (empresaOptional.isPresent()) {
             Empresa empresa = empresaOptional.get();
             List<OfertaEstagioDTO> ofertas = empresa.getOfertaEstagios().stream()
-                    .map(OfertaEstagioDTO::new) // Usa o construtor que aplica a conversão
+                    .map(OfertaEstagioDTO::new)
                     .collect(Collectors.toList());
             modelAndView.addObject("empresa", empresa);
             modelAndView.addObject("ofertas", ofertas);

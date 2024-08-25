@@ -84,7 +84,28 @@ public class OfertaEstagioController {
 
             modelAndView.setViewName("redirect:/empresas/" + empresa.getId() + "/ofertas");
         } else {
-            modelAndView.setViewName("ofertas/cadastro");
+            modelAndView.setViewName("empresas/login");
+        }
+
+        return modelAndView;
+    }
+
+    @PostMapping("/cancelar/{id}")
+    public ModelAndView cancelarOferta(@PathVariable Long id, ModelAndView modelAndView,
+                                 RedirectAttributes redirectAttributes) {
+        Optional<OfertaEstagio> ofertaEstagioOptional = ofertaEstagioService.findById(id);
+
+        if (ofertaEstagioOptional.isPresent()) {
+            OfertaEstagio ofertaEstagio = ofertaEstagioOptional.get();
+            Long empresaId = ofertaEstagio.getEmpresa().getId();
+
+            ofertaEstagioService.delete(ofertaEstagio);
+
+            redirectAttributes.addFlashAttribute("message", "Oferta cancelada com sucesso.");
+            modelAndView.setViewName("redirect:/empresas/" + empresaId + "/ofertas");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Oferta não encontrada.");
+            modelAndView.setViewName("redirect:/empresas/login");
         }
 
         return modelAndView;

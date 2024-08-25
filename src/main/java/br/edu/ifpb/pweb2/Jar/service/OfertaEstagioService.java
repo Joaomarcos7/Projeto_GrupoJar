@@ -19,6 +19,10 @@ public class OfertaEstagioService {
         return ofertaEstagioRepository.save(oferta);
     }
 
+    public void delete(OfertaEstagio oferta) {
+        ofertaEstagioRepository.delete(oferta);
+    }
+
     public List<OfertaEstagio> findAll() {
         return ofertaEstagioRepository.findAll();
     }
