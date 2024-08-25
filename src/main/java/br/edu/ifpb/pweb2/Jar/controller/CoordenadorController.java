@@ -2,7 +2,11 @@ package br.edu.ifpb.pweb2.Jar.controller;
 
 import br.edu.ifpb.pweb2.Jar.model.Aluno;
 import br.edu.ifpb.pweb2.Jar.model.Coordenador;
+import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
+import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
 import br.edu.ifpb.pweb2.Jar.service.CoordenadorService;
+import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -20,6 +24,10 @@ public class CoordenadorController {
 
     @Autowired
     private CoordenadorService coordenadorService;
+
+
+    @Autowired
+    private CandidaturaService candidaturaService;
 
     @GetMapping("/login")
     public ModelAndView login(ModelAndView modelAndView) {
@@ -89,4 +97,24 @@ public class CoordenadorController {
         modelAndView.setViewName("coordenadores/list");
         return modelAndView;
     }
+
+    @GetMapping("/{id}/alunos-nao-selecionados")
+    public ModelAndView listarAlunosNaoSelecionados(@PathVariable("id") Long id, ModelAndView modelAndView) {
+        Optional<Coordenador> coordenadorOptional = coordenadorService.findById(id);
+
+        if (coordenadorOptional.isPresent()) {
+            Coordenador coordenador = coordenadorOptional.get();
+            List<Aluno> alunosNaoSelecionados = candidaturaService.buscarAlunosNaoSelecionados();
+
+            modelAndView.addObject("coordenador", coordenador);
+            modelAndView.addObject("alunosNaoSelecionados", alunosNaoSelecionados);
+            modelAndView.setViewName("coordenadores/list-candidatos");
+        } else {
+            modelAndView.setViewName("redirect:/coordenadores/login");
+        }
+
+        return modelAndView;
+}
+
+
 }
