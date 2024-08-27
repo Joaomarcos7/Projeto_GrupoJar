@@ -59,7 +59,7 @@ public class EmpresaController {
         }
         Empresa empresaSalva = empresaService.save(empresa);
         redirectAttributes.addFlashAttribute("mensagem", "Cadastro conclúido com sucesso!");
-        modelAndView.setViewName("redirect:/empresas/" + empresaSalva.getId() + "/detalhes");
+        modelAndView.setViewName("redirect:/empresas/" + empresaSalva.getId() + "/menu");
         return modelAndView;
     }
 
