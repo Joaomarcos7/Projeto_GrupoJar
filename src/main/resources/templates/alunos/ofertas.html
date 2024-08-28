@@ -14,7 +14,13 @@
     <div class="container mt-5">
         <h2 class="mb-4">Ofertas de Estágio Disponíveis</h2>
 
-        <div class="container mt-4">
+      <div class="container mt-4">
+          <div th:if="${ofertas.isEmpty()}">
+              <p class="alert alert-warning">Não há ofertas disponíveis.</p>
+              <a th:href="@{/alunos/{id}/menu(id=${aluno.id})}" class="btn btn-secondary">Voltar ao Menu</a>
+          </div>
+
+        <div class="row" th:if="${!ofertas.isEmpty()}">
             <h4>Filtrar Ofertas</h4>
             <div class="mb-3">
                 <form id="filterForm">
@@ -37,13 +43,6 @@
                     <button type="button" class="btn btn-primary mt-3 mb-4" onclick="filterCards()">Filtrar</button>
                 </form>
             </div>
-
-        <div th:if="${ofertas.isEmpty()}">
-            <p class="alert alert-warning">Não há ofertas disponíveis.</p>
-            <a th:href="@{/alunos/{id}/menu(id=${aluno.id})}" class="btn btn-secondary">Voltar ao Menu</a>
-        </div>
-
-        <div class="row" th:if="${!ofertas.isEmpty()}">
             <th:block th:each="oferta : ${ofertas}">
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
