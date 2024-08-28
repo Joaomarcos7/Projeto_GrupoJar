@@ -33,18 +33,14 @@ public class OfertaEstagioController {
     @Autowired
     private EmpresaService empresaService;
 
-    @GetMapping("")
+    @GetMapping()
     public ModelAndView listarTodasOfertas(ModelAndView modelAndView) {
-
-        // Obtém a lista de ofertas
         List<OfertaEstagio> ofertas = ofertaEstagioService.findAll();
 
-        // Converte cada oferta para DTO
         List<OfertaEstagioDTO> ofertasDTO = ofertas.stream()
-                .map(OfertaEstagioDTO::new) // Usa o construtor que aplica a conversão
-                .collect(Collectors.toList());
+                .map(OfertaEstagioDTO::new)
+                .toList();
 
-        // Adiciona a lista de DTOs ao modelo
         modelAndView.addObject("ofertasNegada", ofertasDTO.stream().filter(x-> x.getStatusName().equals("NEGADO")).toList());
         modelAndView.addObject("ofertasPendente", ofertasDTO.stream().filter(x-> x.getStatusName().equals("PENDENTE")).toList());
         modelAndView.addObject("ofertasAprovada", ofertasDTO.stream().filter(x-> x.getStatusName().equals("APROVADO")).toList());

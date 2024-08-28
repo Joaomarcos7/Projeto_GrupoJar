@@ -4,6 +4,7 @@ import br.edu.ifpb.pweb2.Jar.model.Aluno;
 import br.edu.ifpb.pweb2.Jar.model.Candidatura;
 import br.edu.ifpb.pweb2.Jar.model.Coordenador;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
+import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
 import br.edu.ifpb.pweb2.Jar.service.CoordenadorService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
@@ -28,6 +29,9 @@ public class CoordenadorController {
 
     @Autowired
     private CandidaturaService candidaturaService;
+
+    @Autowired
+    private OfertaEstagioService ofertaEstagioService;
 
     @GetMapping("/login")
     public ModelAndView login(ModelAndView modelAndView) {
@@ -95,6 +99,32 @@ public class CoordenadorController {
         List<Coordenador> coordenadores = coordenadorService.findAll();
         modelAndView.addObject("coordenadores", coordenadores);
         modelAndView.setViewName("coordenadores/list");
+        return modelAndView;
+    }
+
+    @GetMapping("/{id}/ofertas")
+    public ModelAndView listarOfertasEstagio(@PathVariable("id") Long id, ModelAndView modelAndView) {
+        Optional<Coordenador> coordenadorOptional = coordenadorService.findById(id);
+
+        if (coordenadorOptional.isPresent()) {
+            Coordenador coordenador = coordenadorOptional.get();
+
+            List<OfertaEstagio> ofertas = ofertaEstagioService.findAll();
+
+            List<OfertaEstagioDTO> ofertasDTO = ofertas.stream()
+                    .map(OfertaEstagioDTO::new)
+                    .toList();
+
+            modelAndView.addObject("ofertasNegada", ofertasDTO.stream().filter(x-> x.getStatusName().equals("NEGADO")).toList());
+            modelAndView.addObject("ofertasPendente", ofertasDTO.stream().filter(x-> x.getStatusName().equals("PENDENTE")).toList());
+            modelAndView.addObject("ofertasAprovada", ofertasDTO.stream().filter(x-> x.getStatusName().equals("APROVADO")).toList());
+            modelAndView.addObject("coordenador", coordenador);
+            modelAndView.setViewName("ofertas/list");
+        } else {
+            modelAndView.addObject("error", "Coordenador não encontrado!");
+            modelAndView.setViewName("redirect:/coordenadores/login");
+        }
+
         return modelAndView;
     }
 
