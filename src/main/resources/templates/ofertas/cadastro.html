@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Cadastro de Oferta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Cadastro de Oferta de Estágio</h1>
+<body class="container mt-5">
+<h1 class="mb-4">Cadastro de Oferta de Estágio</h1>
 
 <div th:if="${mensagem}" class="alert alert-success">
     <p th:text="${mensagem}"></p>
@@ -14,63 +15,74 @@
 <form th:action="@{/ofertas/empresa/{empresaId}/cadastro(empresaId=${empresaId})}" th:object="${oferta}" method="post">
     <input type="hidden" th:field="${empresaId}" value="${empresa.id}" />
 
-    <div>
-        <label for="titulo">Título:</label>
-        <input type="text" id="titulo" th:field="*{titulo}" required />
+    <div class="mb-2">
+        <label for="titulo" class="form-label">Título:</label>
+        <input type="text" id="titulo" th:field="*{titulo}" class="form-control" required />
     </div>
 
-    <div>
-        <label for="descricao">Descrição:</label>
-        <textarea id="descricao" th:field="*{descricao}" required></textarea>
+    <div class="mb-2">
+        <label for="descricao" class="form-label">Descrição:</label>
+        <textarea id="descricao" th:field="*{descricao}" class="form-control" required></textarea>
     </div>
 
-    <div>
-        <label for="atividadePrincipal">Atividade Principal:</label>
-        <input type="text" id="atividadePrincipal" th:field="*{atividadePrincipal}" required />
+    <div class="mb-2">
+        <label for="atividadePrincipal" class="form-label">Atividade Principal:</label>
+        <input type="text" id="atividadePrincipal" th:field="*{atividadePrincipal}" class="form-control" required />
     </div>
 
-    <div>
-        <label for="ch">Carga Horária (horas):</label>
-        <input type="number" id="ch" th:field="*{ch}" required />
+    <div class="mb-2">
+        <label for="ch" class="form-label">Carga Horária (horas):</label>
+        <input type="number" id="ch" th:field="*{ch}" class="form-control" required />
     </div>
 
-    <div>
-        <label for="valorPago">Valor Pago:</label>
-        <input type="number" id="valorPago" th:field="*{valorPago}" step="0.01" />
+    <div class="mb-2">
+        <label for="valorPago" class="form-label">Valor Pago:</label>
+        <input type="number" id="valorPago" th:field="*{valorPago}" class="form-control" step="0.01" />
     </div>
 
-    <div>
-        <label for="valeTransporte">Vale Transporte:</label>
-        <input type="number" id="valeTransporte" th:field="*{valeTransporte}" step="0.01" />
+    <div class="mb-2">
+        <label for="valeTransporte" class="form-label">Vale Transporte:</label>
+        <input type="number" id="valeTransporte" th:field="*{valeTransporte}" class="form-control" step="0.01" />
     </div>
 
-    <div>
-        <label for="preRequisitos">Pré-Requisitos:</label>
-        <input type="text" id="preRequisitos" th:field="*{preRequisitos}" required />
+    <div class="mb-2">
+        <label for="preRequisitos" class="form-label">Pré-Requisitos:</label>
+        <input type="text" id="preRequisitos" th:field="*{preRequisitos}" class="form-control" required />
     </div>
 
-    <div>
-        <label>Habilidades Necessárias:</label>
-        <div th:each="habilidade : ${T(br.edu.ifpb.pweb2.Jar.model.Habilidade).values()}">
-            <input type="checkbox"
-                   th:field="*{habilidadesNecessarias}"
-                   th:value="${habilidade}"
-                   th:text="${habilidade.description}" />
+    <div class="mb-3">
+        <label class="form-label mt-3 mb-3">Habilidades Necessárias:</label>
+        <div class="row">
+            <div class="col-md-3" th:each="habilidade : ${T(br.edu.ifpb.pweb2.Jar.model.Habilidade).values()}">
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input"
+                           th:field="*{habilidadesNecessarias}"
+                           th:value="${habilidade}"
+                           id="|habilidadeNecessaria_${habilidade.name}|" />
+                    <label class="form-check-label" th:for="|habilidadeNecessaria_${habilidade.name}|" th:text="${habilidade.description}"></label>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div>
-        <label>Habilidades Desejáveis:</label>
-        <div th:each="habilidade : ${T(br.edu.ifpb.pweb2.Jar.model.Habilidade).values()}">
-            <input type="checkbox"
-                   th:field="*{habilidadesDesejaveis}"
-                   th:value="${habilidade}"
-                   th:text="${habilidade.description}" />
+    <div class="mb-3">
+        <label class="form-label mb-3">Habilidades Desejáveis:</label>
+        <div class="row">
+            <div class="col-md-3" th:each="habilidade : ${T(br.edu.ifpb.pweb2.Jar.model.Habilidade).values()}">
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input"
+                           th:field="*{habilidadesDesejaveis}"
+                           th:value="${habilidade}"
+                           id="|habilidadeDesejavel_${habilidade.name}|" />
+                    <label class="form-check-label" th:for="|habilidadeDesejavel_${habilidade.name}|" th:text="${habilidade.description}"></label>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div>
-        <button type="submit">Cadastrar Oferta</button>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary w-100 mb-5">Cadastrar Oferta</button>
     </div>
 </form>
 </body>
