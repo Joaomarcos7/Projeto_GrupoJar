@@ -73,7 +73,7 @@ public class AlunoController {
     public ModelAndView cadastrarAluno(@Validated @ModelAttribute("aluno") Aluno aluno,
                                        BindingResult result, ModelAndView modelAndView, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            modelAndView.setViewName("alunos/form");
+            modelAndView.setViewName("redirect:alunos/form");
             return modelAndView;
         }
         alunoService.save(aluno);

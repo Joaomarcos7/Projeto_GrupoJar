@@ -17,7 +17,7 @@
             <h4>Filtrar Ofertas</h4>
             <div class="mb-3">
                 <form id="filterForm">
-                    <div class="form-row">
+                    <div class="form-row d-flex gap-2">
 
                         <div class="col-md-4">
                             <label for="maxValue">Valor Bolsa Máximo</label>
@@ -28,13 +28,13 @@
                             <input type="number" id="minValue" class="form-control" placeholder="R$ Bolsa Min">
                         </div>
                     </div>
-                    <div class="mt-3">
-                        <label>Habilidades Necessárias</label>
-                        <div id="skillsFilters" class="form-check">
+                    <div class="mt-3 d-flex">
+                        <label>Habilidades:</label>
+                        <div id="skillsFilters" class="form-check d-flex gap-2">
                             <!-- As habilidades serão inseridas aqui pelo JavaScript -->
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary mt-3" onclick="filterCards()">Filtrar</button>
+                    <button type="button" class="btn btn-primary mt-3 mb-4" onclick="filterCards()">Filtrar</button>
                 </form>
             </div>
 
@@ -121,6 +121,10 @@
                     </div>
                 </div>
             </th:block>
+
+            <div>
+                <a th:href="@{/alunos/{id}/menu(id=${aluno.id})}" class="btn btn-secondary">Voltar ao Menu</a>
+            </div>
         </div>
     </div>
 

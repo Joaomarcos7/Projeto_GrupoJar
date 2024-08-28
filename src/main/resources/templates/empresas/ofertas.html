@@ -25,6 +25,11 @@
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
                         <div class="card-body">
+                            <div class="mb-2">
+                                <label>Status:</label>
+                                <span class="fw-semibold" th:if="${oferta.getStatusName()}" th:text="${oferta.getStatusName()}">Status</span>
+                            </div>
+
                             <h4 class="card-title" th:text="${oferta.titulo}">Título da Oferta</h4>
                             <h6 class="card-subtitle mb-2 text-muted" th:text="${oferta.empresa.nome}">Nome da Empresa</h6>
                             <h5 class="card-text" th:text="${oferta.atividadePrincipal}">Atividade Principal</h5>
@@ -41,10 +46,6 @@
                                 <li class="list-group-item d-flex align-items-center gap-1" th:if="${oferta.valeTransporte}">
                                     <label>Vale Transporte:</label>
                                     <span th:text="${oferta.getFormatadoValeTransporte()}">Vale Transporte</span>
-                                </li>
-                                <li class="list-group-item d-flex align-items-center gap-1">
-                                    <label>Status da Oferta:</label>
-                                    <span th:text="${oferta.getStatusName()}">Valor pago</span>
                                 </li>
                                 <li class="list-group-item d-flex align-items-center gap-1">
                                     <label>Pré Requisitos:</label>
@@ -99,6 +100,10 @@
                     </div>
                 </div>
             </th:block>
+
+            <div>
+                <a th:href="@{/empresas/{id}/menu(id=${empresa.id})}" class="btn btn-secondary">Voltar ao Menu</a>
+            </div>
         </div>
     </div>
 
