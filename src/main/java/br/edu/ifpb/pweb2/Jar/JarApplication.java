@@ -1,4 +1,4 @@
-package com.Jar.Jar;
+package br.edu.ifpb.pweb2.Jar;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
