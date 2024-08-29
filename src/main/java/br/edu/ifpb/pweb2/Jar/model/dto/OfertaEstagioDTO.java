@@ -38,7 +38,7 @@ public class OfertaEstagioDTO {
     }
 
     public String getFormatadoValorPago() {
-        return valorPago != null ? String.format("R$ %.2f", this.valorPago) : "N/A";
+        return valorPago != null ? String.format("R$ %.2f", this.valorPago) : "Não remunerado";
     }
 
     public String getFormatadoValeTransporte() {
