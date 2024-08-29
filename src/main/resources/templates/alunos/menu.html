@@ -58,15 +58,14 @@
 </head>
 <body>
 
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
     <div class="card">
         <div th:if="${mensagem}" class="alert alert-success">
             <p th:text="${mensagem}"></p>
         </div>
         <h1>
             <span th:text="${aluno.nomeCompleto}">Nome do Aluno</span>
-            <a th:href="@{/alunos/{id}/editar(id=${aluno.id})}" class="edit-icon">
-                <i class="fas fa-edit"></i>
-            </a>
         </h1>
         <p>Email: <span th:text="${aluno.email}">email@example.com</span></p>
         <p class="fs-5 mb-1 fw-semibold">Habilidades:</p>
@@ -74,8 +73,6 @@
             <span th:text="${habilidade.description}">Habilidade</span>
         </div>
 
-
-        <!-- Botões de funcionalidades -->
         <a th:href="@{/alunos/{id}/ofertas(id=${aluno.id})}" class="btn btn-primary mt-5">Ver Ofertas de Estágio</a>
         <a th:href="@{/alunos/{id}/candidaturas(id=${aluno.id})}" class="btn btn-secondary">Minhas Candidaturas</a>
     </div>

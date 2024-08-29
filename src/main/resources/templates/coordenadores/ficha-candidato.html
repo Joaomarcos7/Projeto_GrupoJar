@@ -5,10 +5,13 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
     <div class="container mt-5">
         <h1 class="mb-4">Ficha do Candidato</h1>
         <div class="row">
-            <!-- Dados do Aluno -->
+
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white">Dados do Aluno</div>
@@ -19,7 +22,6 @@
                 </div>
             </div>
 
-            <!-- Dados da Empresa -->
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-header bg-success text-white">Dados da Empresa</div>
@@ -30,7 +32,6 @@
                 </div>
             </div>
 
-            <!-- Dados da Oferta de Estágio -->
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-header bg-secondary text-white">Dados da Oferta de Estágio</div>

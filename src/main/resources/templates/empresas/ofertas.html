@@ -8,6 +8,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
     <div class="container mt-5">
         <h2 class="mb-4">Ofertas de Estágio Cadastradas</h2>
 
@@ -66,7 +69,6 @@
                                 </ul>
                             </div>
 
-
                         </div>
 
                         <div class="card-footer text-center">
@@ -75,7 +77,6 @@
                             </button>
                         </div>
 
-                        <!-- Modal de Confirmação de Cancelamento -->
                         <div class="modal fade" th:id="'cancelModal-' + ${oferta.id}" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -88,7 +89,6 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
-                                        <!-- O formulário precisa de uma URL dinâmica -->
                                         <form th:action="@{/ofertas/cancelar/{id}(id=${oferta.id})}" method="post">
                                             <button type="submit" class="btn btn-danger">Cancelar Oferta</button>
                                         </form>
