@@ -3,12 +3,17 @@
 <head>
     <title>Lista de Alunos Candidatos</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .margin-top {
+            margin-top: 100px;
+        }
+    </style>
 </head>
 <body>
 
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <div class="container mt-5">
+    <div class="container margin-top">
         <h1 class="mb-4">Alunos Candidatos a Ofertas de Estágio</h1>
 
         <div th:if="${candidaturas.isEmpty()}">
