@@ -16,34 +16,20 @@ import java.util.Set;
 
 @Data
 public class OfertaEstagioDTO {
-    private Long id; // exemplo de atributo
+    private Long id;
     private String statusName;
-
     private String titulo;
-
     private String descricao;
     private String atividadePrincipal;
-
     private Integer ch;
-
     private BigDecimal valorPago;
-
     private Double valeTransporte;
-
     private String preRequisitos;
-
-
     private Set<Habilidade> habilidadesNecessarias = new HashSet<>();
-
-
     private Set<Habilidade> habilidadesDesejaveis = new HashSet<>();
-
     private LocalDate dataPublicacao;
-
     private Empresa empresa;
-
     private Set<Candidatura> candidaturas = new HashSet<>();
-
     private boolean jaCandidatou;
 
     public String getDataPublicacaoFormatada() {
@@ -52,13 +38,12 @@ public class OfertaEstagioDTO {
     }
 
     public String getFormatadoValorPago() {
-        return valorPago != null ? String.format("R$ %.2f", this.valorPago) : "N/A";
+        return valorPago != null ? String.format("R$ %.2f", this.valorPago) : "Não remunerado";
     }
 
     public String getFormatadoValeTransporte() {
         return valeTransporte != null ? String.format("R$ %.2f", this.valeTransporte) : "N/A";
     }
-    // Construtores, getters e setters
 
     public OfertaEstagioDTO(OfertaEstagio oferta) {
         this.id = oferta.getId();
