@@ -3,6 +3,7 @@ package br.edu.ifpb.pweb2.Jar.service;
 import br.edu.ifpb.pweb2.Jar.model.Aluno;
 import br.edu.ifpb.pweb2.Jar.model.Candidatura;
 import br.edu.ifpb.pweb2.Jar.model.EstadoCandidatura;
+import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 import br.edu.ifpb.pweb2.Jar.repository.CandidaturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class CandidaturaService {
     
     public List<Candidatura> buscarPorAluno(Aluno aluno) { return candidaturaRepository.findByAluno(aluno); }
 
+    public List<Candidatura> buscarPorOferta(OfertaEstagio oferta) {
+        return candidaturaRepository.findByOfertaEstagio(oferta);
+    }
     public boolean existsByAlunoIdAndOfertaId(Long alunoId, Long ofertaId) {
         return candidaturaRepository.existsByAlunoIdAndOfertaEstagioId(alunoId, ofertaId);
     }
