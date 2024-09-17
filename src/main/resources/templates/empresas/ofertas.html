@@ -73,6 +73,10 @@
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" th:attr="data-bs-target='#cancelModal-' + ${oferta.id}">
                                 Cancelar Oferta
                             </button>
+                            <a th:href="@{/empresas/{empresaId}/ofertas/{ofertaId}/alunos(empresaId=${empresa.id}, ofertaId=${oferta.id})}" class="btn btn-primary ms-2">
+                                Ver Alunos
+                            </a>
+                            
                         </div>
 
                         <!-- Modal de Confirmação de Cancelamento -->
