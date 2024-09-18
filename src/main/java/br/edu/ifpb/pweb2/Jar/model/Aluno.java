@@ -1,35 +1,31 @@
 package br.edu.ifpb.pweb2.Jar.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Aluno implements Serializable {
+public class Aluno extends Usuario implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(nullable = false)
     private String nomeCompleto;
 
+    @NotBlank(message = "O username não pode estar em branco")
     @Column(nullable = false, unique = true)
     private String username;
-
-    @Column(nullable = false)
-    private String senha;
-
-    @Column(nullable = false, unique = true)
-    private String email;
 
     @ElementCollection(targetClass = Habilidade.class)
     @Enumerated(EnumType.STRING)
