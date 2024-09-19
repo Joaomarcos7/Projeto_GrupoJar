@@ -102,7 +102,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <form th:action="@{/candidaturas/candidatar/{alunoId}/oferta/{ofertaId}(alunoId=${aluno.id}, ofertaId=${oferta.id})}" method="post">
+                                        <form th:action="@{/candidaturas/candidatar/oferta/{ofertaId}(ofertaId=${oferta.id})}" method="post">
                                             <button type="submit" class="btn btn-primary">Candidatar-se</button>
                                         </form>
                                     </div>
@@ -126,7 +126,7 @@
             </th:block>
 
             <div class="mb-4">
-                <a th:href="@{/alunos/{id}/menu(id=${aluno.id})}" class="btn btn-secondary">Voltar ao Menu</a>
+                <a th:href="@{/alunos/menu}" class="btn btn-secondary">Voltar ao Menu</a>
             </div>
         </div>
     </div>
