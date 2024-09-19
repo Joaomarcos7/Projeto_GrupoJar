@@ -27,7 +27,7 @@ public class Aluno extends Usuario implements Serializable {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @ElementCollection(targetClass = Habilidade.class)
+    @ElementCollection(targetClass = Habilidade.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "aluno_habilidades", joinColumns = @JoinColumn(name = "aluno_id"))
     @Column(name = "habilidade", nullable = false)
