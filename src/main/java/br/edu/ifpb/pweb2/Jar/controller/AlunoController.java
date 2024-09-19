@@ -90,7 +90,7 @@ public class AlunoController {
         httpSession.setAttribute("usuarioLogado", aluno);
 
         modelAndView.addObject("aluno", aluno);
-        modelAndView.setViewName("redirect:/alunos/" + aluno.getId() + "/menu");
+        modelAndView.setViewName("redirect:/alunos/menu");
         return modelAndView;
     }
 
@@ -102,7 +102,7 @@ public class AlunoController {
             modelAndView.addObject("aluno", alunoLogado);
             modelAndView.setViewName("alunos/menu");
         } else {
-            modelAndView.setViewName("redirect:/alunos/login");
+            modelAndView.setViewName("alunos/login");
         }
         return modelAndView;
     }
@@ -145,13 +145,11 @@ public class AlunoController {
                     })
                     .toList();
 
-            // Adicionando objetos ao ModelAndView
             modelAndView.addObject("aluno", alunoLogado);
             modelAndView.addObject("ofertas", ofertasDTO);
             modelAndView.setViewName("alunos/ofertas");
         } else {
-            // Redirecionando para a página de login caso o aluno não esteja logado
-            modelAndView.setViewName("redirect:/alunos/login");
+            modelAndView.setViewName("alunos/login");
         }
 
         return modelAndView;
@@ -168,7 +166,7 @@ public class AlunoController {
             modelAndView.addObject("aluno", alunoLogado);
             modelAndView.setViewName("alunos/candidaturas");
         } else {
-            modelAndView.setViewName("redirect:/alunos/login");
+            modelAndView.setViewName("alunos/login");
         }
 
         return modelAndView;
