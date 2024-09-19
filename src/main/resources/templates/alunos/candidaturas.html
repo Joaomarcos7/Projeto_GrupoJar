@@ -21,7 +21,7 @@
 
         <div th:if="${#lists.isEmpty(candidaturas)}">
             <p class="alert alert-warning">Você ainda não se candidatou a nenhuma oferta.</p>
-            <a th:href="@{/alunos/{id}/menu(id=${aluno.id})}" class="btn btn-secondary">Voltar ao Menu</a>
+            <a th:href="@{/alunos/menu}" class="btn btn-secondary">Voltar ao Menu</a>
         </div>
 
         <div class="row" th:if="${!#lists.isEmpty(candidaturas)}">
@@ -42,7 +42,7 @@
             </th:block>
 
             <div>
-                <a th:href="@{/alunos/{id}/menu(id=${aluno.id})}" class="btn btn-secondary">Voltar ao Menu</a>
+                <a th:href="@{/alunos/menu}" class="btn btn-secondary">Voltar ao Menu</a>
             </div>
 
         </div>
