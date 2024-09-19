@@ -22,7 +22,7 @@
       <div class="container mt-4">
           <div th:if="${ofertas.isEmpty()}">
               <p class="alert alert-warning">Não há ofertas disponíveis.</p>
-              <a th:href="@{/alunos/{id}/menu(id=${aluno.id})}" class="btn btn-secondary">Voltar ao Menu</a>
+              <a th:href="@{/alunos/menu}" class="btn btn-secondary">Voltar ao Menu</a>
           </div>
 
         <div class="row" th:if="${!ofertas.isEmpty()}">

@@ -9,6 +9,7 @@ import br.edu.ifpb.pweb2.Jar.service.AlunoService;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
 import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +31,9 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @Autowired
+    private HttpSession httpSession;
+
+    @Autowired
     private OfertaEstagioService ofertaEstagioService;
 
     @Autowired
@@ -44,22 +48,23 @@ public class AlunoController {
     @PostMapping("/login")
     public ModelAndView login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
-                        ModelAndView model) {
+                        ModelAndView modelAndView) {
 
         Aluno aluno = alunoService.findByUsername(username);
 
         if (aluno != null) {
             if (aluno.getSenha().equals(password)) {
-                model.setViewName("redirect:/alunos/" + aluno.getId() + "/menu");
+                httpSession.setAttribute("usuarioLogado", aluno);
+                modelAndView.setViewName("redirect:/alunos/menu");
             } else {
-                model.addObject("error", "Senha incorreta.");
-                model.setViewName("alunos/login");
+                modelAndView.addObject("error", "Senha incorreta.");
+                modelAndView.setViewName("alunos/login");
             }
         } else {
-            model.addObject("error", "Nome de usuário não encontrado.");
-            model.setViewName("alunos/login");
+            modelAndView.addObject("error", "Username não encontrado.");
+            modelAndView.setViewName("alunos/login");
         }
-        return model;
+        return modelAndView;
     }
 
     @GetMapping("/cadastro")
@@ -71,42 +76,48 @@ public class AlunoController {
 
     @PostMapping("/cadastro")
     public ModelAndView cadastrarAluno(@Validated @ModelAttribute("aluno") Aluno aluno,
-                                       BindingResult result, ModelAndView modelAndView, RedirectAttributes redirectAttributes) {
+                                       BindingResult result, ModelAndView modelAndView,
+                                       RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            modelAndView.setViewName("redirect:alunos/form");
+            modelAndView.setViewName("alunos/form");
             return modelAndView;
         }
+
         alunoService.save(aluno);
+
         redirectAttributes.addFlashAttribute("mensagem", "Bem vindo(a)!");
+
+        httpSession.setAttribute("usuarioLogado", aluno);
+
         modelAndView.addObject("aluno", aluno);
         modelAndView.setViewName("redirect:/alunos/" + aluno.getId() + "/menu");
         return modelAndView;
     }
 
-    @GetMapping("/{id}/menu")
-    public ModelAndView exibirMenu(@PathVariable("id") Long id, ModelAndView modelAndView) {
-        Optional<Aluno> alunoOptional = alunoService.findById(id);
-        if (alunoOptional.isPresent()) {
-            Aluno aluno = alunoOptional.get();
-            modelAndView.addObject("aluno", aluno);
+    @GetMapping("/menu")
+    public ModelAndView exibirMenu(ModelAndView modelAndView) {
+        Aluno alunoLogado = (Aluno) httpSession.getAttribute("usuarioLogado");
+
+        if (alunoLogado != null) {
+            modelAndView.addObject("aluno", alunoLogado);
             modelAndView.setViewName("alunos/menu");
         } else {
-            modelAndView.setViewName("redirect:/alunos/form");
+            modelAndView.setViewName("redirect:/alunos/login");
         }
         return modelAndView;
     }
 
-    @GetMapping("/{id}/ofertas")
-    public ModelAndView listarOfertasDisponiveis(@PathVariable("id") Long id,@RequestParam(required = false) Double minValue,
+    @GetMapping("/ofertas")
+    public ModelAndView listarOfertasDisponiveis(@RequestParam(required = false) Double minValue,
                                                  @RequestParam(required = false) Double maxValue,
-                                                 @RequestParam(required = false) List<String> habilidades, ModelAndView modelAndView) {
-        Optional<Aluno> alunoOptional = alunoService.findById(id);
+                                                 @RequestParam(required = false) List<String> habilidades,
+                                                 ModelAndView modelAndView) {
+        Aluno alunoLogado = (Aluno) httpSession.getAttribute("usuarioLogado");
 
-
-        if (alunoOptional.isPresent()) {
-            Aluno aluno = alunoOptional.get();
-
+        if (alunoLogado != null) {
             List<OfertaEstagio> ofertasDisponiveis = ofertaEstagioService.buscarOfertasDisponiveis();
+
+            // Filtrando as ofertas com base nos parâmetros opcionais
             if (minValue != null) {
                 ofertasDisponiveis = ofertasDisponiveis.stream()
                         .filter(oferta -> oferta.getValorPago().doubleValue() >= minValue)
@@ -123,36 +134,38 @@ public class AlunoController {
                                 .anyMatch(habilidade -> habilidades.contains(habilidade.getDescription())))
                         .collect(Collectors.toList());
             }
+
+            // Transformando as ofertas em DTOs e verificando candidaturas
             List<OfertaEstagioDTO> ofertasDTO = ofertasDisponiveis.stream()
                     .map(oferta -> {
                         OfertaEstagioDTO dto = new OfertaEstagioDTO(oferta);
-                        boolean jaCandidatou = candidaturaService.existsByAlunoIdAndOfertaId(aluno.getId(), oferta.getId());
+                        boolean jaCandidatou = candidaturaService.existsByAlunoIdAndOfertaId(alunoLogado.getId(), oferta.getId());
                         dto.setJaCandidatou(jaCandidatou);
                         return dto;
                     })
                     .toList();
 
-
-            modelAndView.addObject("aluno", aluno);
+            // Adicionando objetos ao ModelAndView
+            modelAndView.addObject("aluno", alunoLogado);
             modelAndView.addObject("ofertas", ofertasDTO);
             modelAndView.setViewName("alunos/ofertas");
         } else {
+            // Redirecionando para a página de login caso o aluno não esteja logado
             modelAndView.setViewName("redirect:/alunos/login");
         }
-        return modelAndView;
 
+        return modelAndView;
     }
 
-    @GetMapping("/{id}/candidaturas")
-    public ModelAndView listarCandidaturas(@PathVariable("id") Long id, ModelAndView modelAndView) {
-        Optional<Aluno> alunoOptional = alunoService.findById(id);
-        if (alunoOptional.isPresent()) {
-            Aluno aluno = alunoOptional.get();
+    @GetMapping("/candidaturas")
+    public ModelAndView listarCandidaturas(ModelAndView modelAndView) {
+        Aluno alunoLogado = (Aluno) httpSession.getAttribute("usuarioLogado");
 
-            List<Candidatura> candidaturas = candidaturaService.buscarPorAluno(aluno);
+        if (alunoLogado != null) {
+            List<Candidatura> candidaturas = candidaturaService.buscarPorAluno(alunoLogado);
 
             modelAndView.addObject("candidaturas", candidaturas);
-            modelAndView.addObject("aluno", aluno);
+            modelAndView.addObject("aluno", alunoLogado);
             modelAndView.setViewName("alunos/candidaturas");
         } else {
             modelAndView.setViewName("redirect:/alunos/login");
@@ -168,4 +181,11 @@ public class AlunoController {
         modelAndView.setViewName("alunos/list");
         return modelAndView;
     }
+
+    @GetMapping("/logout")
+    public String logout() {
+        httpSession.invalidate();
+        return "redirect:/";
+    }
+
 }
