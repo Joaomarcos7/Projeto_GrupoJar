@@ -54,7 +54,7 @@ public class AlunoController {
 
         if (aluno != null) {
             if (aluno.getSenha().equals(password)) {
-                httpSession.setAttribute("usuarioLogado", aluno);
+                httpSession.setAttribute("alunoLogado", aluno);
                 modelAndView.setViewName("redirect:/alunos/menu");
             } else {
                 modelAndView.addObject("error", "Senha incorreta.");
@@ -87,7 +87,7 @@ public class AlunoController {
 
         redirectAttributes.addFlashAttribute("mensagem", "Bem vindo(a)!");
 
-        httpSession.setAttribute("usuarioLogado", aluno);
+        httpSession.setAttribute("alunoLogado", aluno);
 
         modelAndView.addObject("aluno", aluno);
         modelAndView.setViewName("redirect:/alunos/menu");
@@ -96,7 +96,7 @@ public class AlunoController {
 
     @GetMapping("/menu")
     public ModelAndView exibirMenu(ModelAndView modelAndView) {
-        Aluno alunoLogado = (Aluno) httpSession.getAttribute("usuarioLogado");
+        Aluno alunoLogado = (Aluno) httpSession.getAttribute("alunoLogado");
 
         if (alunoLogado != null) {
             modelAndView.addObject("aluno", alunoLogado);
@@ -112,7 +112,7 @@ public class AlunoController {
                                                  @RequestParam(required = false) Double maxValue,
                                                  @RequestParam(required = false) List<String> habilidades,
                                                  ModelAndView modelAndView) {
-        Aluno alunoLogado = (Aluno) httpSession.getAttribute("usuarioLogado");
+        Aluno alunoLogado = (Aluno) httpSession.getAttribute("alunoLogado");
 
         if (alunoLogado != null) {
             List<OfertaEstagio> ofertasDisponiveis = ofertaEstagioService.buscarOfertasDisponiveis();
@@ -157,7 +157,7 @@ public class AlunoController {
 
     @GetMapping("/candidaturas")
     public ModelAndView listarCandidaturas(ModelAndView modelAndView) {
-        Aluno alunoLogado = (Aluno) httpSession.getAttribute("usuarioLogado");
+        Aluno alunoLogado = (Aluno) httpSession.getAttribute("alunoLogado");
 
         if (alunoLogado != null) {
             List<Candidatura> candidaturas = candidaturaService.buscarPorAluno(alunoLogado);
