@@ -4,7 +4,6 @@ import br.edu.ifpb.pweb2.Jar.model.Aluno;
 import br.edu.ifpb.pweb2.Jar.model.Candidatura;
 import br.edu.ifpb.pweb2.Jar.model.EstadoCandidatura;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
-import br.edu.ifpb.pweb2.Jar.service.AlunoService;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
 import jakarta.servlet.http.HttpSession;
@@ -30,8 +29,10 @@ public class CandidaturaController {
     private OfertaEstagioService ofertaEstagioService;
 
     @PostMapping("/candidatar/oferta/{ofertaId}")
-    public ModelAndView candidatar(@PathVariable Long ofertaId, HttpSession httpSession,
-                                   ModelAndView modelAndView, RedirectAttributes redirectAttributes) {
+    public ModelAndView candidatar(@PathVariable Long ofertaId,
+                                   HttpSession httpSession,
+                                   ModelAndView modelAndView,
+                                   RedirectAttributes redirectAttributes) {
         Aluno aluno = (Aluno) httpSession.getAttribute("alunoLogado");
 
         if (aluno != null) {

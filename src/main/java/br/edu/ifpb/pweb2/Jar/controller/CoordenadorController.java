@@ -50,7 +50,7 @@ public class CoordenadorController {
 
         if (coordenador != null) {
             if (coordenador.getSenha().equals(password)) {
-                httpSession.setAttribute("coordenadorLogado", coordenador); // Ajuste para usar sessão
+                httpSession.setAttribute("coordenadorLogado", coordenador);
                 modelAndView.setViewName("redirect:/coordenadores/menu");
             } else {
                 modelAndView.addObject("error", "Senha incorreta.");
@@ -85,13 +85,15 @@ public class CoordenadorController {
 
     @PostMapping("/cadastro")
     public ModelAndView cadastrarCoordenador(@Validated @ModelAttribute("coordenador") Coordenador coordenador,
-                                             BindingResult result, ModelAndView modelAndView, RedirectAttributes redirectAttributes) {
+                                             BindingResult result, 
+                                             ModelAndView modelAndView, 
+                                             RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             modelAndView.setViewName("coordenadores/form");
             return modelAndView;
         }
         coordenadorService.save(coordenador);
-        httpSession.setAttribute("coordenadorLogado", coordenador); // Colocando o coordenador na sessão
+        httpSession.setAttribute("coordenadorLogado", coordenador);
         redirectAttributes.addFlashAttribute("mensagem", "Bem vindo(a)!");
         modelAndView.setViewName("redirect:/coordenadores/menu");
         return modelAndView;
@@ -115,7 +117,6 @@ public class CoordenadorController {
         } else {
             modelAndView.setViewName("redirect:/coordenadores/login");
         }
-
         return modelAndView;
     }
 
@@ -131,12 +132,12 @@ public class CoordenadorController {
         } else {
             modelAndView.setViewName("redirect:/coordenadores/login");
         }
-
         return modelAndView;
     }
 
     @GetMapping("/candidato/{candidaturaId}")
-    public ModelAndView verFichaCandidato(@PathVariable Long candidaturaId, ModelAndView modelAndView) {
+    public ModelAndView verFichaCandidato(@PathVariable Long candidaturaId,
+                                          ModelAndView modelAndView) {
         Coordenador coordenadorLogado = (Coordenador) httpSession.getAttribute("coordenadorLogado");
         Optional<Candidatura> candidaturaOptional = candidaturaService.findById(candidaturaId);
 
