@@ -1,18 +1,14 @@
 package br.edu.ifpb.pweb2.Jar.controller;
 
-import br.edu.ifpb.pweb2.Jar.model.Aluno;
 import br.edu.ifpb.pweb2.Jar.model.Candidatura;
 import br.edu.ifpb.pweb2.Jar.model.Empresa;
 import br.edu.ifpb.pweb2.Jar.model.EstadoCandidatura;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
-import br.edu.ifpb.pweb2.Jar.model.dto.AlunoDTO;
-import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
-import br.edu.ifpb.pweb2.Jar.service.AlunoService;
+import br.edu.ifpb.pweb2.Jar.model.dto.*;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
 import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -66,7 +62,9 @@ public class EmpresaController {
 
     @PostMapping("/cadastro")
     public ModelAndView cadastrarEmpresa(@Validated @ModelAttribute("empresa") Empresa empresa,
-                                         BindingResult result, ModelAndView modelAndView, RedirectAttributes redirectAttributes) {
+                                         BindingResult result, 
+                                         ModelAndView modelAndView, 
+                                         RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             modelAndView.setViewName("empresas/form");
             return modelAndView;
@@ -86,7 +84,6 @@ public class EmpresaController {
             modelAndView.addObject("empresa", empresaOptional.get());
             modelAndView.setViewName("empresas/menu");
         }
-
         return modelAndView;
     }
 
@@ -106,36 +103,32 @@ public class EmpresaController {
             modelAndView.addObject("mensagem", "Empresa não encontrada.");
             modelAndView.setViewName("empresas/menu");
         }
-
         return modelAndView;
     }
 
     @GetMapping("/{empresaId}/ofertas/{ofertaId}/alunos")
-public ModelAndView consultarAlunosPorOferta(@PathVariable Long empresaId,
-                                             @PathVariable Long ofertaId) {
-    ModelAndView modelAndView = new ModelAndView();
-    Optional<Empresa> empresaOptional = empresaService.findById(empresaId);
-    Optional<OfertaEstagio> ofertaOptional = ofertaEstagioService.findById(ofertaId);
+    public ModelAndView consultarAlunosPorOferta(@PathVariable Long empresaId, @PathVariable Long ofertaId) {
+        ModelAndView modelAndView = new ModelAndView();
+        Optional<Empresa> empresaOptional = empresaService.findById(empresaId);
+        Optional<OfertaEstagio> ofertaOptional = ofertaEstagioService.findById(ofertaId);
     
 
-    // Buscar todas as candidaturas para a oferta de estágio
-    List<Candidatura> candidaturas = candidaturaService.buscarPorOferta(ofertaOptional.get());
+        // Buscar todas as candidaturas para a oferta de estágio
+        List<Candidatura> candidaturas = candidaturaService.buscarPorOferta(ofertaOptional.get());
 
-    // Filtrar alunos que ainda estão com candidatura pendente
-    List<AlunoDTO> alunosNaoSelecionados = candidaturas.stream()
+        // Filtrar alunos que ainda estão com candidatura pendente
+        List<AlunoDTO> alunosNaoSelecionados = candidaturas.stream()
             .filter(candidatura -> candidatura.getEstado() == EstadoCandidatura.PENDENTE)
             .map(candidatura -> new AlunoDTO(candidatura.getAluno()))
             .collect(Collectors.toList());
 
-    modelAndView.addObject("empresa", empresaOptional.get());
-    modelAndView.addObject("oferta", ofertaOptional.get());
-    modelAndView.addObject("alunos", alunosNaoSelecionados);
-    modelAndView.setViewName("empresas/oferta-aluno"); // Nome da view Thymeleaf para listar alunos
+        modelAndView.addObject("empresa", empresaOptional.get());
+        modelAndView.addObject("oferta", ofertaOptional.get());
+        modelAndView.addObject("alunos", alunosNaoSelecionados);
+        modelAndView.setViewName("empresas/oferta-aluno");
 
-    return modelAndView;
-}
-
-
+        return modelAndView;
+    }
 
     @GetMapping()
     public ModelAndView listarEmpresas(ModelAndView modelAndView) {

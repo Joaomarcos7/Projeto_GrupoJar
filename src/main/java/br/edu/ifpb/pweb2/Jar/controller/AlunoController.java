@@ -2,17 +2,14 @@ package br.edu.ifpb.pweb2.Jar.controller;
 
 import br.edu.ifpb.pweb2.Jar.model.Aluno;
 import br.edu.ifpb.pweb2.Jar.model.Candidatura;
-import br.edu.ifpb.pweb2.Jar.model.Empresa;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
 import br.edu.ifpb.pweb2.Jar.service.AlunoService;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
-import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -47,8 +43,8 @@ public class AlunoController {
 
     @PostMapping("/login")
     public ModelAndView login(@RequestParam("username") String username,
-                        @RequestParam("password") String password,
-                        ModelAndView modelAndView) {
+                              @RequestParam("password") String password,
+                              ModelAndView modelAndView) {
 
         Aluno aluno = alunoService.findByUsername(username);
 
@@ -76,7 +72,8 @@ public class AlunoController {
 
     @PostMapping("/cadastro")
     public ModelAndView cadastrarAluno(@Validated @ModelAttribute("aluno") Aluno aluno,
-                                       BindingResult result, ModelAndView modelAndView,
+                                       BindingResult result,
+                                       ModelAndView modelAndView,
                                        RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             modelAndView.setViewName("alunos/form");

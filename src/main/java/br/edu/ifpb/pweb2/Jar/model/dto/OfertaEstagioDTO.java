@@ -5,7 +5,6 @@ import br.edu.ifpb.pweb2.Jar.model.Empresa;
 import br.edu.ifpb.pweb2.Jar.model.Habilidade;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 import br.edu.ifpb.pweb2.Jar.util.GetStatusName;
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
