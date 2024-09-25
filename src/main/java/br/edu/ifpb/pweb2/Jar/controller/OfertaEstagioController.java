@@ -6,6 +6,7 @@ import br.edu.ifpb.pweb2.Jar.model.StatusOfertaEstagio;
 import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
 import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,9 @@ public class OfertaEstagioController {
     private OfertaEstagioService ofertaEstagioService;
 
     @Autowired
+    private HttpSession httpSession;
+
+    @Autowired
     private EmpresaService empresaService;
 
     @GetMapping()
@@ -44,22 +48,24 @@ public class OfertaEstagioController {
         return modelAndView;
     }
 
-    @GetMapping("empresa/{empresaId}/cadastro")
-    public ModelAndView exibirFormularioCadastroOferta(@PathVariable Long empresaId, ModelAndView modelAndView) {
-        Optional<Empresa> empresa = empresaService.findById(empresaId);
+    @GetMapping("empresa/cadastro")
+    public ModelAndView exibirFormularioCadastroOferta(ModelAndView modelAndView) {
+        Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
+        Optional<Empresa> empresa = empresaService.findById(empresaLogada.getId());
         modelAndView.addObject("empresa", empresa);
-        modelAndView.addObject("empresaId", empresaId);
+        modelAndView.addObject("empresaId", empresa.get().getId());
         modelAndView.addObject("oferta", new OfertaEstagio());
         modelAndView.setViewName("ofertas/cadastro");
         return modelAndView;
     }
 
-    @PostMapping("empresa/{empresaId}/cadastro")
-    public ModelAndView cadastrarOferta(@PathVariable Long empresaId,
+    @PostMapping("empresa/cadastro")
+    public ModelAndView cadastrarOferta(
                                         OfertaEstagio ofertaEstagio,
                                         ModelAndView modelAndView,
                                         RedirectAttributes redirectAttributes) {
-        Optional<Empresa> empresaOptional = empresaService.findById(empresaId);
+        Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
+        Optional<Empresa> empresaOptional = empresaService.findById(empresaLogada.getId());
 
         if (empresaOptional.isPresent()) {
             Empresa empresa = empresaOptional.get();
