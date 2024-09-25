@@ -66,10 +66,10 @@
         </h1>
         <p>CNPJ: <span th:text="${empresa.cnpj}">Cnpj</span></p>
         <p>URL: <span th:text="${empresa.url}">Url</span></p>
-        <p>Email contato: <span th:text="${empresa.emailContato}">Email Contato</span></p>
+        <p>Email contato: <span th:text="${empresa.email}">Email Contato</span></p>
 
-        <a th:href="@{/ofertas/empresa/{id}/cadastro(id=${empresa.id})}" class="btn btn-primary mt-5">Cadastrar Oferta de Estágio</a>
-        <a th:href="@{/empresas/{id}/ofertas(id=${empresa.id})}" class="btn btn-secondary">Ver Ofertas de Estágio</a>
+        <a th:href="@{/ofertas/empresa/cadastro}" class="btn btn-primary mt-5">Cadastrar Oferta de Estágio</a>
+        <a th:href="@{/empresas/ofertas}" class="btn btn-secondary">Ver Ofertas de Estágio</a>
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>

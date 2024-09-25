@@ -25,7 +25,7 @@
 
         <div th:if="${ofertas.isEmpty()}">
             <p class="alert alert-warning">Não há ofertas cadastradas.</p>
-            <a th:href="@{/empresas/{id}/menu(id=${empresa.id})}" class="btn btn-secondary">Voltar ao Menu</a>
+            <a th:href="@{/empresas/menu}" class="btn btn-secondary">Voltar ao Menu</a>
         </div>
 
         <div class="row" th:if="${!ofertas.isEmpty()}">
@@ -111,7 +111,7 @@
             </th:block>
 
             <div class="mb-5">
-                <a th:href="@{/empresas/{id}/menu(id=${empresa.id})}" class="btn btn-secondary">Voltar ao Menu</a>
+                <a th:href="empresas/menu" class="btn btn-secondary">Voltar ao Menu</a>
             </div>
         </div>
     </div>
