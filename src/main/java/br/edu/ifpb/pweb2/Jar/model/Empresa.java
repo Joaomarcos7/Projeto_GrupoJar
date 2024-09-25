@@ -33,9 +33,6 @@ public class Empresa extends Usuario implements Serializable {
     @Column(nullable = false)
     private String telefoneContato;
 
-    @Column(nullable = false, unique = true)
-    private String emailContato;
-
     @Column(nullable = false)
     private String pessoaContato;
 
