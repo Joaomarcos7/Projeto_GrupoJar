@@ -8,6 +8,7 @@ import br.edu.ifpb.pweb2.Jar.model.dto.*;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
 import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -30,6 +31,9 @@ public class EmpresaController {
     private OfertaEstagioService ofertaEstagioService;
 
     @Autowired
+    private HttpSession httpSession;
+
+    @Autowired
     private CandidaturaService candidaturaService;
 
     @GetMapping("/login")
@@ -45,7 +49,8 @@ public class EmpresaController {
         Empresa empresa = empresaService.findByCnpj(cnpj);
 
         if (empresa != null) {
-                model.setViewName("redirect:/empresas/" + empresa.getId() + "/menu");
+                httpSession.setAttribute("empresaLogada",empresa);
+                model.setViewName("redirect:/empresas" + "/menu");
         } else {
             model.addObject("error", "Empresa não encontrada. Tente Novamente!");
             model.setViewName("empresas/login");
@@ -66,18 +71,20 @@ public class EmpresaController {
                                          ModelAndView modelAndView, 
                                          RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("mensagem", "Houve um erro no seu cadastro! Tente novamente");
             modelAndView.setViewName("empresas/form");
             return modelAndView;
         }
         Empresa empresaSalva = empresaService.save(empresa);
         redirectAttributes.addFlashAttribute("mensagem", "Cadastro conclúido com sucesso!");
-        modelAndView.setViewName("redirect:/empresas/" + empresaSalva.getId() + "/menu");
+        modelAndView.setViewName("redirect:/empresas" + "/menu");
         return modelAndView;
     }
 
-    @GetMapping("/{id}/menu")
-    public ModelAndView detalhesEmpresa(@PathVariable Long id, ModelAndView modelAndView) {
-        Optional<Empresa> empresaOptional = empresaService.findById(id);
+    @GetMapping("/menu")
+    public ModelAndView detalhesEmpresa( ModelAndView modelAndView) {
+        Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
+        Optional<Empresa> empresaOptional = empresaService.findById(empresaLogada.getId());
         modelAndView.setViewName("empresas/form");
 
         if (empresaOptional.isPresent()) {
@@ -87,9 +94,10 @@ public class EmpresaController {
         return modelAndView;
     }
 
-    @GetMapping("/{id}/ofertas")
-    public ModelAndView listarOfertas(@PathVariable("id") Long id, ModelAndView modelAndView) {
-        Optional<Empresa> empresaOptional = empresaService.findById(id);
+    @GetMapping("/ofertas")
+    public ModelAndView listarOfertas(ModelAndView modelAndView) {
+        Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
+        Optional<Empresa> empresaOptional = empresaService.findById(empresaLogada.getId());
 
         if (empresaOptional.isPresent()) {
             Empresa empresa = empresaOptional.get();
@@ -106,10 +114,11 @@ public class EmpresaController {
         return modelAndView;
     }
 
-    @GetMapping("/{empresaId}/ofertas/{ofertaId}/alunos")
-    public ModelAndView consultarAlunosPorOferta(@PathVariable Long empresaId, @PathVariable Long ofertaId) {
+    @GetMapping("ofertas/{ofertaId}/alunos")
+    public ModelAndView consultarAlunosPorOferta(@PathVariable Long ofertaId) {
         ModelAndView modelAndView = new ModelAndView();
-        Optional<Empresa> empresaOptional = empresaService.findById(empresaId);
+        Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
+        Optional<Empresa> empresaOptional = empresaService.findById(empresaLogada.getId());
         Optional<OfertaEstagio> ofertaOptional = ofertaEstagioService.findById(ofertaId);
     
 
