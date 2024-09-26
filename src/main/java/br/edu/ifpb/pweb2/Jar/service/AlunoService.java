@@ -22,6 +22,10 @@ public class AlunoService {
         return alunoRepository.findAll();
     }
 
+    public List<Aluno> findAllByIds(List<Long> ids) {
+        return alunoRepository.findAllById(ids);
+    }
+
     public Optional<Aluno> findById(Long id) { return alunoRepository.findById(id); }
 
     public Aluno findByUsername(String username) { return alunoRepository.findByUsername(username); }

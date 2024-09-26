@@ -7,14 +7,13 @@ import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
 import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -117,6 +116,18 @@ public class OfertaEstagioController {
         }
         modelAndView.setViewName("redirect:/ofertas");
         return modelAndView;
+    }
+
+    @PostMapping("/{id}/converter")
+    public String converterParaEstagio(@PathVariable("id") Long ofertaId,
+                                       @RequestParam("alunosSelecionados") List<Long> alunosIds,
+                                       @RequestParam("empresaId") Long empresaId,
+                                       @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
+                                       @RequestParam("dataTermino") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataTermino,
+                                       @RequestParam("valor") BigDecimal valor,
+                                       ModelAndView modelAndView) {
+        ofertaEstagioService.converterParaEstagio(ofertaId, alunosIds, empresaId, dataInicio, dataTermino, valor);
+        return "redirect:/ofertas/" + ofertaId + "/estagios"; // Redireciona para a lista de estágios da oferta
     }
 
 }

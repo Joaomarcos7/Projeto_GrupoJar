@@ -46,6 +46,9 @@ public class OfertaEstagio implements Serializable {
     @Column(nullable = false)
     private int status;
 
+    @Column(nullable = false)
+    private Boolean foiConvertidaEmEstagio;
+
     @ElementCollection(targetClass = Habilidade.class, fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "habilidades_necessarias", joinColumns = @JoinColumn(name = "oferta_id", nullable = false))
