@@ -46,13 +46,13 @@ public class OfertaEstagio implements Serializable {
     @Column(nullable = false)
     private int status;
 
-    @ElementCollection(targetClass = Habilidade.class, fetch = FetchType.LAZY)
+    @ElementCollection(targetClass = Habilidade.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "habilidades_necessarias", joinColumns = @JoinColumn(name = "oferta_id", nullable = false))
     @Column(name = "habilidade_necessaria")
     private Set<Habilidade> habilidadesNecessarias = new HashSet<>();
 
-    @ElementCollection(targetClass = Habilidade.class, fetch = FetchType.LAZY)
+    @ElementCollection(targetClass = Habilidade.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "habilidades_desejaveis", joinColumns = @JoinColumn(name = "oferta_id", nullable = false))
     @Column(name = "habilidade_desejavel")

@@ -54,7 +54,7 @@ public class Empresa extends Usuario implements Serializable {
     @Column(nullable = false)
     private byte[] documentoComprovacaoEndereco;
 
-    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<OfertaEstagio> ofertaEstagios = new HashSet<>();
 
 }
