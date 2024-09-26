@@ -35,6 +35,10 @@
                 <label for="cnpj" class="form-label">CNPJ da Empresa</label>
                 <input type="text" class="form-control" id="cnpj" name="cnpj" required>
             </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Senha</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
 
             <div th:if="${error}" class="alert alert-danger" role="alert">
                 <p th:text="${error}"></p>

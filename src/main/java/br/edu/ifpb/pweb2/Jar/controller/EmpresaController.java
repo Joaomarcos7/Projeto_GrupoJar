@@ -44,19 +44,26 @@ public class EmpresaController {
 
     @PostMapping("/login")
     public ModelAndView login(@RequestParam("cnpj") String cnpj,
+                              @RequestParam("password") String password,
                               ModelAndView model) {
 
         Empresa empresa = empresaService.findByCnpj(cnpj);
 
         if (empresa != null) {
-                httpSession.setAttribute("empresaLogada",empresa);
-                model.setViewName("redirect:/empresas" + "/menu");
+            if (empresa.getSenha().equals(password)) {
+                httpSession.setAttribute("empresaLogada", empresa);
+                model.setViewName("redirect:/empresas/menu");
+            } else {
+                model.addObject("error", "Senha incorreta.");
+                model.setViewName("empresas/login");
+            } 
         } else {
             model.addObject("error", "Empresa não encontrada. Tente Novamente!");
             model.setViewName("empresas/login");
         }
         return model;
     }
+    
 
     @GetMapping("/cadastro")
     public ModelAndView showCadastroForm(ModelAndView modelAndView) {
