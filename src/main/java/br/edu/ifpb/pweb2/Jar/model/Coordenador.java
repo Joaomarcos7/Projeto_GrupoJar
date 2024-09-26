@@ -20,6 +20,6 @@ public class Coordenador extends Usuario implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Column(nullable = false)
-    @NotBlank(message = "Nome é obrigatório.")
+    @NotBlank(message = "Campo obrigatório")
     private String nome;
 }

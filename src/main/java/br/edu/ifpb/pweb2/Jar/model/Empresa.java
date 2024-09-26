@@ -22,15 +22,15 @@ public class Empresa extends Usuario implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @NotBlank(message = "O nome da empresa é obrigatório.")
+    @NotBlank(message = "Campo obrigatório")
     @Column(nullable = false)
     private String nome;
 
-    @Pattern(regexp = "\\d{14}", message = "O CNPJ deve conter 14 dígitos.")
+    @Pattern(regexp = "\\d{14}", message = "O CNPJ deve conter 14 dígitos")
     @Column(nullable = false, unique = true)
     private String cnpj;
 
-    @NotBlank(message = "O endereço é obrigatório.")
+    @NotBlank(message = "Campo obrigatório")
     @Column(nullable = false)
     private String endereco;
 
@@ -38,19 +38,19 @@ public class Empresa extends Usuario implements Serializable {
     @Column(nullable = false)
     private String telefoneContato;
 
-    @NotBlank(message = "O nome da pessoa de contato é obrigatório.")
+    @NotBlank(message = "Campo obrigatório")
     @Column(nullable = false)
     private String pessoaContato;
 
-    @NotBlank(message = "A atividade principal é obrigatória.")
+    @NotBlank(message = "Campo obrigatório")
     @Column(nullable = false)
     private String atividadePrincipal;
 
-    @NotNull(message = "A URL é obrigatória.")
+    @NotNull(message = "Campo obrigatório")
     @Column(nullable = false)
     private URL url;
 
-    @NotNull(message = "O documento de comprovação de endereço é obrigatório.")
+    @NotNull(message = "Campo obrigatório")
     @Column(nullable = false)
     private byte[] documentoComprovacaoEndereco;
 

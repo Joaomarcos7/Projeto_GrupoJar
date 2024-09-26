@@ -62,9 +62,6 @@
                 <label for="endereco">Endereço</label>
                 <input type="text" id="endereco" class="form-control" name="endereco" th:field="*{endereco}" />
                 <div th:if="${#fields.hasErrors('endereco')}" class="error-message" th:errors="*{endereco}">Endereço inválido.</div>
-                <div th:if="${#fields.hasErrors('endereco')}" class="error-message">
-                    <p th:errors="*{endereco}">Endereço inválido.</p>
-                </div>
             </div>
 
             <div class="mb-1">

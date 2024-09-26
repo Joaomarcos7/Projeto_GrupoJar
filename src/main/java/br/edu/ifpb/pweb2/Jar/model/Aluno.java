@@ -20,11 +20,11 @@ public class Aluno extends Usuario implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @NotBlank(message = "O nome completo não pode estar vazio")
+    @NotBlank(message = "Campo obrigatório")
     @Column(nullable = false)
     private String nomeCompleto;
 
-    @NotBlank(message = "O username não pode estar em branco")
+    @NotBlank(message = "Campo obrigatório")
     @Column(nullable = false, unique = true)
     private String username;
 

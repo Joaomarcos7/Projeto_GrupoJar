@@ -17,10 +17,9 @@ public abstract class Usuario {
     private Long id;
 
     @Email(message = "O e-mail deve ser válido")
-    @NotBlank(message = "O e-mail não pode estar em branco")
+    @NotBlank(message = "Campo obrigatório")
     private String email;
 
-    @NotBlank(message = "A senha não pode estar em branco")
     @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
     private String senha;
 }
