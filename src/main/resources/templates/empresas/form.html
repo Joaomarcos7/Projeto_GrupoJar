@@ -8,7 +8,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            padding: 15px; /* Adicionado para dar espaçamento em telas pequenas */
             background-color: #f8f9fa;
         }
         .cadastro-card {
@@ -18,85 +19,106 @@
             border-radius: 8px;
             background-color: #ffffff;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Adicionado para evitar quebra do conteúdo */
         }
         .cadastro-card h2 {
             margin-bottom: 20px;
         }
+        .error-message {
+            color: red;
+            font-size: 0.875em;
+        }
+        @media (max-width: 768px) {
+            .cadastro-card {
+                padding: 15px; /* Reduzir o padding em telas menores */
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="cadastro-card">
+<div class="container">
+    <div class="cadastro-card">
 
-            <h2 class="text-center">Cadastro de Empresa</h2>
+        <h2 class="text-center">Cadastro de Empresa</h2>
 
-            <div th:if="${mensagem}" class="alert alert-success">
-                <p th:text="${mensagem}"></p>
+        <div th:if="${mensagem}" class="alert alert-success">
+            <p th:text="${mensagem}"></p>
+        </div>
+
+        <form th:action="@{/empresas/cadastro}" th:object="${empresa}" method="post">
+            <div class="mb-1">
+                <label for="nome">Nome da Empresa</label>
+                <input type="text" id="nome" class="form-control" name="nome" th:field="*{nome}" />
+                <div th:if="${#fields.hasErrors('nome')}" class="error-message" th:errors="*{nome}">Nome da empresa inválido.</div>
             </div>
 
-            <form th:action="@{/empresas/cadastro}" th:object="${empresa}" method="post">
-                <div class="mb-1">
-                    <label for="nome">Nome da Empresa</label>
-                    <input type="text" id="nome" class="form-control" name="nome" th:field="*{nome}" required/>
-                </div>
+            <div class="mb-1">
+                <label for="cnpj">CNPJ</label>
+                <input type="text" id="cnpj" class="form-control" name="cnpj" th:field="*{cnpj}" />
+                <div th:if="${#fields.hasErrors('cnpj')}" class="error-message" th:errors="*{cnpj}">CNPJ inválido.</div>
+            </div>
 
-                <div class="mb-1">
-                    <label for="cnpj">CNPJ</label>
-                    <input type="text" id="cnpj" class="form-control" name="cnpj" th:field="*{cnpj}" required/>
-                </div>
+            <div class="mb-1">
+                <label for="endereco">Endereço</label>
+                <input type="text" id="endereco" class="form-control" name="endereco" th:field="*{endereco}" />
+                <div th:if="${#fields.hasErrors('endereco')}" class="error-message" th:errors="*{endereco}">Endereço inválido.</div>
+            </div>
 
-                <div class="mb-1">
-                    <label for="endereco">Endereço</label>
-                    <input type="text" id="endereco" class="form-control" name="endereco" th:field="*{endereco}" required/>
-                </div>
+            <div class="mb-1">
+                <label for="telefone">Telefone de Contato</label>
+                <input type="text" id="telefone" class="form-control" name="telefone" th:field="*{telefoneContato}" />
+                <div th:if="${#fields.hasErrors('telefoneContato')}" class="error-message" th:errors="*{telefoneContato}">Telefone inválido.</div>
+            </div>
 
-                <div class="mb-1">
-                    <label for="telefone">Telefone de Contato</label>
-                    <input type="text" id="telefone" class="form-control" name="telefone" th:field="*{telefoneContato}" required/>
-                </div>
+            <div class="mb-1">
+                <label for="email">Email de Contato</label>
+                <input type="email" id="email" class="form-control" name="email" th:field="*{email}" />
+                <div th:if="${#fields.hasErrors('email')}" class="error-message" th:errors="*{email}">Email inválido.</div>
+            </div>
 
-                <div class="mb-1">
-                    <label for="email">Email de Contato</label>
-                    <input type="email" id="email" class="form-control" name="email" th:field="*{email}" required/>
-                </div>
+            <div class="mb-1">
+                <label for="pessoaContato">Pessoa de Contato</label>
+                <input type="text" id="pessoaContato" class="form-control" name="pessoaContato" th:field="*{pessoaContato}" />
+                <div th:if="${#fields.hasErrors('pessoaContato')}" class="error-message" th:errors="*{pessoaContato}">Nome da pessoa de contato inválido.</div>
+            </div>
 
-                <div class="mb-1">
-                    <label for="pessoaContato">Pessoa de Contato</label>
-                    <input type="text" id="pessoaContato" class="form-control" name="pessoaContato" th:field="*{pessoaContato}" required/>
-                </div>
+            <div class="mb-1">
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" class="form-control" name="senha" th:field="*{senha}" minlength="6"/>
+                <div th:if="${#fields.hasErrors('senha')}" class="error-message" th:errors="*{senha}">Senha inválida. Mínimo 6 caracteres.</div>
+            </div>
 
-                <div class="mb-1">
-                    <label for="senha">Senha:</label>
-                    <input type="password" id="senha" class="form-control" name="senha" th:field="*{senha}" minlength="6" required/>
-                </div>
+            <div class="mb-1">
+                <label for="atividadePrincipal">Atividade Principal</label>
+                <input type="text" id="atividadePrincipal" class="form-control" name="atividadePrincipal" th:field="*{atividadePrincipal}" />
+                <div th:if="${#fields.hasErrors('atividadePrincipal')}" class="error-message" th:errors="*{atividadePrincipal}">Atividade principal inválida.</div>
+            </div>
 
-                <div class="mb-1">
-                    <label for="atividadePrincipal">Atividade Principal</label>
-                    <input type="text" id="atividadePrincipal" class="form-control" name="atividadePrincipal" th:field="*{atividadePrincipal}" required/>
-                </div>
+            <div class="mb-1">
+                <label for="url">URL da Empresa</label>
+                <input type="url" id="url" class="form-control" name="url" th:field="*{url}" />
+                <div th:if="${#fields.hasErrors('url')}" class="error-message" th:errors="*{url}">URL inválida.</div>
+            </div>
 
-                <div class="mb-1">
-                    <label for="url">URL da Empresa</label>
-                    <input type="url" id="url" class="form-control" name="url" th:field="*{url}" required/>
-                </div>
-
-                <div class="mb-1">
-                    <label for="documentoComprovacaoEndereco">Documento de Comprovação de Endereço:</label>
-                    <div class="input-group mb-3">
-                        <label class="input-group-text" for="documentoComprovacaoEndereco">Enviar</label>
-                        <input type="file" class="form-control" id="documentoComprovacaoEndereco" th:field="*{documentoComprovacaoEndereco}" required/>
+            <div class="mb-1">
+                <label for="documentoComprovacaoEndereco">Documento de Comprovação de Endereço:</label>
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="documentoComprovacaoEndereco">Enviar</label>
+                    <input type="file" class="form-control" id="documentoComprovacaoEndereco" th:field="*{documentoComprovacaoEndereco}" />
+                    <div th:if="${#fields.hasErrors('documentoComprovacaoEndereco')}" class="error-message">
+                        <p th:errors="*{documentoComprovacaoEndereco}">Arquivo inválido.</p>
                     </div>
                 </div>
+            </div>
 
+            <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+            <div class="mt-3 text-center">
+                <a th:href="@{/empresas/login}" class="link-secondary">Entrar</a>
+            </div>
+        </form>
 
-                <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
-                <div class="mt-3 text-center">
-                    <a th:href="@{/empresas/login}" class="link-secondary">Entrar</a>
-                </div>
-            </form>
-
-        </div>
     </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
