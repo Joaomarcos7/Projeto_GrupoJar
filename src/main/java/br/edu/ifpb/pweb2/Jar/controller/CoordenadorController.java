@@ -2,11 +2,13 @@ package br.edu.ifpb.pweb2.Jar.controller;
 
 import br.edu.ifpb.pweb2.Jar.model.Candidatura;
 import br.edu.ifpb.pweb2.Jar.model.Coordenador;
+import br.edu.ifpb.pweb2.Jar.model.Empresa;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
 import br.edu.ifpb.pweb2.Jar.service.CoordenadorService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
+import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,9 @@ public class CoordenadorController {
 
     @Autowired
     private CandidaturaService candidaturaService;
+
+    @Autowired
+    private EmpresaService empresaService;
 
     @Autowired
     private HttpSession httpSession;
@@ -161,7 +166,53 @@ public class CoordenadorController {
         return modelAndView;
     }
 
+    @GetMapping("/empresas")
+public ModelAndView listarEmpresas(ModelAndView modelAndView) {
+    Coordenador coordenadorLogado = (Coordenador) httpSession.getAttribute("coordenadorLogado");
 
+    if (coordenadorLogado != null) {
+        List<Empresa> empresas = empresaService.findAll();  // Supondo que empresaService já exista
+        modelAndView.addObject("empresas", empresas);
+        modelAndView.setViewName("coordenadores/list-empresas");
+    } else {
+        modelAndView.setViewName("redirect:/coordenadores/login");
+    }
+    return modelAndView;
+}
+
+@GetMapping("/edit-empresa/{id}")
+public ModelAndView editarEmpresa(@PathVariable Long id, ModelAndView modelAndView) {
+    System.out.println("ID recebido: " + id); // Log para verificar o ID
+    Optional<Empresa> empresa = empresaService.findById(id);
+    if (empresa.isPresent()) {
+        modelAndView.addObject("empresa", empresa.get());
+        modelAndView.setViewName("coordenadores/edit-empresa");
+    } else {
+        modelAndView.setViewName("redirect:/coordenadores/empresas");
+    }
+    return modelAndView;
+}
+
+@PostMapping("/edit-empresa")
+public ModelAndView salvarEdicaoEmpresa(@Validated @ModelAttribute("empresa") Empresa empresa,
+                                        BindingResult result,
+                                        ModelAndView modelAndView,
+                                        RedirectAttributes redirectAttributes) {
+    if (empresa.getId() == null) {
+        throw new IllegalArgumentException("ID da empresa não pode ser nulo.");
+    }
+
+    Empresa empresaExistente = empresaService.findById(empresa.getId()).orElseThrow();
+
+    if (empresa.getSenha() == null || empresa.getSenha().isEmpty()) {
+        empresa.setSenha(empresaExistente.getSenha());
+    }
+
+    empresaService.save(empresa);
+    redirectAttributes.addFlashAttribute("mensagem", "Empresa editada com sucesso.");
+    modelAndView.setViewName("redirect:/coordenadores/empresas");
+    return modelAndView;
+}
     @GetMapping("/logout")
     public String logout() {
         httpSession.invalidate(); 
