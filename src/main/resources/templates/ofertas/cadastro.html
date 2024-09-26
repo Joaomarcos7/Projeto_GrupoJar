@@ -15,7 +15,7 @@
             width: 50vw;
         }
          .margin-top {
-             margin-top: 300px;
+             margin-top: 50px;
          }
     </style>
 </head>
@@ -31,7 +31,7 @@
             <p th:text="${mensagem}"></p>
         </div>
 
-        <form th:action="@{/ofertas/empresa/{empresaId}/cadastro(empresaId=${empresaId})}" th:object="${oferta}" method="post">
+        <form th:action="@{/ofertas/empresa/cadastro}" th:object="${oferta}" method="post">
             <input type="hidden" th:field="${empresaId}" value="${empresa.id}" />
 
             <div class="mb-2">

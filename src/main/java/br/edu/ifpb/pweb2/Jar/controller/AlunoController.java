@@ -86,7 +86,6 @@ public class AlunoController {
 
         httpSession.setAttribute("alunoLogado", aluno);
 
-        modelAndView.addObject("aluno", aluno);
         modelAndView.setViewName("redirect:/alunos/menu");
         return modelAndView;
     }

@@ -48,37 +48,36 @@ public class OfertaEstagioController {
         return modelAndView;
     }
 
-    @GetMapping("empresa/cadastro")
+    @GetMapping("/empresa/cadastro")
     public ModelAndView exibirFormularioCadastroOferta(ModelAndView modelAndView) {
         Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
-        Optional<Empresa> empresa = empresaService.findById(empresaLogada.getId());
-        modelAndView.addObject("empresa", empresa);
-        modelAndView.addObject("empresaId", empresa.get().getId());
+
+        modelAndView.addObject("empresa", empresaLogada);
+        modelAndView.addObject("empresaId", empresaLogada.getId());
         modelAndView.addObject("oferta", new OfertaEstagio());
         modelAndView.setViewName("ofertas/cadastro");
         return modelAndView;
     }
 
-    @PostMapping("empresa/cadastro")
+    @PostMapping("/empresa/cadastro")
     public ModelAndView cadastrarOferta(
                                         OfertaEstagio ofertaEstagio,
                                         ModelAndView modelAndView,
                                         RedirectAttributes redirectAttributes) {
         Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
-        Optional<Empresa> empresaOptional = empresaService.findById(empresaLogada.getId());
 
-        if (empresaOptional.isPresent()) {
-            Empresa empresa = empresaOptional.get();
-
-            ofertaEstagio.setEmpresa(empresa);
+        if (empresaLogada != null) {
+            ofertaEstagio.setEmpresa(empresaLogada);
             ofertaEstagio.setDataPublicacao(LocalDate.now());
             ofertaEstagio.setStatus(StatusOfertaEstagio.PENDENTE.getStatus());
 
-            empresa.getOfertaEstagios().add(ofertaEstagio);
+            empresaLogada.getOfertaEstagios().add(ofertaEstagio);
             ofertaEstagioService.save(ofertaEstagio);
+
             redirectAttributes.addFlashAttribute("mensagem", "Oferta cadastrada com sucesso!");
-            modelAndView.setViewName("redirect:/empresas/" + empresa.getId() + "/ofertas");
+            modelAndView.setViewName("redirect:/empresas/ofertas");
         } else {
+            modelAndView.addObject("mensagem", "Empresa não encontrada.");
             modelAndView.setViewName("empresas/login");
         }
         return modelAndView;
@@ -88,19 +87,20 @@ public class OfertaEstagioController {
     public ModelAndView cancelarOferta(@PathVariable Long id,
                                         ModelAndView modelAndView,
                                         RedirectAttributes redirectAttributes) {
+        Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
         Optional<OfertaEstagio> ofertaEstagioOptional = ofertaEstagioService.findById(id);
 
         if (ofertaEstagioOptional.isPresent()) {
             OfertaEstagio ofertaEstagio = ofertaEstagioOptional.get();
-            Long empresaId = ofertaEstagio.getEmpresa().getId();
 
+            empresaLogada.getOfertaEstagios().remove(ofertaEstagio);
             ofertaEstagioService.delete(ofertaEstagio);
 
             redirectAttributes.addFlashAttribute("message", "Oferta cancelada com sucesso.");
-            modelAndView.setViewName("redirect:/empresas/" + empresaId + "/ofertas");
+            modelAndView.setViewName("redirect:/empresas/ofertas");
         } else {
             redirectAttributes.addFlashAttribute("error", "Oferta não encontrada.");
-            modelAndView.setViewName("redirect:/empresas/login");
+            modelAndView.setViewName("redirect:/empresas/menu");
         }
 
         return modelAndView;

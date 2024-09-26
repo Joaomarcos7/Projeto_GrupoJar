@@ -11,6 +11,7 @@ import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ public class EmpresaController {
 
     @Autowired
     private EmpresaService empresaService;
+
     @Autowired
     private OfertaEstagioService ofertaEstagioService;
 
@@ -45,23 +47,23 @@ public class EmpresaController {
     @PostMapping("/login")
     public ModelAndView login(@RequestParam("cnpj") String cnpj,
                               @RequestParam("password") String password,
-                              ModelAndView model) {
+                              ModelAndView modelAndView) {
 
         Empresa empresa = empresaService.findByCnpj(cnpj);
 
         if (empresa != null) {
             if (empresa.getSenha().equals(password)) {
                 httpSession.setAttribute("empresaLogada", empresa);
-                model.setViewName("redirect:/empresas/menu");
+                modelAndView.setViewName("redirect:/empresas/menu");
             } else {
-                model.addObject("error", "Senha incorreta.");
-                model.setViewName("empresas/login");
+                modelAndView.addObject("error", "Senha incorreta.");
+                modelAndView.setViewName("empresas/login");
             } 
         } else {
-            model.addObject("error", "Empresa não encontrada. Tente Novamente!");
-            model.setViewName("empresas/login");
+            modelAndView.addObject("error", "Empresa não encontrada.");
+            modelAndView.setViewName("empresas/login");
         }
-        return model;
+        return modelAndView;
     }
     
 
@@ -82,21 +84,26 @@ public class EmpresaController {
             modelAndView.setViewName("empresas/form");
             return modelAndView;
         }
-        Empresa empresaSalva = empresaService.save(empresa);
-        redirectAttributes.addFlashAttribute("mensagem", "Cadastro conclúido com sucesso!");
-        modelAndView.setViewName("redirect:/empresas" + "/menu");
+
+        empresaService.save(empresa);
+
+        redirectAttributes.addFlashAttribute("mensagem", "Cadastro concluído com sucesso!");
+
+        httpSession.setAttribute("empresaLogada", empresa);
+
+        modelAndView.setViewName("redirect:/empresas/menu");
         return modelAndView;
     }
 
     @GetMapping("/menu")
-    public ModelAndView detalhesEmpresa( ModelAndView modelAndView) {
+    public ModelAndView detalhesEmpresa(ModelAndView modelAndView) {
         Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
-        Optional<Empresa> empresaOptional = empresaService.findById(empresaLogada.getId());
-        modelAndView.setViewName("empresas/form");
 
-        if (empresaOptional.isPresent()) {
-            modelAndView.addObject("empresa", empresaOptional.get());
+        if (empresaLogada != null) {
+            modelAndView.addObject("empresa", empresaLogada);
             modelAndView.setViewName("empresas/menu");
+        } else {
+            modelAndView.setViewName("empresas/login");
         }
         return modelAndView;
     }
@@ -104,44 +111,44 @@ public class EmpresaController {
     @GetMapping("/ofertas")
     public ModelAndView listarOfertas(ModelAndView modelAndView) {
         Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
-        Optional<Empresa> empresaOptional = empresaService.findById(empresaLogada.getId());
 
-        if (empresaOptional.isPresent()) {
-            Empresa empresa = empresaOptional.get();
-            List<OfertaEstagioDTO> ofertas = empresa.getOfertaEstagios().stream()
+        if (empresaLogada != null) {
+            List<OfertaEstagioDTO> ofertas = empresaLogada.getOfertaEstagios().stream()
                     .map(OfertaEstagioDTO::new)
                     .collect(Collectors.toList());
-            modelAndView.addObject("empresa", empresa);
+            modelAndView.addObject("empresa", empresaLogada);
             modelAndView.addObject("ofertas", ofertas);
             modelAndView.setViewName("empresas/ofertas");
         } else {
             modelAndView.addObject("mensagem", "Empresa não encontrada.");
-            modelAndView.setViewName("empresas/menu");
+            modelAndView.setViewName("empresas/login");
         }
         return modelAndView;
     }
 
-    @GetMapping("ofertas/{ofertaId}/alunos")
-    public ModelAndView consultarAlunosPorOferta(@PathVariable Long ofertaId) {
-        ModelAndView modelAndView = new ModelAndView();
+    @GetMapping("/ofertas/{ofertaId}/alunos")
+    public ModelAndView consultarAlunosPorOferta(@PathVariable Long ofertaId,
+                                                 ModelAndView modelAndView) {
         Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
-        Optional<Empresa> empresaOptional = empresaService.findById(empresaLogada.getId());
         Optional<OfertaEstagio> ofertaOptional = ofertaEstagioService.findById(ofertaId);
-    
 
-        // Buscar todas as candidaturas para a oferta de estágio
-        List<Candidatura> candidaturas = candidaturaService.buscarPorOferta(ofertaOptional.get());
+        if (ofertaOptional.isPresent()) {
+            OfertaEstagio ofertaEstagio = ofertaOptional.get();
 
-        // Filtrar alunos que ainda estão com candidatura pendente
-        List<AlunoDTO> alunosNaoSelecionados = candidaturas.stream()
-            .filter(candidatura -> candidatura.getEstado() == EstadoCandidatura.PENDENTE)
-            .map(candidatura -> new AlunoDTO(candidatura.getAluno()))
-            .collect(Collectors.toList());
+            // Buscar todas as candidaturas para a oferta de estágio
+            List<Candidatura> candidaturas = candidaturaService.buscarPorOferta(ofertaEstagio);
 
-        modelAndView.addObject("empresa", empresaOptional.get());
-        modelAndView.addObject("oferta", ofertaOptional.get());
-        modelAndView.addObject("alunos", alunosNaoSelecionados);
-        modelAndView.setViewName("empresas/oferta-aluno");
+            // Filtrar alunos que ainda estão com candidatura pendente
+            List<AlunoDTO> alunosNaoSelecionados = candidaturas.stream()
+                    .filter(candidatura -> candidatura.getEstado() == EstadoCandidatura.PENDENTE)
+                    .map(candidatura -> new AlunoDTO(candidatura.getAluno()))
+                    .collect(Collectors.toList());
+
+            modelAndView.addObject("empresa", empresaLogada);
+            modelAndView.addObject("oferta", ofertaEstagio);
+            modelAndView.addObject("alunos", alunosNaoSelecionados);
+            modelAndView.setViewName("empresas/oferta-aluno");
+        }
 
         return modelAndView;
     }
@@ -152,6 +159,12 @@ public class EmpresaController {
         modelAndView.addObject("empresas", empresas);
         modelAndView.setViewName("empresas/list");
         return modelAndView;
+    }
+
+    @GetMapping("/logout")
+    public String logout() {
+        httpSession.invalidate();
+        return "redirect:/";
     }
 
 }
