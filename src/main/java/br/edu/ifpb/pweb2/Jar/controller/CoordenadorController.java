@@ -1,9 +1,6 @@
 package br.edu.ifpb.pweb2.Jar.controller;
 
-import br.edu.ifpb.pweb2.Jar.model.Candidatura;
-import br.edu.ifpb.pweb2.Jar.model.Coordenador;
-import br.edu.ifpb.pweb2.Jar.model.Empresa;
-import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
+import br.edu.ifpb.pweb2.Jar.model.*;
 import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
 import br.edu.ifpb.pweb2.Jar.service.CoordenadorService;
@@ -39,6 +36,14 @@ public class CoordenadorController {
 
     @Autowired
     private OfertaEstagioService ofertaEstagioService;
+
+    @GetMapping()
+    public ModelAndView listarCoordenadores(ModelAndView modelAndView) {
+        List<Coordenador> coordenadores = coordenadorService.findAll();
+        modelAndView.addObject("coordenadores", coordenadores);
+        modelAndView.setViewName("coordenadores/list");
+        return modelAndView;
+    }
 
     @GetMapping("/login")
     public ModelAndView login(ModelAndView modelAndView) {
