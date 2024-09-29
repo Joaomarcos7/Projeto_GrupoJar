@@ -24,6 +24,8 @@ public class AlunoService {
 
     public Optional<Aluno> findById(Long id) { return alunoRepository.findById(id); }
 
+    public Aluno findByEmail(String email){return  alunoRepository.findByEmail(email); }
+
     public Aluno findByUsername(String username) { return alunoRepository.findByUsername(username); }
 
 }

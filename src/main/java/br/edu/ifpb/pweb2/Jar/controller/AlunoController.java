@@ -42,11 +42,11 @@ public class AlunoController {
     }
 
     @PostMapping("/login")
-    public ModelAndView login(@RequestParam("username") String username,
+    public ModelAndView login(@RequestParam("email") String email,
                               @RequestParam("password") String password,
                               ModelAndView modelAndView) {
 
-        Aluno aluno = alunoService.findByUsername(username);
+        Aluno aluno = alunoService.findByEmail(email);
 
         if (aluno != null) {
             if (aluno.getSenha().equals(password)) {
@@ -57,7 +57,7 @@ public class AlunoController {
                 modelAndView.setViewName("alunos/login");
             }
         } else {
-            modelAndView.addObject("error", "Username não encontrado.");
+            modelAndView.addObject("error", "Email não encontrado.");
             modelAndView.setViewName("alunos/login");
         }
         return modelAndView;
