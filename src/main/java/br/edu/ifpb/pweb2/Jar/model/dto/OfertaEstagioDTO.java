@@ -24,6 +24,7 @@ public class OfertaEstagioDTO {
     private BigDecimal valorPago;
     private Double valeTransporte;
     private String preRequisitos;
+    private int vagas;
     private Set<Habilidade> habilidadesNecessarias = new HashSet<>();
     private Set<Habilidade> habilidadesDesejaveis = new HashSet<>();
     private LocalDate dataPublicacao;
@@ -59,5 +60,6 @@ public class OfertaEstagioDTO {
         this.dataPublicacao = oferta.getDataPublicacao();
         this.empresa = oferta.getEmpresa();
         this.candidaturas = oferta.getCandidaturas();
+        this.vagas = oferta.getVagas();
     }
 }

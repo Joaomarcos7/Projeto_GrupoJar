@@ -53,6 +53,7 @@
             <table class="table table-striped table-hover">
                 <thead class="thead-green">
                     <tr>
+                        <th>Selecionar</th>
                         <th>Nome Completo</th>
                         <th>Email</th>
                         <th>Habilidades</th>
@@ -60,6 +61,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="aluno : ${alunos}">
+                        <td><input type="checkbox" class="select-candidato"></td>
                         <td th:text="${aluno.nomeCompleto}">Nome Completo</td>
                         <td th:text="${aluno.email}">Email</td>
                         <td th:text="${aluno.formatadoHabilidades}">Habilidades</td>
@@ -68,7 +70,43 @@
             </table>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.select-candidato');
+            const confirmBtn = document.getElementById('confirm-selection-btn');
 
+            function updateButtonState() {
+                const selectedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+                confirmBtn.disabled = selectedCount === 0;
+            }
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const row = checkbox.closest('tr');
+                    if (checkbox.checked) {
+                        row.classList.add('selected-row');
+                    } else {
+                        row.classList.remove('selected-row');
+                    }
+                    updateButtonState();
+                });
+            });
+
+            confirmBtn.addEventListener('click', function() {
+                const selectedEmpresas = [];
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        const empresaNome = checkbox.closest('tr').querySelector('td:nth-child(2)').innerText;
+                        selectedEmpresas.push(empresaNome);
+                    }
+                });
+
+                if (selectedEmpresas.length > 0) {
+                    alert(`Você selecionou os seguintes candidatos: ${selectedEmpresas.join(', ')}`);
+                }
+            });
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
