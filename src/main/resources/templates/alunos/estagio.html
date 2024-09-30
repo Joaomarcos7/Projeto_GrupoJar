@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Estágio</title>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container mt-4">
+  <div th:if="${candidatura.isPresent()}">
+    <p class="alert alert-warning">Não há estágio registrado a você.</p>
+    <a th:href="@{/alunos/menu}" class="btn btn-secondary">Voltar ao Menu</a>
+  </div>
+
+  <div class="row" th:if="${!(candidatura.isPresent())}">
+</body>
+</html>

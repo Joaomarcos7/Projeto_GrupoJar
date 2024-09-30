@@ -81,7 +81,7 @@
 
                         </div>
 
-                        <div class="card-footer text-center">
+                        <div class="card-footer text-center" th:if="${!(oferta.getStatusName().equals('FINALIZADO'))}">
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" th:attr="data-bs-target='#cancelModal-' + ${oferta.id}">
                                 Cancelar Oferta
                             </button>
