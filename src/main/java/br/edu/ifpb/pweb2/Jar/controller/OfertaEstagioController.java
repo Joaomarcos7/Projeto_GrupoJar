@@ -119,9 +119,11 @@ public class OfertaEstagioController {
             oferta.setStatus(statusOferta);
             ofertaEstagioService.save(oferta);
             redirectAttributes.addFlashAttribute("mensagem", "Oferta atualizada com sucesso!");
-            modelAndView.setViewName("redirect:/ofertas");
+            modelAndView.setViewName("redirect:/coordenadores/menu");
+        } else {
+            modelAndView.setViewName("redirect:/coordenadores/ofertas/pendentes");
         }
-        modelAndView.setViewName("redirect:/ofertas");
+
         return modelAndView;
     }
 

@@ -93,7 +93,15 @@
             </tr>
             </tbody>
         </table>
+
     </div>
+
+    <div th:replace="~{/fragments/paging :: paginator('coordenadores/empresas', ${navPage})}" />
+
+    <div class="mt-3 mb-2">
+        <a th:href="@{/coordenadores/menu}" class="btn btn-secondary">Voltar ao Menu</a>
+    </div>
+
 </div>
 
 <script>
