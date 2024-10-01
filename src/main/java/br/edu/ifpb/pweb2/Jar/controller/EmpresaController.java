@@ -1,10 +1,9 @@
 package br.edu.ifpb.pweb2.Jar.controller;
 
-import br.edu.ifpb.pweb2.Jar.model.Candidatura;
-import br.edu.ifpb.pweb2.Jar.model.Empresa;
-import br.edu.ifpb.pweb2.Jar.model.EstadoCandidatura;
-import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
+import br.edu.ifpb.pweb2.Jar.model.*;
 import br.edu.ifpb.pweb2.Jar.model.dto.*;
+import br.edu.ifpb.pweb2.Jar.model.pagination.NavPage;
+import br.edu.ifpb.pweb2.Jar.model.pagination.NavePageBuilder;
 import br.edu.ifpb.pweb2.Jar.model.Aluno;
 import br.edu.ifpb.pweb2.Jar.service.AlunoService;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
@@ -12,6 +11,9 @@ import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -134,15 +136,25 @@ public class EmpresaController {
     }
 
     @GetMapping("/ofertas")
-    public ModelAndView listarOfertas(ModelAndView modelAndView) {
+    public ModelAndView listarOfertas(@RequestParam(defaultValue = "1") int page,
+                                      @RequestParam(defaultValue = "3") int size,
+                                      ModelAndView modelAndView) {
         Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
 
         if (empresaLogada != null) {
-            List<OfertaEstagioDTO> ofertas = empresaLogada.getOfertaEstagios().stream()
+            Pageable pageable = PageRequest.of(page - 1, size);
+
+            Page<OfertaEstagio> ofertasPage = ofertaEstagioService.findByEmpresa(empresaLogada.getId(), pageable);
+            List<OfertaEstagioDTO> ofertas = ofertasPage.getContent().stream()
                     .map(OfertaEstagioDTO::new)
                     .collect(Collectors.toList());
+
+            NavPage navPage = NavePageBuilder.newNavPage(ofertasPage.getNumber() + 1,
+                    ofertasPage.getTotalElements(), ofertasPage.getTotalPages(), size);
+
             modelAndView.addObject("empresa", empresaLogada);
             modelAndView.addObject("ofertas", ofertas);
+            modelAndView.addObject("navPage", navPage);
             modelAndView.setViewName("empresas/ofertas");
         } else {
             modelAndView.addObject("mensagem", "Empresa não encontrada.");
@@ -151,28 +163,39 @@ public class EmpresaController {
         return modelAndView;
     }
 
+
     @GetMapping("/ofertas/{ofertaId}/alunos")
-    public ModelAndView consultarAlunosPorOferta(@PathVariable Long ofertaId,
-                                                 ModelAndView modelAndView) {
+    public ModelAndView consultarAlunosPorOferta(@RequestParam(defaultValue = "1") int page,
+                                                 @RequestParam(defaultValue = "5") int size,
+                                                 @PathVariable Long ofertaId,
+                                                 ModelAndView modelAndView, Model model) {
         Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
         Optional<OfertaEstagio> ofertaOptional = ofertaEstagioService.findById(ofertaId);
 
         if (ofertaOptional.isPresent()) {
             OfertaEstagio ofertaEstagio = ofertaOptional.get();
 
+            Pageable paging = PageRequest.of(page - 1, size);
+
             // Buscar todas as candidaturas para a oferta de estágio
-            List<Candidatura> candidaturas = candidaturaService.buscarPorOferta(ofertaEstagio);
+            Page<Candidatura> candidaturasPage = candidaturaService.buscarPorOfertaPaginado(ofertaEstagio, paging);
 
             // Filtrar alunos que ainda estão com candidatura pendente
-            List<AlunoDTO> alunosNaoSelecionados = candidaturas.stream()
+            List<AlunoDTO> alunosNaoSelecionados = candidaturasPage.getContent().stream()
                     .filter(candidatura -> candidatura.getEstado() == EstadoCandidatura.PENDENTE)
                     .map(candidatura -> new AlunoDTO(candidatura.getAluno()))
                     .collect(Collectors.toList());
 
+            NavPage navPage = NavePageBuilder.newNavPage(candidaturasPage.getNumber() + 1,
+                    candidaturasPage.getTotalElements(), candidaturasPage.getTotalPages(), size);
+
             modelAndView.addObject("empresa", empresaLogada);
             modelAndView.addObject("oferta", ofertaEstagio);
             modelAndView.addObject("alunos", alunosNaoSelecionados);
+            modelAndView.addObject("navPage", navPage);
             modelAndView.setViewName("empresas/oferta-aluno");
+        } else {
+            modelAndView.setViewName("empresas/login");
         }
 
         return modelAndView;

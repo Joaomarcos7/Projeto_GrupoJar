@@ -4,6 +4,8 @@ import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 import br.edu.ifpb.pweb2.Jar.repository.OfertaEstagioRepository;
 import br.edu.ifpb.pweb2.Jar.util.GetStatusName;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,10 +29,18 @@ public class OfertaEstagioService {
         return ofertaEstagioRepository.findAll();
     }
 
+    public Page<OfertaEstagio> findAllPaged(Pageable page) {
+        return ofertaEstagioRepository.findAll(page);
+    }
+
     public Optional<OfertaEstagio> findById(Long id) { return ofertaEstagioRepository.findById(id); }
 
-    public List<OfertaEstagio> buscarOfertasDisponiveis() {
-        return ofertaEstagioRepository.findByStatus(1);
+    public Page<OfertaEstagio> findByEmpresa(Long empresaId, Pageable page) {
+        return ofertaEstagioRepository.findByEmpresaId(empresaId, page);
+    }
+
+    public Page<OfertaEstagio> buscarOfertasDisponiveisPaginado(Pageable page) {
+        return ofertaEstagioRepository.findByStatus(1, page);
     }
 
     public String convertStatus(int statusCode) {
