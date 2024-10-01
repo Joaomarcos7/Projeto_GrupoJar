@@ -5,6 +5,8 @@ import br.edu.ifpb.pweb2.Jar.model.Candidatura;
 import br.edu.ifpb.pweb2.Jar.model.EstadoCandidatura;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +17,7 @@ public interface CandidaturaRepository extends JpaRepository<Candidatura, Long> 
 
     List<Candidatura> findByAluno(Aluno aluno);
     List<Candidatura> findByOfertaEstagio(OfertaEstagio ofertaEstagio);
-    List<Candidatura> findByEstado(EstadoCandidatura estado);
+    Page<Candidatura> findByEstado(EstadoCandidatura estado, Pageable pageable);
 
     boolean existsByAlunoIdAndOfertaEstagioId(Long alunoId, Long ofertaId);
 }

@@ -2,12 +2,17 @@ package br.edu.ifpb.pweb2.Jar.controller;
 
 import br.edu.ifpb.pweb2.Jar.model.*;
 import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
+import br.edu.ifpb.pweb2.Jar.model.pagination.NavPage;
+import br.edu.ifpb.pweb2.Jar.model.pagination.NavePageBuilder;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
 import br.edu.ifpb.pweb2.Jar.service.CoordenadorService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
 import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -110,18 +115,27 @@ public class CoordenadorController {
     }
 
     @GetMapping("/ofertas")
-    public ModelAndView listarOfertasEstagio(ModelAndView modelAndView) {
+    public ModelAndView listarOfertasEstagio(@RequestParam(defaultValue = "1") int page,
+                                             @RequestParam(defaultValue = "5") int size,
+                                             ModelAndView modelAndView) {
         Coordenador coordenadorLogado = (Coordenador) httpSession.getAttribute("coordenadorLogado");
 
         if (coordenadorLogado != null) {
-            List<OfertaEstagio> ofertas = ofertaEstagioService.findAll();
-            List<OfertaEstagioDTO> ofertasDTO = ofertas.stream()
+            Pageable paging = PageRequest.of(page -1, size);
+
+            Page<OfertaEstagio> ofertasPage = ofertaEstagioService.findAllPaged(paging);
+
+            List<OfertaEstagioDTO> ofertasDTO = ofertasPage.getContent().stream()
                     .map(OfertaEstagioDTO::new)
                     .toList();
+
+            NavPage navPage = NavePageBuilder.newNavPage(ofertasPage.getNumber() + 1,
+                    ofertasPage.getTotalElements(), ofertasPage.getTotalPages(), size);
 
             modelAndView.addObject("ofertasNegada", ofertasDTO.stream().filter(x -> x.getStatusName().equals("NEGADO")).toList());
             modelAndView.addObject("ofertasPendente", ofertasDTO.stream().filter(x -> x.getStatusName().equals("PENDENTE")).toList());
             modelAndView.addObject("ofertasAprovada", ofertasDTO.stream().filter(x -> x.getStatusName().equals("APROVADO")).toList());
+            modelAndView.addObject("navPage", navPage);
             modelAndView.addObject("coordenador", coordenadorLogado);
             modelAndView.setViewName("ofertas/list");
         } else {
@@ -131,13 +145,20 @@ public class CoordenadorController {
     }
 
     @GetMapping("/candidatos")
-    public ModelAndView listarCandidatos(ModelAndView modelAndView) {
+    public ModelAndView listarCandidatos(@RequestParam(defaultValue = "1") int page,
+                                         @RequestParam(defaultValue = "5") int size,
+                                         ModelAndView modelAndView) {
         Coordenador coordenadorLogado = (Coordenador) httpSession.getAttribute("coordenadorLogado");
 
         if (coordenadorLogado != null) {
-            List<Candidatura> candidaturas = candidaturaService.buscarPorAlunosNaoSelecionados();
+            Pageable paging = PageRequest.of(page -1, size);
+            Page<Candidatura> candidaturasPage = candidaturaService.buscarPorAlunosNaoSelecionadosPaginado(paging);
+            NavPage navPage = NavePageBuilder.newNavPage(candidaturasPage.getNumber() + 1,
+                    candidaturasPage.getTotalElements(), candidaturasPage.getTotalPages(), size);
+
             modelAndView.addObject("coordenador", coordenadorLogado);
-            modelAndView.addObject("candidaturas", candidaturas);
+            modelAndView.addObject("candidaturas", candidaturasPage);
+            modelAndView.addObject("navPage", navPage);
             modelAndView.setViewName("coordenadores/list-candidatos");
         } else {
             modelAndView.setViewName("redirect:/coordenadores/login");
