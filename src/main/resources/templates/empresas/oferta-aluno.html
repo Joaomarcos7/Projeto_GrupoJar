@@ -31,14 +31,24 @@
 
     <div class="container">
         <!-- Títulos -->
+        <input type="hidden" id="oferta-id" th:value="${oferta.id}">
         <h1><span th:text="${oferta.titulo}">Título da Oferta</span></h1>
         <h2><span th:text="${empresa.nome}">Nome da Empresa</span></h2>
+
+        <div class="header-options">
+            <button class="btn btn-success" id="confirm-selection-btn" disabled>Aprovar Candidatos Selecionados</button>
+        </div>
+
+        <div th:text="${oferta.vagas + ' vagas disponíveis'}">Vagas Disponíveis</div>
+
+
 
         <!-- Tabela de Alunos -->
         <div class="table-container">
             <table class="table table-striped table-hover">
                 <thead class="thead-green">
                     <tr>
+                        <th>Selecionar</th>
                         <th>Nome Completo</th>
                         <th>Email</th>
                         <th>Habilidades</th>
@@ -46,12 +56,33 @@
                 </thead>
                 <tbody>
                     <tr th:each="aluno : ${alunos}">
+                        <td><input type="checkbox" class="select-candidato"></td>
                         <td th:text="${aluno.nomeCompleto}">Nome Completo</td>
                         <td th:text="${aluno.email}">Email</td>
                         <td th:text="${aluno.formatadoHabilidades}">Habilidades</td>
+
                     </tr>
                 </tbody>
             </table>
+            <div class="modal fade" id="estagio-modal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cancelModalLabel">Confir</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Você tem certeza de que deseja aprovar estes candidatos?
+                            <span> </span>
+                        </div>
+                        <div class="modal-footer">
+                            <form th:action="@{/empresas/aprovarcandidato}" method="post">
+                                <button type="submit" class="btn btn-danger">Aprovar Candidatos</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div th:if="${alunos.size() <= 0}" class="alert alert-info">
@@ -65,7 +96,67 @@
         </div>
 
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.select-candidato');
+            const confirmBtn = document.getElementById('confirm-selection-btn');
+            const ofertaId = document.getElementById('oferta-id').value;
 
+            document.addEventListener('DOMContentLoaded', function () {
+                var cancelModals = document.querySelectorAll('.modal[id^="estagio-modal"]');
+
+                cancelModals.forEach(function (modal) {
+                    modal.addEventListener('show.bs.modal', function (event) {
+                        var button = event.relatedTarget;
+                        var offerId = button.getAttribute('data-bs-target').split('-').pop(); // Extrai o ID da oferta do data-bs-target
+                        var form = modal.querySelector('form');
+                        var actionUrl = form.getAttribute('th:action').replace('{id}', offerId);
+                        form.setAttribute('action', actionUrl);
+                    });
+                });
+            });
+
+            function updateButtonState() {
+                const selectedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+                confirmBtn.disabled = selectedCount === 0;
+            }
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const row = checkbox.closest('tr');
+                    if (checkbox.checked) {
+                        row.classList.add('selected-row');
+                    } else {
+                        row.classList.remove('selected-row');
+                    }
+                    updateButtonState();
+                });
+            });
+
+            confirmBtn.addEventListener('click', function() {
+                const selectedEmpresas = [];
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        const alunoEmail = checkbox.closest('tr').querySelector('td:nth-child(3)').innerText;
+                        selectedEmpresas.push(alunoEmail);
+                    }
+                });
+
+                if (selectedEmpresas.length > 0) {
+                    fetch('/estagiosJar/empresas/aprovar-candidatos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body:JSON.stringify({
+                            ofertaId: ofertaId,
+                            emails: selectedEmpresas
+                        }) // Enviando os dados selecionados no corpo da requisição
+                    })
+                }
+            });
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -4,6 +4,8 @@ import br.edu.ifpb.pweb2.Jar.model.*;
 import br.edu.ifpb.pweb2.Jar.model.dto.*;
 import br.edu.ifpb.pweb2.Jar.model.pagination.NavPage;
 import br.edu.ifpb.pweb2.Jar.model.pagination.NavePageBuilder;
+import br.edu.ifpb.pweb2.Jar.model.Aluno;
+import br.edu.ifpb.pweb2.Jar.service.AlunoService;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
 import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
@@ -21,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -39,6 +42,11 @@ public class EmpresaController {
 
     @Autowired
     private CandidaturaService candidaturaService;
+
+    @Autowired
+    private AlunoService alunoService;
+
+
 
     @GetMapping("/login")
     public ModelAndView login(ModelAndView modelAndView) {
@@ -107,6 +115,23 @@ public class EmpresaController {
         } else {
             modelAndView.setViewName("empresas/login");
         }
+        return modelAndView;
+    }
+
+    @PostMapping("/aprovar-candidatos")
+    public ModelAndView AprovarCandidatos(@RequestBody Map<String, Object> payload, ModelAndView modelAndView){
+        Long ofertaId = Long.valueOf(payload.get("ofertaId").toString());
+        List<String> emails = (List<String>) payload.get("emails");
+        System.out.println(emails);
+        OfertaEstagio oferta = this.ofertaEstagioService.findById(ofertaId).orElseThrow();
+        oferta.setStatus(4);
+        this.ofertaEstagioService.save(oferta);
+        for(String email : emails){
+            Candidatura candidatura = this.candidaturaService.buscarPorOferta(oferta).stream().filter(x->x.getAluno().getEmail().equals(email)).findFirst().orElseThrow();
+            candidatura.setEstado(EstadoCandidatura.ACEITA);
+            candidaturaService.save((candidatura));
+        }
+        modelAndView.setViewName("empresas/menu");
         return modelAndView;
     }
 

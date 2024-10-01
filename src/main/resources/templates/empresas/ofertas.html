@@ -51,6 +51,11 @@
                                     <label>Bolsa:</label>
                                     <span th:text="${oferta.getFormatadoValorPago()}">Valor pago</span>
                                 </li>
+                                <li class="list-group-item d-flex align-items-center gap-1">
+                                    <label>Vagas:</label>
+                                    <span th:text="${oferta.getVagas()}">Vaga(s)</span>
+                                </li>
+
                                 <li class="list-group-item d-flex align-items-center gap-1" th:if="${oferta.valeTransporte}">
                                     <label>Vale Transporte:</label>
                                     <span th:text="${oferta.getFormatadoValeTransporte()}">Vale Transporte</span>
@@ -76,12 +81,12 @@
 
                         </div>
 
-                        <div class="card-footer text-center">
+                        <div class="card-footer text-center" th:if="${!(oferta.getStatusName().equals('FINALIZADO'))}">
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" th:attr="data-bs-target='#cancelModal-' + ${oferta.id}">
                                 Cancelar Oferta
                             </button>
                             <a th:href="@{/empresas/ofertas/{ofertaId}/alunos(empresaId=${empresa.id}, ofertaId=${oferta.id})}" class="btn btn-primary ms-2">
-                                Ver Alunos
+                                Ver Candidatos
                             </a>
                             
                         </div>

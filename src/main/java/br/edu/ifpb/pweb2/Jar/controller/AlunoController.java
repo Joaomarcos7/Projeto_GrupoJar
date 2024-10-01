@@ -2,6 +2,7 @@ package br.edu.ifpb.pweb2.Jar.controller;
 
 import br.edu.ifpb.pweb2.Jar.model.Aluno;
 import br.edu.ifpb.pweb2.Jar.model.Candidatura;
+import br.edu.ifpb.pweb2.Jar.model.EstadoCandidatura;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
 import br.edu.ifpb.pweb2.Jar.model.pagination.NavPage;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -47,11 +49,11 @@ public class AlunoController {
     }
 
     @PostMapping("/login")
-    public ModelAndView login(@RequestParam("username") String username,
+    public ModelAndView login(@RequestParam("email") String email,
                               @RequestParam("password") String password,
                               ModelAndView modelAndView) {
 
-        Aluno aluno = alunoService.findByUsername(username);
+        Aluno aluno = alunoService.findByEmail(email);
 
         if (aluno != null) {
             if (aluno.getSenha().equals(password)) {
@@ -62,7 +64,7 @@ public class AlunoController {
                 modelAndView.setViewName("alunos/login");
             }
         } else {
-            modelAndView.addObject("error", "Username não encontrado.");
+            modelAndView.addObject("error", "Email não encontrado.");
             modelAndView.setViewName("alunos/login");
         }
         return modelAndView;
@@ -72,6 +74,15 @@ public class AlunoController {
     public ModelAndView exibirFormularioDeCadastro(ModelAndView modelAndView) {
         modelAndView.addObject("aluno", new Aluno());
         modelAndView.setViewName("alunos/form");
+        return modelAndView;
+    }
+
+    @GetMapping("/estagio")
+    public ModelAndView exibirEstagio(ModelAndView modelAndView){
+        Aluno alunoLogado = (Aluno) httpSession.getAttribute("alunoLogado");
+        Optional<Candidatura> candidatura = candidaturaService.buscarPorAluno(alunoLogado).stream().filter(x->x.getEstado().equals(EstadoCandidatura.ACEITA)).findFirst();
+        modelAndView.addObject("candidatura",candidatura);
+        modelAndView.setViewName("alunos/estagio");
         return modelAndView;
     }
 
