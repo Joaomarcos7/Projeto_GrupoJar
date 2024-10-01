@@ -110,9 +110,12 @@
                 </div>
             </th:block>
 
+            <div th:replace="~{/fragments/paging :: paginator('empresas/ofertas', ${navPage})}" />
+
             <div class="mb-5">
                 <a th:href="@{/empresas/menu}" class="btn btn-secondary">Voltar ao Menu</a>
             </div>
+
         </div>
     </div>
 

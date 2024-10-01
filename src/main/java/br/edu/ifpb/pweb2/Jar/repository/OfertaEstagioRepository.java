@@ -16,4 +16,6 @@ public interface OfertaEstagioRepository extends JpaRepository<OfertaEstagio, Lo
     List<OfertaEstagio> findByStatus(Integer status);
 
     Page<OfertaEstagio> findAll(Pageable pageable);
+
+    Page<OfertaEstagio> findByEmpresaId(Long empresaId, Pageable pageable);
 }

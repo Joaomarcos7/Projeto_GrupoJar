@@ -16,7 +16,8 @@ import java.util.List;
 public interface CandidaturaRepository extends JpaRepository<Candidatura, Long> {
 
     List<Candidatura> findByAluno(Aluno aluno);
-    List<Candidatura> findByOfertaEstagio(OfertaEstagio ofertaEstagio);
+    Page<Candidatura> findByOfertaEstagio(OfertaEstagio ofertaEstagio, Pageable pageable);
+
     Page<Candidatura> findByEstado(EstadoCandidatura estado, Pageable pageable);
 
     boolean existsByAlunoIdAndOfertaEstagioId(Long alunoId, Long ofertaId);

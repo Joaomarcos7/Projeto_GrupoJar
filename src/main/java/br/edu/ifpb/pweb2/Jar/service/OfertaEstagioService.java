@@ -35,6 +35,10 @@ public class OfertaEstagioService {
 
     public Optional<OfertaEstagio> findById(Long id) { return ofertaEstagioRepository.findById(id); }
 
+    public Page<OfertaEstagio> findByEmpresa(Long empresaId, Pageable page) {
+        return ofertaEstagioRepository.findByEmpresaId(empresaId, page);
+    }
+
     public List<OfertaEstagio> buscarOfertasDisponiveis() {
         return ofertaEstagioRepository.findByStatus(1);
     }
