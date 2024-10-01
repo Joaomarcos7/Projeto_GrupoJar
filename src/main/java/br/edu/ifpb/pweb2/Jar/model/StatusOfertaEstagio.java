@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum StatusOfertaEstagio {
     APROVADO(1),
     PENDENTE(2),
-    NEGADO(3);
+    NEGADO(3),
+    FINALIZADO(4);
 
     private final int status;
 
