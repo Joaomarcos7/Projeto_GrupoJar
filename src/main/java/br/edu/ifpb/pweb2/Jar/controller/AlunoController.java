@@ -4,11 +4,16 @@ import br.edu.ifpb.pweb2.Jar.model.Aluno;
 import br.edu.ifpb.pweb2.Jar.model.Candidatura;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
+import br.edu.ifpb.pweb2.Jar.model.pagination.NavPage;
+import br.edu.ifpb.pweb2.Jar.model.pagination.NavePageBuilder;
 import br.edu.ifpb.pweb2.Jar.service.AlunoService;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -104,14 +109,19 @@ public class AlunoController {
     }
 
     @GetMapping("/ofertas")
-    public ModelAndView listarOfertasDisponiveis(@RequestParam(required = false) Double minValue,
+    public ModelAndView listarOfertasDisponiveis(@RequestParam(defaultValue = "1") int page,
+                                                 @RequestParam(defaultValue = "6") int size,
+                                                 @RequestParam(required = false) Double minValue,
                                                  @RequestParam(required = false) Double maxValue,
                                                  @RequestParam(required = false) List<String> habilidades,
                                                  ModelAndView modelAndView) {
         Aluno alunoLogado = (Aluno) httpSession.getAttribute("alunoLogado");
 
         if (alunoLogado != null) {
-            List<OfertaEstagio> ofertasDisponiveis = ofertaEstagioService.buscarOfertasDisponiveis();
+            Pageable paging = PageRequest.of(page - 1, size);
+
+            Page<OfertaEstagio> ofertasDisponiveisPage = ofertaEstagioService.buscarOfertasDisponiveisPaginado(paging);
+            List<OfertaEstagio> ofertasDisponiveis = ofertasDisponiveisPage.getContent();
 
             // Filtrando as ofertas com base nos parâmetros opcionais
             if (minValue != null) {
@@ -141,8 +151,12 @@ public class AlunoController {
                     })
                     .toList();
 
+            NavPage navPage = NavePageBuilder.newNavPage(ofertasDisponiveisPage.getNumber() + 1,
+                    ofertasDisponiveisPage.getTotalElements(), ofertasDisponiveisPage.getTotalPages(), size);
+
             modelAndView.addObject("aluno", alunoLogado);
             modelAndView.addObject("ofertas", ofertasDTO);
+            modelAndView.addObject("navPage", navPage);
             modelAndView.setViewName("alunos/ofertas");
         } else {
             modelAndView.setViewName("alunos/login");
@@ -152,14 +166,22 @@ public class AlunoController {
     }
 
     @GetMapping("/candidaturas")
-    public ModelAndView listarCandidaturas(ModelAndView modelAndView) {
+    public ModelAndView listarCandidaturas(@RequestParam(defaultValue = "1") int page,
+                                           @RequestParam(defaultValue = "6") int size,
+                                           ModelAndView modelAndView) {
         Aluno alunoLogado = (Aluno) httpSession.getAttribute("alunoLogado");
 
         if (alunoLogado != null) {
-            List<Candidatura> candidaturas = candidaturaService.buscarPorAluno(alunoLogado);
+            Pageable paging = PageRequest.of(page - 1, size);
 
-            modelAndView.addObject("candidaturas", candidaturas);
+            Page<Candidatura> candidaturasPage = candidaturaService.buscarPorAlunoPaginado(alunoLogado, paging);
+
+            NavPage navPage = NavePageBuilder.newNavPage(candidaturasPage.getNumber() + 1,
+                    candidaturasPage.getTotalElements(), candidaturasPage.getTotalPages(), size);
+
+            modelAndView.addObject("candidaturas", candidaturasPage.getContent());
             modelAndView.addObject("aluno", alunoLogado);
+            modelAndView.addObject("navPage", navPage);
             modelAndView.setViewName("alunos/candidaturas");
         } else {
             modelAndView.setViewName("alunos/login");

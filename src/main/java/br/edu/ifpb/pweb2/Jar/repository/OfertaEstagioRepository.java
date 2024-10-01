@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface OfertaEstagioRepository extends JpaRepository<OfertaEstagio, Long> {
 
-    List<OfertaEstagio> findByStatus(Integer status);
+    Page<OfertaEstagio> findByStatus(Integer status, Pageable pageable);
 
     Page<OfertaEstagio> findAll(Pageable pageable);
 

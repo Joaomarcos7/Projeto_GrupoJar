@@ -39,8 +39,8 @@ public class OfertaEstagioService {
         return ofertaEstagioRepository.findByEmpresaId(empresaId, page);
     }
 
-    public List<OfertaEstagio> buscarOfertasDisponiveis() {
-        return ofertaEstagioRepository.findByStatus(1);
+    public Page<OfertaEstagio> buscarOfertasDisponiveisPaginado(Pageable page) {
+        return ofertaEstagioRepository.findByStatus(1, page);
     }
 
     public String convertStatus(int statusCode) {

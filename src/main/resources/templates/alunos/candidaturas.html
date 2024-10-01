@@ -41,6 +41,8 @@
                 </div>
             </th:block>
 
+            <div th:replace="~{/fragments/paging :: paginator('alunos/candidaturas', ${navPage})}" />
+
             <div>
                 <a th:href="@{/alunos/menu}" class="btn btn-secondary">Voltar ao Menu</a>
             </div>

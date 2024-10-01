@@ -15,7 +15,8 @@ import java.util.List;
 @Repository
 public interface CandidaturaRepository extends JpaRepository<Candidatura, Long> {
 
-    List<Candidatura> findByAluno(Aluno aluno);
+    Page<Candidatura> findByAluno(Aluno aluno, Pageable pageable);
+
     Page<Candidatura> findByOfertaEstagio(OfertaEstagio ofertaEstagio, Pageable pageable);
 
     Page<Candidatura> findByEstado(EstadoCandidatura estado, Pageable pageable);

@@ -26,7 +26,9 @@ public class CandidaturaService {
 
     public Optional<Candidatura> findById(Long id) { return candidaturaRepository.findById(id); }
     
-    public List<Candidatura> buscarPorAluno(Aluno aluno) { return candidaturaRepository.findByAluno(aluno); }
+    public Page<Candidatura> buscarPorAlunoPaginado(Aluno aluno, Pageable pageable) {
+        return candidaturaRepository.findByAluno(aluno, pageable);
+    }
 
     public Page<Candidatura> buscarPorOfertaPaginado(OfertaEstagio oferta, Pageable pageable) {
         return candidaturaRepository.findByOfertaEstagio(oferta, pageable);
