@@ -13,6 +13,7 @@
             min-height: 100vh;
             margin: 0;
             background-color: #f8f9fa;
+            flex-direction: column;
         }
         .card {
             background: white;
@@ -47,8 +48,6 @@
     </style>
 </head>
 <body>
-
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
     <div class="card">
         <div th:if="${mensagem}" class="alert alert-success">
