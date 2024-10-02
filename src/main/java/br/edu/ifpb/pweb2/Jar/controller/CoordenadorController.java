@@ -53,9 +53,18 @@ public class CoordenadorController {
     }
 
     @GetMapping("/estagios")
-    public ModelAndView estagios(ModelAndView modelAndView){
-        List<Estagio> estagios = estagioService.findAll();
-        modelAndView.addObject("estagios",estagios);
+    public ModelAndView estagios(@RequestParam(defaultValue = "1") int page,
+                                 @RequestParam(defaultValue = "5") int size,
+                                 ModelAndView modelAndView) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Page<Estagio> estagiosPage = estagioService.findAll(pageable);
+
+        NavPage navPage = NavePageBuilder.newNavPage(estagiosPage.getNumber() + 1,
+                estagiosPage.getTotalElements(), estagiosPage.getTotalPages(), size);
+
+        modelAndView.addObject("estagios", estagiosPage.getContent());
+        modelAndView.addObject("navPage", navPage);
         modelAndView.setViewName("coordenadores/estagios");
         return modelAndView;
 

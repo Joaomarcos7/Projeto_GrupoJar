@@ -80,10 +80,10 @@ public class AlunoController {
     }
 
     @GetMapping("/estagio")
-    public ModelAndView exibirEstagio(ModelAndView modelAndView){
+    public ModelAndView exibirEstagio(ModelAndView modelAndView) {
         Aluno alunoLogado = (Aluno) httpSession.getAttribute("alunoLogado");
         Estagio estagio  = this.estagioService.findByAluno(alunoLogado);
-        modelAndView.addObject("estagio",estagio);
+        modelAndView.addObject("estagio", estagio);
         modelAndView.setViewName("alunos/estagio");
         return modelAndView;
     }
