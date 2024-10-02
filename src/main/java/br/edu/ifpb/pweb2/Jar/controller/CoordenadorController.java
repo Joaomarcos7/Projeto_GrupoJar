@@ -321,11 +321,32 @@ public class CoordenadorController {
             empresa.setSenha(empresaExistente.getSenha());
         }
 
+        empresa.setOfertaEstagios(empresaExistente.getOfertaEstagios());
         empresaService.save(empresa);
+
         redirectAttributes.addFlashAttribute("mensagem", "Empresa editada com sucesso.");
         modelAndView.setViewName("redirect:/coordenadores/empresas");
         return modelAndView;
     }
+
+    @PostMapping("/deletar-empresas")
+    public String deletarEmpresas(@RequestParam("ids") String ids,
+                                  RedirectAttributes redirectAttributes) {
+
+        if (ids != null && !ids.isEmpty()) {
+            String[] empresaIds = ids.split(",");
+            for (String id : empresaIds) {
+                Long empresaId = Long.parseLong(id);
+                empresaService.deleteById(empresaId);
+            }
+            redirectAttributes.addFlashAttribute("mensagem", "Empresas deletadas com sucesso.");
+        
+        }
+        return "redirect:/coordenadores/empresas";
+    }
+
+
+
 
     @GetMapping("/logout")
     public String logout() {
