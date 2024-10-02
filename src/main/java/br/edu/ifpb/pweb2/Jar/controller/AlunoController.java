@@ -1,14 +1,12 @@
 package br.edu.ifpb.pweb2.Jar.controller;
 
-import br.edu.ifpb.pweb2.Jar.model.Aluno;
-import br.edu.ifpb.pweb2.Jar.model.Candidatura;
-import br.edu.ifpb.pweb2.Jar.model.EstadoCandidatura;
-import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
+import br.edu.ifpb.pweb2.Jar.model.*;
 import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
 import br.edu.ifpb.pweb2.Jar.model.pagination.NavPage;
 import br.edu.ifpb.pweb2.Jar.model.pagination.NavePageBuilder;
 import br.edu.ifpb.pweb2.Jar.service.AlunoService;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
+import br.edu.ifpb.pweb2.Jar.service.EstagioService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +39,10 @@ public class AlunoController {
 
     @Autowired
     private CandidaturaService candidaturaService;
+
+    @Autowired
+    private EstagioService estagioService;
+
 
     @GetMapping("/login")
     public ModelAndView login(ModelAndView modelAndView) {
@@ -80,8 +82,8 @@ public class AlunoController {
     @GetMapping("/estagio")
     public ModelAndView exibirEstagio(ModelAndView modelAndView){
         Aluno alunoLogado = (Aluno) httpSession.getAttribute("alunoLogado");
-        Optional<Candidatura> candidatura = candidaturaService.buscarPorAluno(alunoLogado).stream().filter(x->x.getEstado().equals(EstadoCandidatura.ACEITA)).findFirst();
-        modelAndView.addObject("candidatura",candidatura);
+        Estagio estagio  = this.estagioService.findByAluno(alunoLogado);
+        modelAndView.addObject("estagio",estagio);
         modelAndView.setViewName("alunos/estagio");
         return modelAndView;
     }
