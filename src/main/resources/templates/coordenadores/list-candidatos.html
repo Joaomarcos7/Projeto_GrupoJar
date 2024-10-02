@@ -2,11 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
     <title>Lista de Alunos Candidatos</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .margin-top {
             margin-top: 100px;
         }
+        th{
+            background-color: #343a40 !important;
+            color:white; 
+        } 
+        .table>:not(caption)>*>* {
+            padding: .5rem .5rem;
+            color: var(--bs-table-color-state, var(--bs-table-color-type, #ffffff));
+            background-color: var(--bs-table-bg);
+            border-bottom-width: var(--bs-border-width);
+            box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)));
+        }
+
     </style>
 </head>
 <body>
@@ -49,7 +61,7 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
