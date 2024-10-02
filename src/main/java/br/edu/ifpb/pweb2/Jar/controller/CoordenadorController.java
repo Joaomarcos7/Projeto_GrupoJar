@@ -4,16 +4,14 @@ import br.edu.ifpb.pweb2.Jar.model.*;
 import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
 import br.edu.ifpb.pweb2.Jar.model.pagination.NavPage;
 import br.edu.ifpb.pweb2.Jar.model.pagination.NavePageBuilder;
-import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
-import br.edu.ifpb.pweb2.Jar.service.CoordenadorService;
-import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
-import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
+import br.edu.ifpb.pweb2.Jar.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/coordenadores")
@@ -42,12 +41,24 @@ public class CoordenadorController {
     @Autowired
     private OfertaEstagioService ofertaEstagioService;
 
+    @Autowired
+    private EstagioService estagioService;
+
     @GetMapping()
     public ModelAndView listarCoordenadores(ModelAndView modelAndView) {
         List<Coordenador> coordenadores = coordenadorService.findAll();
         modelAndView.addObject("coordenadores", coordenadores);
         modelAndView.setViewName("coordenadores/list");
         return modelAndView;
+    }
+
+    @GetMapping("/estagios")
+    public ModelAndView estagios(ModelAndView modelAndView){
+        List<Estagio> estagios = estagioService.findAll();
+        modelAndView.addObject("estagios",estagios);
+        modelAndView.setViewName("coordenadores/estagios");
+        return modelAndView;
+
     }
 
     @GetMapping("/login")

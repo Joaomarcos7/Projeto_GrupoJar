@@ -30,8 +30,16 @@ public class CandidaturaService {
         return candidaturaRepository.findByAluno(aluno, pageable);
     }
 
+    public List<Candidatura> buscarPorAluno(Aluno aluno) {
+        return candidaturaRepository.findByAluno(aluno);
+    }
+
     public Page<Candidatura> buscarPorOfertaPaginado(OfertaEstagio oferta, Pageable pageable) {
         return candidaturaRepository.findByOfertaEstagio(oferta, pageable);
+    }
+
+    public List<Candidatura> buscarPorOferta(OfertaEstagio oferta) {
+        return candidaturaRepository.findByOfertaEstagio(oferta);
     }
 
     public boolean existsByAlunoIdAndOfertaId(Long alunoId, Long ofertaId) {

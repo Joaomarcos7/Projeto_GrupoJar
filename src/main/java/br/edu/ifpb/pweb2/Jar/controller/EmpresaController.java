@@ -5,10 +5,7 @@ import br.edu.ifpb.pweb2.Jar.model.dto.*;
 import br.edu.ifpb.pweb2.Jar.model.pagination.NavPage;
 import br.edu.ifpb.pweb2.Jar.model.pagination.NavePageBuilder;
 import br.edu.ifpb.pweb2.Jar.model.Aluno;
-import br.edu.ifpb.pweb2.Jar.service.AlunoService;
-import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
-import br.edu.ifpb.pweb2.Jar.service.EmpresaService;
-import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
+import br.edu.ifpb.pweb2.Jar.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,9 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -42,6 +38,9 @@ public class EmpresaController {
 
     @Autowired
     private CandidaturaService candidaturaService;
+
+    @Autowired
+    private EstagioService estagioService;
 
     @Autowired
     private AlunoService alunoService;
@@ -120,18 +119,31 @@ public class EmpresaController {
 
     @PostMapping("/aprovar-candidatos")
     public ModelAndView AprovarCandidatos(@RequestBody Map<String, Object> payload, ModelAndView modelAndView){
+        Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
         Long ofertaId = Long.valueOf(payload.get("ofertaId").toString());
         List<String> emails = (List<String>) payload.get("emails");
         System.out.println(emails);
         OfertaEstagio oferta = this.ofertaEstagioService.findById(ofertaId).orElseThrow();
         oferta.setStatus(4);
         this.ofertaEstagioService.save(oferta);
+        Estagio estagio = new Estagio();
+        estagio.setEmpresa(empresaLogada);
+        estagio.setOferta(oferta);
+        Set<Aluno> alunos = new HashSet<>();
         for(String email : emails){
             Candidatura candidatura = this.candidaturaService.buscarPorOferta(oferta).stream().filter(x->x.getAluno().getEmail().equals(email)).findFirst().orElseThrow();
             candidatura.setEstado(EstadoCandidatura.ACEITA);
-            candidaturaService.save((candidatura));
+            Aluno aluno = alunoService.findByEmail(email);
+            alunos.add(aluno);
+            this.candidaturaService.save((candidatura));
         }
-        modelAndView.setViewName("empresas/menu");
+        estagio.setAluno(alunos);
+        estagio.setDataInicio(LocalDate.now());
+        estagio.setValor(oferta.getValorPago());
+        estagio.setDataFim(LocalDate.now().plusYears(1));
+        this.estagioService.save(estagio);
+        modelAndView.addObject("empresa",empresaLogada);
+        modelAndView.setViewName("redirect:/empresas/menu");
         return modelAndView;
     }
 
