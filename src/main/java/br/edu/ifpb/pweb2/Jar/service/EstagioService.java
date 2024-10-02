@@ -28,6 +28,10 @@ public class EstagioService {
         return repository.findAll();
     }
 
+    public Page<Estagio> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
     public Optional<Estagio> findById(Long id) {
         return repository.findById(id);
     }

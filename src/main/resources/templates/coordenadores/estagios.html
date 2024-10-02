@@ -21,24 +21,30 @@
       <th>Alunos</th>
     </tr>
     </thead>
-    <tbody>
-    <!-- Listando as empresas do banco -->
-    <tr th:each="estagio : ${estagios}">
-      <td th:text="${estagio.empresa.nome}">Nome</td>
-      <td th:text="${estagio.empresa.cnpj}">CNPJ</td>
-      <td th:text="${estagio.dataInicio}">Atividade</td>
-      <td th:text="${estagio.dataFim}">Atividade</td>
-      <td th:text="${estagio.valor}">Atividade</td>
-      <td >
-        <ul>
-          <li th:each="aluno : ${estagio.aluno}">
-            <span th:text="${aluno.nomeCompleto}" ></span>
-          </li>
-        </ul>
-      </td>
-    </tr>
+    <tbody th:if="${estagios.size() > 0}">
+      <!-- Listando as empresas do banco -->
+      <tr th:each="estagio : ${estagios}">
+        <td th:text="${estagio.empresa.nome}">Nome</td>
+        <td th:text="${estagio.empresa.cnpj}">CNPJ</td>
+        <td th:text="${estagio.dataInicio}">Atividade</td>
+        <td th:text="${estagio.dataFim}">Atividade</td>
+        <td th:text="${estagio.valor}">Atividade</td>
+        <td >
+          <ul>
+            <li th:each="aluno : ${estagio.aluno}">
+              <span th:text="${aluno.nomeCompleto}" ></span>
+            </li>
+          </ul>
+        </td>
+      </tr>
     </tbody>
   </table>
+
+  <div th:if="${estagios.size() <= 0}" class="alert alert-info">
+    <p>Não há ofertas pendentes no momento.</p>
+  </div>
+
+  <div th:replace="~{/fragments/paging :: paginator('coordenadores/estagios', ${navPage})}" />
 
   <div class="mt-3 mb-2">
     <a th:href="@{/coordenadores/menu}" class="btn btn-secondary">Voltar ao Menu</a>

@@ -4,17 +4,33 @@
     <meta charset="UTF-8">
     <title>Estágio</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .margin-top {
+            margin-top: 100px;
+        }
+    </style>
 </head>
 <body>
-<div th:replace="~{fragments/navbar :: navbar}"></div>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <div class="container mt-4">
-          <h1>
-              <span th:text="${estagio.empresa.nome}">Nome da Empresa</span>
-          </h1>
-          <p>Data Inicio: <span th:text="${estagio.dataInicio}">email@example.com</span></p>
-          <p>Data Fim: <span th:text="${estagio.dataFim}">email@example.com</span></p>
-          <p>Valor Bolsa: <span th:text="${estagio.valor}">email@example.com</span></p>
+    <div class="container margin-top">
+
+        <h2>Estágio</h2>
+
+        <div th:if="${estagio == null}">
+            <p class="alert alert-warning">Você ainda não possui um estágio.</p>
+            <a th:href="@{/alunos/menu}" class="btn btn-secondary">Voltar ao Menu</a>
+        </div>
+
+        <div th:if="${estagio != null}">
+            <h1>
+                <span th:text="${estagio.empresa.nome}">Nome da Empresa</span>
+            </h1>
+            <p>Data Inicio: <span th:text="${estagio.dataInicio}">email@example.com</span></p>
+            <p>Data Fim: <span th:text="${estagio.dataFim}">email@example.com</span></p>
+            <p>Valor Bolsa: <span th:text="${estagio.valor}">email@example.com</span></p>
+        </div>
+
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>

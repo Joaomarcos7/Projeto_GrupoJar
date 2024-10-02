@@ -152,7 +152,14 @@
                             ofertaId: ofertaId,
                             emails: selectedEmpresas
                         }) // Enviando os dados selecionados no corpo da requisição
-                    })
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '/estagiosJar/empresas/menu';
+                            alert('Candidatos aprovados com sucesso.');
+                        } else {
+                            console.error('Erro ao aprovar candidatos:', response);
+                        }
+                    });
                 }
             });
         });

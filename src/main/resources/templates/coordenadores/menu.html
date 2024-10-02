@@ -58,13 +58,14 @@
         </h1>
         <p>Email: <span th:text="${coordenador.email}">email@example.com</span></p>
 
-        <div class="d-flex flex-column justify-content-center align-items-center gap-1">
+        <div class="d-flex flex-column justify-content-center align-items-center mt-4 gap-2">
             <a th:href="@{/coordenadores/candidatos}" class="btn btn-primary w-100">Ver Alunos Candidatos</a>
             <a th:href="@{/coordenadores/ofertas/pendentes}" class="btn btn-secondary w-100">Ver Ofertas de Estágio Pendentes</a>
             <a th:href="@{/coordenadores/ofertas/negadas}" class="btn btn-secondary w-100">Ver Ofertas de Estágio Negadas</a>
             <a th:href="@{/coordenadores/ofertas/aprovadas}" class="btn btn-secondary w-100">Ver Ofertas de Estágio Aprovadas</a>
             <a th:href="@{/coordenadores/empresas}" class="btn btn-terciary w-100">Ver Empresas</a>
             <a th:href="@{/coordenadores/estagios}" class="btn btn-terciary w-100">Ver Estágios</a>
+            <a th:href="@{/coordenadores/logout}" class="btn btn-danger w-100">Sair</a>
         </div>
 
     </div>
