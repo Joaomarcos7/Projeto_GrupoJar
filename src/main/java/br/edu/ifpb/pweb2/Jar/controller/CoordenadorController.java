@@ -329,22 +329,6 @@ public class CoordenadorController {
         return modelAndView;
     }
 
-    @PostMapping("/deletar-empresas")
-    public String deletarEmpresas(@RequestParam("ids") String ids,
-                                  RedirectAttributes redirectAttributes) {
-
-        if (ids != null && !ids.isEmpty()) {
-            String[] empresaIds = ids.split(",");
-            for (String id : empresaIds) {
-                Long empresaId = Long.parseLong(id);
-                empresaService.deleteById(empresaId);
-            }
-            redirectAttributes.addFlashAttribute("mensagem", "Empresas deletadas com sucesso.");
-        
-        }
-        return "redirect:/coordenadores/empresas";
-    }
-
     @PostMapping("/bloquear-empresas")
     public String bloquearEmpresas(@RequestParam("ids") String ids,
                                    RedirectAttributes redirectAttributes) {
