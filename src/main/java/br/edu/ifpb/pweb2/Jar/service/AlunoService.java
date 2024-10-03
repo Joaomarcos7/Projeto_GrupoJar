@@ -5,6 +5,7 @@ import br.edu.ifpb.pweb2.Jar.model.Authority;
 import br.edu.ifpb.pweb2.Jar.model.User;
 import br.edu.ifpb.pweb2.Jar.repository.AlunoRepository;
 import br.edu.ifpb.pweb2.Jar.repository.AuthorityRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,9 +28,8 @@ public class AlunoService {
     private AuthorityRepository authorityRepository;
 
 
-
+    @Transactional
     public Aluno save(Aluno aluno) {
-
         Aluno alunoachado = alunoRepository.findByEmail(aluno.getEmail());
 
         if (alunoachado != null) {
@@ -39,10 +39,10 @@ public class AlunoService {
         aluno.setPassword(passwordEncoder.encode(aluno.getPassword()));
 
         Authority authority = new Authority();
-        authority.setId(new Authority.AuthorityId(aluno.getUsername(), "ALUNO"));
+        authority.setId(new Authority.AuthorityId(aluno.getUsername(), "ROLE_ALUNO"));
         authority.setUsername(aluno);
-        authority.setAuthority("ALUNO");
-       Aluno alunoSaved =  this.alunoRepository.save(aluno);
+        authority.setAuthority("ROLE_ALUNO");
+        Aluno alunoSaved =  this.alunoRepository.save(aluno);
         this.authorityRepository.save(authority);
         return alunoSaved;
     }

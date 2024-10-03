@@ -62,7 +62,7 @@ public class AuthController {
         return modelAndView;
     }
 
-    @GetMapping("cadastro-empresa")
+    @GetMapping("/cadastro-empresa")
     public ModelAndView showRegistrationForm(ModelAndView modelAndView) {
         modelAndView.setViewName("auth/form-empresa");
         modelAndView.addObject("empresa", new Empresa());
@@ -74,6 +74,7 @@ public class AuthController {
         ModelAndView modelAndView = new ModelAndView("auth/form-empresa");
 
         if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getAllErrors());
             return modelAndView;
         }
 

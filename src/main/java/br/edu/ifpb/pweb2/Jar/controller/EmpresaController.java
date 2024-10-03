@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -105,16 +107,12 @@ public class EmpresaController {
     }
 
     @GetMapping("/menu")
-    public ModelAndView detalhesEmpresa(ModelAndView modelAndView) {
-        Empresa empresaLogada = (Empresa) httpSession.getAttribute("empresaLogada");
-
-        if (empresaLogada != null) {
-            modelAndView.addObject("empresa", empresaLogada);
+    public ModelAndView detalhesEmpresa(ModelAndView modelAndView,@AuthenticationPrincipal UserDetails userDetails) {
+            Empresa empresa= empresaService.findByUsername(userDetails.getUsername());
+            httpSession.setAttribute("empresaLogada",empresa);
+            modelAndView.addObject("empresa", empresa);
             modelAndView.setViewName("empresas/menu");
-        } else {
-            modelAndView.setViewName("empresas/login");
-        }
-        return modelAndView;
+            return modelAndView;
     }
 
     @PostMapping("/aprovar-candidatos")
@@ -207,7 +205,7 @@ public class EmpresaController {
             modelAndView.addObject("navPage", navPage);
             modelAndView.setViewName("empresas/oferta-aluno");
         } else {
-            modelAndView.setViewName("empresas/login");
+            modelAndView.setViewName("auth/login");
         }
 
         return modelAndView;

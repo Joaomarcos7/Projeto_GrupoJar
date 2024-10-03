@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -130,16 +132,12 @@ public class CoordenadorController {
     }
 
     @GetMapping("/menu")
-    public ModelAndView exibirMenu(ModelAndView modelAndView) {
-        Coordenador coordenadorLogado = (Coordenador) httpSession.getAttribute("coordenadorLogado");
-
-        if (coordenadorLogado != null) {
-            modelAndView.addObject("coordenador", coordenadorLogado);
+    public ModelAndView exibirMenu(ModelAndView modelAndView, @AuthenticationPrincipal UserDetails userDetails) {
+            Coordenador coordenador= coordenadorService.findByUsername(userDetails.getUsername());
+            httpSession.setAttribute("coordenadorLogado",coordenador);
+            modelAndView.addObject("coordenador", coordenador);
             modelAndView.setViewName("coordenadores/menu");
-        } else {
-            modelAndView.setViewName("redirect:/coordenadores/login");
-        }
-        return modelAndView;
+            return modelAndView;
     }
 
     @GetMapping("/cadastro")

@@ -6,6 +6,7 @@ import br.edu.ifpb.pweb2.Jar.model.Empresa;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 import br.edu.ifpb.pweb2.Jar.repository.AuthorityRepository;
 import br.edu.ifpb.pweb2.Jar.repository.EmpresaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +29,7 @@ public class EmpresaService {
     @Autowired
     private AuthorityRepository authorityRepository;
 
-
+    @Transactional
     public Empresa save(Empresa empresa) {
 
         Empresa companyCnpj = this.empresaRepository.findByCnpj(empresa.getCnpj());
@@ -40,9 +41,9 @@ public class EmpresaService {
         empresa.setPassword(passwordEncoder.encode(empresa.getPassword()));
 
         Authority authority = new Authority();
-        authority.setId(new Authority.AuthorityId(empresa.getUsername(), "EMPRESA"));
+        authority.setId(new Authority.AuthorityId(empresa.getUsername(), "ROLE_EMPRESA"));
         authority.setUsername(empresa);
-        authority.setAuthority("EMPRESA");
+        authority.setAuthority("ROlE_EMPRESA");
         Empresa empresaSaved = this.empresaRepository.save(empresa);
         authorityRepository.save(authority);
         return empresaSaved;

@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -83,6 +85,7 @@ public class AlunoController {
     public ModelAndView exibirEstagio(ModelAndView modelAndView) {
         Aluno alunoLogado = (Aluno) httpSession.getAttribute("alunoLogado");
         Estagio estagio  = this.estagioService.findByAluno(alunoLogado);
+        System.out.println(estagio);
         modelAndView.addObject("estagio", estagio);
         modelAndView.setViewName("alunos/estagio");
         return modelAndView;
@@ -109,16 +112,12 @@ public class AlunoController {
     }
 
     @GetMapping("/menu")
-    public ModelAndView exibirMenu(ModelAndView modelAndView) {
-        Aluno alunoLogado = (Aluno) httpSession.getAttribute("alunoLogado");
-
-        if (alunoLogado != null) {
-            modelAndView.addObject("aluno", alunoLogado);
+    public ModelAndView exibirMenu(ModelAndView modelAndView, @AuthenticationPrincipal UserDetails userDetails) {
+            Aluno aluno = alunoService.findByUsername(userDetails.getUsername());
+            httpSession.setAttribute("alunoLogado",aluno);
+            modelAndView.addObject("aluno", aluno);
             modelAndView.setViewName("alunos/menu");
-        } else {
-            modelAndView.setViewName("alunos/login");
-        }
-        return modelAndView;
+            return modelAndView;
     }
 
     @GetMapping("/ofertas")

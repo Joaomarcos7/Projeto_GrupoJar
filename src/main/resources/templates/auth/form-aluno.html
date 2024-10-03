@@ -41,7 +41,7 @@
 
     <h2 class="text-center">Cadastro de Aluno</h2>
 
-    <form th:action="@{/alunos/cadastro}" th:object="${aluno}" method="post">
+    <form th:action="@{/auth/cadastro-aluno}" th:object="${aluno}" method="post">
 
       <!-- Campo Nome Completo -->
       <div class="mb-3">
@@ -59,7 +59,7 @@
 
       <!-- Campo Username -->
       <div class="mb-3">
-        <label for="username">Username:</label>
+        <label for="username">Nome de Usuário:</label>
         <input type="text" id="username" class="form-control" name="username" th:field="*{username}" />
         <div th:if="${#fields.hasErrors('username')}" class="error-message" th:errors="*{username}">Username Error</div>
       </div>

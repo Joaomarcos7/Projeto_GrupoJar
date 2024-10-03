@@ -17,8 +17,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 public class Aluno extends User {
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     @NotBlank(message = "Campo obrigatório")
     @Column(nullable = false)

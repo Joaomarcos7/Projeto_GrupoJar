@@ -45,11 +45,17 @@
             <p th:text="${mensagem}"></p>
         </div>
 
-        <form th:action="@{/empresas/cadastro}" th:object="${empresa}" method="post">
+        <form th:action="@{/auth/cadastro-empresa}" th:object="${empresa}" method="post">
             <div class="mb-1">
                 <label for="nome">Nome da Empresa</label>
                 <input type="text" id="nome" class="form-control" name="nome" th:field="*{nome}" />
                 <div th:if="${#fields.hasErrors('nome')}" class="error-message" th:errors="*{nome}">Nome da empresa inválido.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="username">Nome de Usuário:</label>
+                <input type="text" id="username" class="form-control" name="username" th:field="*{username}" />
+                <div th:if="${#fields.hasErrors('username')}" class="error-message" th:errors="*{username}">Username Error</div>
             </div>
 
             <div class="mb-1">

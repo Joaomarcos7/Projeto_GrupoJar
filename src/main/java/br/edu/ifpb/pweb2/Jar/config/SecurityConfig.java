@@ -34,7 +34,7 @@ public class SecurityConfig {
     }
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http
+        http.csrf().disable()
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(
                                 "/css/**", "/images/**",
@@ -60,15 +60,15 @@ public class SecurityConfig {
         return (request, response, authentication) -> {
             if (authentication.getAuthorities().stream()
                     .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ALUNO"))) {
-                response.sendRedirect("/estagioJar/alunos/menu");
+                response.sendRedirect("/estagiosJar/alunos/menu");
             } else if (authentication.getAuthorities().stream()
                     .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_EMPRESA"))) {
-                response.sendRedirect("/estagioJar/empresas/menu");
+                response.sendRedirect("/estagiosJar/empresas/menu");
             } else if (authentication.getAuthorities().stream()
                     .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
-                response.sendRedirect("/estagioJar/coordenadores/menu");
+                response.sendRedirect("/estagiosJar/coordenadores/menu");
             } else {
-                response.sendRedirect("/estagioJar/");
+                response.sendRedirect("/estagiosJar/");
             }
         };
     }
