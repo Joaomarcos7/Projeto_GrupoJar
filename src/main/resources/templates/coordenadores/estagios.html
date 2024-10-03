@@ -82,6 +82,7 @@
                 <th>Data Fim</th>
                 <th>Bolsa</th>
                 <th>Alunos</th>
+                <th> Termo de Estágio</th>
             </tr>
             </thead>
             <tbody th:if="${estagios.size() > 0}">
@@ -89,8 +90,8 @@
             <tr th:each="estagio : ${estagios}">
                 <td th:text="${estagio.empresa.nome}">Nome</td>
                 <td th:text="${estagio.empresa.cnpj}">CNPJ</td>
-                <td th:text="${estagio.dataInicio}">Data Início</td>
-                <td th:text="${estagio.dataFim}">Data Fim</td>
+                <td th:text="${estagio.getDataInicioFormatada()}">Data Início</td>
+                <td th:text="${estagio.getDataFimFormatada()}">Data Fim</td>
                 <td th:text="${estagio.valor}">Bolsa</td>
                 <td>
                     <ul>
@@ -99,6 +100,8 @@
                         </li>
                     </ul>
                 </td>
+                <td> <button id="btn-donwload" class="btn btn-primary" th:attr="data-id=${estagio.id}"
+                             onclick="downloadPDF(this)" >Baixar PDF</button> </td>
             </tr>
             </tbody>
         </table>
@@ -115,6 +118,13 @@
     </div>
 </div>
 
+
+<script>
+    function downloadPDF(button) {
+        const estagioId = button.getAttribute("data-id");
+        window.location.href = `estagios/download/${estagioId}`;
+    }
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 </body>

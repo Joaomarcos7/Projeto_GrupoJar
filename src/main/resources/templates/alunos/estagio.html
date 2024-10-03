@@ -38,8 +38,8 @@
             <h3 class="text-center mb-4">
                 <span th:text="${estagio.empresa.nome}">Nome da Empresa</span>
             </h3>
-            <p><strong>Data de Início:</strong> <span th:text="${estagio.dataInicio}">Data Início</span></p>
-            <p><strong>Data de Fim:</strong> <span th:text="${estagio.dataFim}">Data Fim</span></p>
+            <p><strong>Data de Início:</strong> <span th:text="${estagio.getDataInicioFormatada()}">Data Início</span></p>
+            <p><strong>Data de Fim:</strong> <span th:text="${estagio.getDataFimFormatada()}">Data Fim</span></p>
             <p><strong>Valor da Bolsa:</strong> <span th:text="${estagio.valor}">Valor Bolsa</span></p>
         </div>
 
