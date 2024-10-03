@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.Jar.service;
 
+import br.edu.ifpb.pweb2.Jar.model.Aluno;
 import br.edu.ifpb.pweb2.Jar.model.Coordenador;
 import br.edu.ifpb.pweb2.Jar.repository.CoordenadorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,4 +22,6 @@ public class CoordenadorService {
     public Optional<Coordenador> findById(Long id) { return coordenadorRepository.findById(id); }
 
     public Coordenador findByEmail(String email) { return coordenadorRepository.findByEmail(email); }
+
+    public Coordenador findByUsername(String username) { return coordenadorRepository.findByUsername(username); }
 }

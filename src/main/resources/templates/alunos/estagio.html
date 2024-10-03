@@ -27,10 +27,11 @@
         <div th:if="${estagio != null}">
             <h1>
                 <span th:text="${estagio.empresa.nome}">Nome da Empresa</span>
-            </h1>
-            <p>Data Inicio: <span th:text="${estagio.dataInicio}">email@example.com</span></p>
-            <p>Data Fim: <span th:text="${estagio.dataFim}">email@example.com</span></p>
-            <p>Valor Bolsa: <span th:text="${estagio.valor}">email@example.com</span></p>
+            </h3>
+            <p><strong>Data de Início:</strong> <span th:text="${estagio.getDataInicioFormatada()}">Data Início</span></p>
+            <p><strong>Data de Fim:</strong> <span th:text="${estagio.getDataFimFormatada()}">Data Fim</span></p>
+            <p><strong>Valor da Bolsa:</strong> <span th:text="${estagio.valor}">Valor Bolsa</span></p>
+
         </div>
 
     </div>

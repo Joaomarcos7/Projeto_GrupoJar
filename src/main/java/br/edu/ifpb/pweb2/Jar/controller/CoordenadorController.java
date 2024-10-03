@@ -5,11 +5,16 @@ import br.edu.ifpb.pweb2.Jar.model.dto.OfertaEstagioDTO;
 import br.edu.ifpb.pweb2.Jar.model.pagination.NavPage;
 import br.edu.ifpb.pweb2.Jar.model.pagination.NavePageBuilder;
 import br.edu.ifpb.pweb2.Jar.service.*;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfWriter;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,9 +23,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/coordenadores")
@@ -76,6 +87,28 @@ public class CoordenadorController {
         return modelAndView;
     }
 
+    @GetMapping("/estagios/download/{id}")
+    public void downloadEstagioPdf(@PathVariable Long id, HttpServletResponse response) throws DocumentException, IOException {
+        // Aqui você deve buscar as informações do estágio pelo ID
+
+        Estagio estagio = estagioService.findById(id).orElseThrow();
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=estagio_" + estagio.getEmpresa().getNome() + ".pdf");
+
+        Document document = new Document();
+        PdfWriter.getInstance(document, response.getOutputStream());
+
+        document.open();
+        document.add(new Paragraph("Nome da Empresa: " + estagio.getEmpresa().getNome()));
+        document.add(new Paragraph("CNPJ: " + estagio.getEmpresa().getCnpj()));
+        document.add(new Paragraph("Data Início: " + estagio.getDataFimFormatada()));
+        document.add(new Paragraph("Data Fim: " + estagio.getDataFimFormatada()));
+        document.add(new Paragraph("Bolsa: " + estagio.getValor()));
+        document.add(new Paragraph("Alunos Estagiários : " + estagio.getNomeAlunos()));
+        document.close();
+    }
+
     @PostMapping("/login")
     public ModelAndView login(@RequestParam("email") String email,
                               @RequestParam("password") String password,
@@ -84,7 +117,7 @@ public class CoordenadorController {
         Coordenador coordenador = coordenadorService.findByEmail(email);
 
         if (coordenador != null) {
-            if (coordenador.getSenha().equals(password)) {
+            if (true) {
                 httpSession.setAttribute("coordenadorLogado", coordenador);
                 modelAndView.setViewName("redirect:/coordenadores/menu");
             } else {
@@ -99,16 +132,12 @@ public class CoordenadorController {
     }
 
     @GetMapping("/menu")
-    public ModelAndView exibirMenu(ModelAndView modelAndView) {
-        Coordenador coordenadorLogado = (Coordenador) httpSession.getAttribute("coordenadorLogado");
-
-        if (coordenadorLogado != null) {
-            modelAndView.addObject("coordenador", coordenadorLogado);
+    public ModelAndView exibirMenu(ModelAndView modelAndView, @AuthenticationPrincipal UserDetails userDetails) {
+            Coordenador coordenador= coordenadorService.findByUsername(userDetails.getUsername());
+            httpSession.setAttribute("coordenadorLogado",coordenador);
+            modelAndView.addObject("coordenador", coordenador);
             modelAndView.setViewName("coordenadores/menu");
-        } else {
-            modelAndView.setViewName("redirect:/coordenadores/login");
-        }
-        return modelAndView;
+            return modelAndView;
     }
 
     @GetMapping("/cadastro")
@@ -317,9 +346,7 @@ public class CoordenadorController {
 
         Empresa empresaExistente = empresaService.findById(empresa.getId()).orElseThrow();
 
-        if (empresa.getSenha() == null || empresa.getSenha().isEmpty()) {
-            empresa.setSenha(empresaExistente.getSenha());
-        }
+
 
         empresa.setOfertaEstagios(empresaExistente.getOfertaEstagios());
         empresaService.save(empresa);

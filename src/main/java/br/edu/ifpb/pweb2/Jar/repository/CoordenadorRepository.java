@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface CoordenadorRepository extends JpaRepository<Coordenador, Long> {
 
     Coordenador findByEmail(String email);
+    Coordenador findByUsername(String username);
+
 }

@@ -19,15 +19,13 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Empresa extends Usuario implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class Empresa extends User{
 
     @NotBlank(message = "Campo obrigatório")
     @Column(nullable = false)
     private String nome;
 
-    @Pattern(regexp = "\\d{14}", message = "O CNPJ deve conter 14 dígitos")
+    @Size(min = 14, message = "CNPJ deve ter no mínimo 14 caracteres")
     @Column(nullable = false, unique = true)
     private String cnpj;
 
