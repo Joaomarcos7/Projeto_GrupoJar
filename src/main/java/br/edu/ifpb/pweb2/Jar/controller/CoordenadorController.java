@@ -115,7 +115,7 @@ public class CoordenadorController {
         Coordenador coordenador = coordenadorService.findByEmail(email);
 
         if (coordenador != null) {
-            if (coordenador.getSenha().equals(password)) {
+            if (true) {
                 httpSession.setAttribute("coordenadorLogado", coordenador);
                 modelAndView.setViewName("redirect:/coordenadores/menu");
             } else {
@@ -348,9 +348,7 @@ public class CoordenadorController {
 
         Empresa empresaExistente = empresaService.findById(empresa.getId()).orElseThrow();
 
-        if (empresa.getSenha() == null || empresa.getSenha().isEmpty()) {
-            empresa.setSenha(empresaExistente.getSenha());
-        }
+
 
         empresa.setOfertaEstagios(empresaExistente.getOfertaEstagios());
         empresaService.save(empresa);

@@ -18,9 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Empresa extends Usuario implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class Empresa extends User{
 
     @NotBlank(message = "Campo obrigatório")
     @Column(nullable = false)

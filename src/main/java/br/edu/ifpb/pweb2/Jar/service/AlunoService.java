@@ -1,9 +1,14 @@
 package br.edu.ifpb.pweb2.Jar.service;
 
 import br.edu.ifpb.pweb2.Jar.model.Aluno;
+import br.edu.ifpb.pweb2.Jar.model.Authority;
+import br.edu.ifpb.pweb2.Jar.model.User;
 import br.edu.ifpb.pweb2.Jar.repository.AlunoRepository;
+import br.edu.ifpb.pweb2.Jar.repository.AuthorityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +19,32 @@ public class AlunoService {
     @Autowired
     private AlunoRepository alunoRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
+
+
+
     public Aluno save(Aluno aluno) {
-        return alunoRepository.save(aluno);
+
+        Aluno alunoachado = alunoRepository.findByEmail(aluno.getEmail());
+
+        if (alunoachado != null) {
+            throw new IllegalArgumentException("Email já cadastrado");
+        }
+
+        aluno.setPassword(passwordEncoder.encode(aluno.getPassword()));
+
+        Authority authority = new Authority();
+        authority.setId(new Authority.AuthorityId(aluno.getUsername(), "ALUNO"));
+        authority.setUsername(aluno);
+        authority.setAuthority("ALUNO");
+       Aluno alunoSaved =  this.alunoRepository.save(aluno);
+        this.authorityRepository.save(authority);
+        return alunoSaved;
     }
 
     public List<Aluno> findAll() {

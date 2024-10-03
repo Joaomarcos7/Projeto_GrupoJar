@@ -16,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Aluno extends Usuario implements Serializable {
+public class Aluno extends User {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -24,9 +24,6 @@ public class Aluno extends Usuario implements Serializable {
     @Column(nullable = false)
     private String nomeCompleto;
 
-    @NotBlank(message = "Campo obrigatório")
-    @Column(nullable = false, unique = true)
-    private String username;
 
     @ElementCollection(targetClass = Habilidade.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
