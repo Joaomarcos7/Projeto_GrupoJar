@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.format.DateTimeFormatter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
+
 
 @Data
 @NoArgsConstructor
@@ -40,7 +42,15 @@ public class Estagio {
     @JoinColumn(name="oferta_id",nullable = false)
     private OfertaEstagio oferta;
 
+    public String getDataInicio() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return this.dataInicio.format(formatter);
+    }
 
+    public String getDataFim() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return this.dataInicio.format(formatter);
+    }
 
 
 }
