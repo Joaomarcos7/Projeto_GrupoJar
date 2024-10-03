@@ -52,9 +52,28 @@
             color: #ff9900;
             background-color: #ffffff;
         }
+        
         .btn-edit i {
             margin-right: 5px;
         }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+            border-radius: 0.25rem;
+            padding: 5px 10px;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-danger {
+            margin-left: 10px;
+}
+
     </style>
 </head>
 <body>
@@ -64,9 +83,13 @@
 
     <div class="header-options">
         <h3>Funções</h3>
-        <form id="delete-form" th:action="@{/coordenadores/deletar-empresas}" method="post">
-            <button type="submit" class="btn btn-danger" id="confirm-selection-btn" disabled>Deletar</button>
-            <input type="hidden" name="ids" id="selected-ids">
+        <form id="block-form" th:action="@{/coordenadores/bloquear-empresas}" method="post">
+            <button type="submit" class="btn btn-danger" id="block-btn" disabled>Bloquear</button>
+            <input type="hidden" name="ids" id="selected-ids-block">
+        </form>
+        <form id="unblock-form" th:action="@{/coordenadores/desbloquear-empresas}" method="post">
+            <button type="submit" class="btn btn-success" id="unblock-btn" disabled>Desbloquear</button>
+            <input type="hidden" name="ids" id="selected-ids-unblock">
         </form>
     </div>
 
@@ -109,42 +132,58 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const checkboxes = document.querySelectorAll('.select-empresa');
-        const confirmBtn = document.getElementById('confirm-selection-btn');
+    const checkboxes = document.querySelectorAll('.select-empresa');
+    const blockBtn = document.getElementById('block-btn');
+    const unblockBtn = document.getElementById('unblock-btn');
 
-        function updateButtonState() {
-            const selectedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
-            confirmBtn.disabled = selectedCount === 0;
-        }
+    function updateButtonState() {
+        const selectedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+        blockBtn.disabled = selectedCount === 0;
+        unblockBtn.disabled = selectedCount === 0;
+    }
 
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const row = checkbox.closest('tr');
-                if (checkbox.checked) {
-                    row.classList.add('selected-row');
-                } else {
-                    row.classList.remove('selected-row');
-                }
-                updateButtonState();
-            });
-        });
-
-
-        confirmBtn.addEventListener('click', function() {
-            const selectedIds = [];
-            checkboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    const empresaId = checkbox.closest('tr').querySelector('input[type="checkbox"]').value;
-                    selectedIds.push(empresaId);
-                }
-            });
-
-            if (selectedIds.length > 0) {
-                document.getElementById('selected-ids').value = selectedIds.join(',');
-                document.getElementById('delete-form').submit();
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const row = checkbox.closest('tr');
+            if (checkbox.checked) {
+                row.classList.add('selected-row');
+            } else {
+                row.classList.remove('selected-row');
             }
+            updateButtonState();
         });
     });
+
+    blockBtn.addEventListener('click', function() {
+        const selectedIds = [];
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                const empresaId = checkbox.closest('tr').querySelector('input[type="checkbox"]').value;
+                selectedIds.push(empresaId);
+            }
+        });
+
+        if (selectedIds.length > 0) {
+            document.getElementById('selected-ids-block').value = selectedIds.join(',');
+            document.getElementById('block-form').submit();
+        }
+    });
+
+    unblockBtn.addEventListener('click', function() {
+        const selectedIds = [];
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                const empresaId = checkbox.closest('tr').querySelector('input[type="checkbox"]').value;
+                selectedIds.push(empresaId);
+            }
+        });
+
+        if (selectedIds.length > 0) {
+            document.getElementById('selected-ids-unblock').value = selectedIds.join(',');
+            document.getElementById('unblock-form').submit();
+        }
+    });
+});
 
 </script>
 

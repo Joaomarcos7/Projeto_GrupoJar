@@ -35,7 +35,8 @@ public class EmpresaService {
 
     public void deleteById(Long id) {
         empresaRepository.deleteById(id);
-    }    
+    }
 
     public Empresa findByCnpj(String cnpj) { return empresaRepository.findByCnpj(cnpj); }
+    
 }

@@ -345,7 +345,37 @@ public class CoordenadorController {
         return "redirect:/coordenadores/empresas";
     }
 
+    @PostMapping("/bloquear-empresas")
+    public String bloquearEmpresas(@RequestParam("ids") String ids,
+                                   RedirectAttributes redirectAttributes) {
+        String[] empresaIds = ids.split(",");
+        for (String id : empresaIds) {
+            Long empresaId = Long.parseLong(id);
+            Empresa empresa = empresaService.findById(empresaId).orElseThrow(() -> new IllegalArgumentException("Empresa não encontrada."));
+            empresa.setBloqueada(true);
+            empresa.setOfertaEstagios(empresa.getOfertaEstagios());
+            empresaService.save(empresa);
+            redirectAttributes.addFlashAttribute("mensagem", "Empresas bloqueadas com sucesso.");
+        }
+        return "redirect:/coordenadores/empresas";
 
+    }
+
+    @PostMapping("/desbloquear-empresas")
+    public String desbloquearEmpresas(@RequestParam("ids") String ids,
+                                   RedirectAttributes redirectAttributes) {
+        String[] empresaIds = ids.split(",");
+        for (String id : empresaIds) {
+            Long empresaId = Long.parseLong(id);
+            Empresa empresa = empresaService.findById(empresaId).orElseThrow(() -> new IllegalArgumentException("Empresa não encontrada."));
+            empresa.setBloqueada(false);
+            empresa.setOfertaEstagios(empresa.getOfertaEstagios());
+            empresaService.save(empresa);
+            redirectAttributes.addFlashAttribute("mensagem", "Empresas desbloqueadas com sucesso.");
+        }
+        return "redirect:/coordenadores/empresas";
+
+    }
 
 
     @GetMapping("/logout")
