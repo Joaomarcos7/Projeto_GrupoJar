@@ -89,8 +89,8 @@
             <tr th:each="estagio : ${estagios}">
                 <td th:text="${estagio.empresa.nome}">Nome</td>
                 <td th:text="${estagio.empresa.cnpj}">CNPJ</td>
-                <td th:text="${estagio.dataInicio}">Data Início</td>
-                <td th:text="${estagio.dataFim}">Data Fim</td>
+                <td th:text="${estagio.getDataInicio()}">Data Início</td>
+                <td th:text="${estagio.getDataFim()}">Data Fim</td>
                 <td th:text="${estagio.valor}">Bolsa</td>
                 <td>
                     <ul>
