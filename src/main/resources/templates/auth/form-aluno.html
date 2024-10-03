@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Cadastro de Aluno</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 15px; /* Adicionado para dar espaçamento em telas pequenas */
+      background-color: #f8f9fa;
+    }
+    .cadastro-card {
+      width: 100%;
+      max-width: 650px;
+      padding: 20px;
+      border-radius: 8px;
+      background-color: #ffffff;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden; /* Adicionado para evitar quebra do conteúdo */
+    }
+    .cadastro-card h2 {
+      margin-bottom: 20px;
+    }
+    .error-message {
+      color: red;
+      font-size: 0.875em;
+    }
+    @media (max-width: 768px) {
+      .cadastro-card {
+        padding: 15px; /* Reduzir o padding em telas menores */
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="cadastro-card">
+
+    <h2 class="text-center">Cadastro de Aluno</h2>
+
+    <form th:action="@{/auth/cadastro-aluno}" th:object="${aluno}" method="post">
+
+      <!-- Campo Nome Completo -->
+      <div class="mb-3">
+        <label for="nomeCompleto">Nome Completo:</label>
+        <input type="text" id="nomeCompleto" class="form-control" name="nomeCompleto" th:field="*{nomeCompleto}" />
+        <div th:if="${#fields.hasErrors('nomeCompleto')}" class="error-message" th:errors="*{nomeCompleto}">Nome Completo Error</div>
+      </div>
+
+      <!-- Campo E-mail -->
+      <div class="mb-3">
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" class="form-control" name="email" th:field="*{email}" />
+        <div th:if="${#fields.hasErrors('email')}" class="error-message" th:errors="*{email}">Email Error</div>
+      </div>
+
+      <!-- Campo Username -->
+      <div class="mb-3">
+        <label for="username">Nome de Usuário:</label>
+        <input type="text" id="username" class="form-control" name="username" th:field="*{username}" />
+        <div th:if="${#fields.hasErrors('username')}" class="error-message" th:errors="*{username}">Username Error</div>
+      </div>
+      <!-- Campo Senha -->
+      <div class="mb-3">
+        <label for="password">Senha:</label>
+        <input type="password" id="password" class="form-control" name="password" th:field="*{password}" minlength="6" />
+        <div th:if="${#fields.hasErrors('password')}" class="error-message" th:errors="*{password}">Senha Error</div>
+      </div>
+
+      <!-- Habilidades/Competências -->
+      <div>
+        <label class="mb-3">Habilidades/Competências:</label>
+        <div class="checkbox-container d-flex flex-wrap mb-3">
+          <div class="checkbox-item form-check" th:each="habilidade : ${T(br.edu.ifpb.pweb2.Jar.model.Habilidade).values()}" style="flex: 1 0 48%; margin-bottom: 10px;">
+            <input class="form-check-input" type="checkbox"
+                   th:field="*{habilidades}"
+                   th:value="${habilidade}"
+                   id="|habilidade_${habilidade.name}|" />
+            <label class="form-check-label" th:for="|habilidade_${habilidade.name}|" th:text="${habilidade.description}"></label>
+          </div>
+        </div>
+        <div th:if="${#fields.hasErrors('habilidades')}" class="error-message" th:errors="*{habilidades}">Habilidades Error</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-3">Cadastrar</button>
+      <div class="mt-3 text-center">
+        <a th:href="@{/alunos/login}" class="link-secondary">Entrar</a>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

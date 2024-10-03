@@ -29,19 +29,19 @@
             max-width: 90rem;
         }
         .thead-yellow {
-            background-color: #fff3cd; 
+            background-color: #fff3cd;
         }
         .thead-red {
-            background-color: #f8d7da; 
+            background-color: #f8d7da;
         }
         .thead-green {
-            background-color: #d4edda; 
+            background-color: #d4edda;
         }
     </style>
 </head>
 <body>
 
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    <!-- <div th:replace="~{fragments/navbar :: navbar}"></div> -->
 
     <div class="container">
         <h1 class="mb-4">Listagem de Ofertas de Estágio</h1>
@@ -54,6 +54,7 @@
                 <th>ID</th>
                 <th>Título</th>
                 <th>Descrição</th>
+                <th>Vagas</th>
                 <th>Atividade Principal</th>
                 <th>Carga Horária</th>
                 <th>Valor Pago</th>
@@ -71,6 +72,7 @@
                 <td th:text="${oferta.id}"></td>
                 <td th:text="${oferta.titulo}"></td>
                 <td th:text="${oferta.descricao}"></td>
+                <td th:text="${oferta.vagas}"></td>
                 <td th:text="${oferta.atividadePrincipal}"></td>
                 <td th:text="${oferta.ch}"></td>
                 <td th:text="${oferta.formatadoValorPago}"></td>
@@ -100,9 +102,12 @@
             </tr>
             </tbody>
         </table>
+
         <div th:if="${ofertasPendente.size() <= 0}" class="alert alert-info">
             <p>Não há ofertas pendentes no momento.</p>
         </div>
+
+        <div th:replace="~{/fragments/paging :: paginator('coordenadores/ofertas', ${navPage})}" />
 
         <h2>Ofertas Negadas</h2>
         <table class="table table-striped table-hover table-negadas">
@@ -111,6 +116,7 @@
                 <th>ID</th>
                 <th>Título</th>
                 <th>Descrição</th>
+                <th>Vagas</th>
                 <th>Atividade Principal</th>
                 <th>Carga Horária</th>
                 <th>Valor Pago</th>
@@ -127,6 +133,7 @@
                 <td th:text="${oferta.id}"></td>
                 <td th:text="${oferta.titulo}"></td>
                 <td th:text="${oferta.descricao}"></td>
+                <td th:text="${oferta.vagas}"></td>
                 <td th:text="${oferta.atividadePrincipal}"></td>
                 <td th:text="${oferta.ch}"></td>
                 <td th:text="${oferta.formatadoValorPago}"></td>
@@ -161,6 +168,7 @@
                 <th>ID</th>
                 <th>Título</th>
                 <th>Descrição</th>
+                <th>Vagas</th>
                 <th>Atividade Principal</th>
                 <th>Carga Horária</th>
                 <th>Valor Pago</th>
@@ -177,6 +185,7 @@
                 <td th:text="${oferta.id}"></td>
                 <td th:text="${oferta.titulo}"></td>
                 <td th:text="${oferta.descricao}"></td>
+                <td th:text="${oferta.vagas}"></td>
                 <td th:text="${oferta.atividadePrincipal}"></td>
                 <td th:text="${oferta.ch}"></td>
                 <td th:text="${oferta.formatadoValorPago}"></td>
@@ -206,7 +215,7 @@
 
     </div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

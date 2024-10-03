@@ -22,7 +22,7 @@
       <div class="container mt-4">
           <div th:if="${ofertas.isEmpty()}">
               <p class="alert alert-warning">Não há ofertas disponíveis.</p>
-              <a th:href="@{/alunos/{id}/menu(id=${aluno.id})}" class="btn btn-secondary">Voltar ao Menu</a>
+              <a th:href="@{/alunos/menu}" class="btn btn-secondary">Voltar ao Menu</a>
           </div>
 
         <div class="row" th:if="${!ofertas.isEmpty()}">
@@ -60,6 +60,10 @@
                                 <li class="list-group-item d-flex align-items-center gap-1">
                                     <label>CH:</label>
                                     <span th:text="${oferta.ch} + ' horas'">Carga horária</span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center gap-1">
+                                    <label>Vagas:</label>
+                                    <span th:text="${oferta.getVagas()}">vaga(s)</span>
                                 </li>
                                 <li class="list-group-item d-flex align-items-center gap-1">
                                     <label>Bolsa:</label>
@@ -102,7 +106,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <form th:action="@{/candidaturas/candidatar/{alunoId}/oferta/{ofertaId}(alunoId=${aluno.id}, ofertaId=${oferta.id})}" method="post">
+                                        <form th:action="@{/candidaturas/candidatar/oferta/{ofertaId}(ofertaId=${oferta.id})}" method="post">
                                             <button type="submit" class="btn btn-primary">Candidatar-se</button>
                                         </form>
                                     </div>
@@ -125,8 +129,10 @@
                 </div>
             </th:block>
 
+            <div th:replace="~{/fragments/paging :: paginator('alunos/ofertas', ${navPage})}" />
+
             <div class="mb-4">
-                <a th:href="@{/alunos/{id}/menu(id=${aluno.id})}" class="btn btn-secondary">Voltar ao Menu</a>
+                <a th:href="@{/alunos/menu}" class="btn btn-secondary">Voltar ao Menu</a>
             </div>
         </div>
     </div>

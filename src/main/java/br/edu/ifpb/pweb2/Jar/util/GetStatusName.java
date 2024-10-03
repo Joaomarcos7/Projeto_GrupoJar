@@ -9,6 +9,7 @@ public class GetStatusName {
             case 1 -> StatusOfertaEstagio.APROVADO.name();
             case 2 -> StatusOfertaEstagio.PENDENTE.name();
             case 3 -> StatusOfertaEstagio.NEGADO.name();
+            case 4 -> StatusOfertaEstagio.FINALIZADO.name();
             default -> "Desconhecido";
         };
     }

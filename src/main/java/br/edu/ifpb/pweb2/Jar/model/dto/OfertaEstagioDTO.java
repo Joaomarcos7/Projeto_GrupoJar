@@ -5,7 +5,6 @@ import br.edu.ifpb.pweb2.Jar.model.Empresa;
 import br.edu.ifpb.pweb2.Jar.model.Habilidade;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 import br.edu.ifpb.pweb2.Jar.util.GetStatusName;
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -25,6 +24,7 @@ public class OfertaEstagioDTO {
     private BigDecimal valorPago;
     private Double valeTransporte;
     private String preRequisitos;
+    private int vagas;
     private Set<Habilidade> habilidadesNecessarias = new HashSet<>();
     private Set<Habilidade> habilidadesDesejaveis = new HashSet<>();
     private LocalDate dataPublicacao;
@@ -60,5 +60,6 @@ public class OfertaEstagioDTO {
         this.dataPublicacao = oferta.getDataPublicacao();
         this.empresa = oferta.getEmpresa();
         this.candidaturas = oferta.getCandidaturas();
+        this.vagas = oferta.getVagas();
     }
 }

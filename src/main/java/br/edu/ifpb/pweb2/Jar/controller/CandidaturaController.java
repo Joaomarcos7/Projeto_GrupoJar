@@ -4,9 +4,9 @@ import br.edu.ifpb.pweb2.Jar.model.Aluno;
 import br.edu.ifpb.pweb2.Jar.model.Candidatura;
 import br.edu.ifpb.pweb2.Jar.model.EstadoCandidatura;
 import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
-import br.edu.ifpb.pweb2.Jar.service.AlunoService;
 import br.edu.ifpb.pweb2.Jar.service.CandidaturaService;
 import br.edu.ifpb.pweb2.Jar.service.OfertaEstagioService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,20 +22,22 @@ public class CandidaturaController {
     @Autowired
     private CandidaturaService candidaturaService;
 
-    @Autowired
-    private AlunoService alunoService;
+    //@Autowired
+    //private AlunoService alunoService;
 
     @Autowired
     private OfertaEstagioService ofertaEstagioService;
 
-    @PostMapping("/candidatar/{alunoId}/oferta/{ofertaId}")
-    public ModelAndView candidatar(@PathVariable Long alunoId, @PathVariable Long ofertaId,
-                                   ModelAndView modelAndView, RedirectAttributes redirectAttributes) {
-        Optional<Aluno> alunoOptional = alunoService.findById(alunoId);
-        Optional<OfertaEstagio> ofertaEstagioOptional = ofertaEstagioService.findById(ofertaId);
+    @PostMapping("/candidatar/oferta/{ofertaId}")
+    public ModelAndView candidatar(@PathVariable Long ofertaId,
+                                   HttpSession httpSession,
+                                   ModelAndView modelAndView,
+                                   RedirectAttributes redirectAttributes) {
+        Aluno aluno = (Aluno) httpSession.getAttribute("alunoLogado");
 
-        if (alunoOptional.isPresent()) {
-            Aluno aluno = alunoOptional.get();
+        if (aluno != null) {
+            Optional<OfertaEstagio> ofertaEstagioOptional = ofertaEstagioService.findById(ofertaId);
+
             if (ofertaEstagioOptional.isPresent()) {
                 OfertaEstagio ofertaEstagio = ofertaEstagioOptional.get();
 
@@ -49,14 +51,14 @@ public class CandidaturaController {
                 candidaturaService.save(candidatura);
 
                 redirectAttributes.addFlashAttribute("mensagem", "Candidatura realizada com sucesso!");
-                modelAndView.setViewName("redirect:/alunos/" + aluno.getId() + "/candidaturas");
+                modelAndView.setViewName("redirect:/alunos/candidaturas");
 
             } else {
-                modelAndView.addObject("mensagem", "Oferta invalida");
-                modelAndView.setViewName("redirect:/alunos/" + aluno.getId() + "/candidaturas");
+                modelAndView.addObject("mensagem", "Oferta inválida");
+                modelAndView.setViewName("redirect:/alunos/candidaturas");
             }
         } else {
-            modelAndView.addObject("mensagem", "Aluno nao encontrado");
+            modelAndView.addObject("mensagem", "Por favor, faça login para se candidatar.");
             modelAndView.setViewName("redirect:/alunos/login");
         }
 

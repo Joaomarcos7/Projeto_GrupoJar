@@ -3,8 +3,12 @@ package br.edu.ifpb.pweb2.Jar.service;
 import br.edu.ifpb.pweb2.Jar.model.Aluno;
 import br.edu.ifpb.pweb2.Jar.model.Candidatura;
 import br.edu.ifpb.pweb2.Jar.model.EstadoCandidatura;
+import br.edu.ifpb.pweb2.Jar.model.OfertaEstagio;
 import br.edu.ifpb.pweb2.Jar.repository.CandidaturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,15 +26,31 @@ public class CandidaturaService {
 
     public Optional<Candidatura> findById(Long id) { return candidaturaRepository.findById(id); }
     
-    public List<Candidatura> buscarPorAluno(Aluno aluno) { return candidaturaRepository.findByAluno(aluno); }
+    public Page<Candidatura> buscarPorAlunoPaginado(Aluno aluno, Pageable pageable) {
+        return candidaturaRepository.findByAluno(aluno, pageable);
+    }
+
+    public List<Candidatura> buscarPorAluno(Aluno aluno) {
+        return candidaturaRepository.findByAluno(aluno);
+    }
+
+    public Page<Candidatura> buscarPorOfertaPaginado(OfertaEstagio oferta, Pageable pageable) {
+        return candidaturaRepository.findByOfertaEstagio(oferta, pageable);
+    }
+
+    public List<Candidatura> buscarPorOferta(OfertaEstagio oferta) {
+        return candidaturaRepository.findByOfertaEstagio(oferta);
+    }
 
     public boolean existsByAlunoIdAndOfertaId(Long alunoId, Long ofertaId) {
         return candidaturaRepository.existsByAlunoIdAndOfertaEstagioId(alunoId, ofertaId);
     }
     
-    public List<Candidatura> buscarPorAlunosNaoSelecionados() {
-        return candidaturaRepository.findByEstado(EstadoCandidatura.PENDENTE);
+    public Page<Candidatura> buscarPorAlunosNaoSelecionadosPaginado(Pageable page) {
+        return candidaturaRepository.findByEstado(EstadoCandidatura.PENDENTE, page);
     }
+
+
 
 
     

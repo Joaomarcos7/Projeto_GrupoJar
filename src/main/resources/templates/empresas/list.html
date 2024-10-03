@@ -2,37 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Lista de Empresas</title>
+    <!-- Link para o CSS do Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h1>Empresas Cadastradas</h1>
+<div class="container mt-5">
+    <h1 class="mb-4">Empresas Cadastradas</h1>
 
-<table>
-    <thead>
-    <tr>
-        <th>Nome</th>
-        <th>CNPJ</th>
-        <th>Endereço</th>
-        <th>Telefone</th>
-        <th>Email</th>
-        <th>Pessoa de Contato</th>
-        <th>Atividade Principal</th>
-        <th>URL</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="empresa : ${empresas}">
-        <td th:text="${empresa.nome}">Nome da Empresa</td>
-        <td th:text="${empresa.cnpj}">CNPJ</td>
-        <td th:text="${empresa.endereco}">Endereço</td>
-        <td th:text="${empresa.telefoneContato}">Telefone</td>
-        <td th:text="${empresa.emailContato}">Email</td>
-        <td th:text="${empresa.pessoaContato}">Pessoa de Contato</td>
-        <td th:text="${empresa.atividadePrincipal}">Atividade Principal</td>
-        <td th:text="${empresa.url}">URL</td>
-    </tr>
-    </tbody>
-</table>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>Nome</th>
+            <th>CNPJ</th>
+            <th>Endereço</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>Pessoa de Contato</th>
+            <th>Atividade Principal</th>
+            <th>URL</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="empresa : ${empresas}">
+            <td th:text="${empresa.nome}">Nome da Empresa</td>
+            <td th:text="${empresa.cnpj}">CNPJ</td>
+            <td th:text="${empresa.endereco}">Endereço</td>
+            <td th:text="${empresa.telefoneContato}">Telefone</td>
+            <td th:text="${empresa.email}">Email</td>
+            <td th:text="${empresa.pessoaContato}">Pessoa de Contato</td>
+            <td th:text="${empresa.atividadePrincipal}">Atividade Principal</td>
+            <td th:text="${empresa.url}">URL</td>
+        </tr>
+        </tbody>
+    </table>
 
-<a th:href="@{/empresas/cadastro}">Cadastrar Nova Empresa</a>
+    <a th:href="@{/}" class="btn btn-secondary">Voltar para a página inicial</a>
+</div>
+
+<!-- Scripts do Bootstrap (opcional) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
