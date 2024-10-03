@@ -23,6 +23,7 @@ public class Aluno extends User {
     private String nomeCompleto;
 
 
+
     @ElementCollection(targetClass = Habilidade.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "aluno_habilidades", joinColumns = @JoinColumn(name = "aluno_id"))

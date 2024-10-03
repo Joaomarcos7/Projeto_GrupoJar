@@ -356,23 +356,37 @@ public class CoordenadorController {
         return modelAndView;
     }
 
-    @PostMapping("/deletar-empresas")
-    public String deletarEmpresas(@RequestParam("ids") String ids,
-                                  RedirectAttributes redirectAttributes) {
-
-        if (ids != null && !ids.isEmpty()) {
-            String[] empresaIds = ids.split(",");
-            for (String id : empresaIds) {
-                Long empresaId = Long.parseLong(id);
-                empresaService.deleteById(empresaId);
-            }
-            redirectAttributes.addFlashAttribute("mensagem", "Empresas deletadas com sucesso.");
-        
+    @PostMapping("/bloquear-empresas")
+    public String bloquearEmpresas(@RequestParam("ids") String ids,
+                                   RedirectAttributes redirectAttributes) {
+        String[] empresaIds = ids.split(",");
+        for (String id : empresaIds) {
+            Long empresaId = Long.parseLong(id);
+            Empresa empresa = empresaService.findById(empresaId).orElseThrow(() -> new IllegalArgumentException("Empresa não encontrada."));
+            empresa.setBloqueada(true);
+            empresa.setOfertaEstagios(empresa.getOfertaEstagios());
+            empresaService.save(empresa);
+            redirectAttributes.addFlashAttribute("mensagem", "Empresas bloqueadas com sucesso.");
         }
         return "redirect:/coordenadores/empresas";
+
     }
 
+    @PostMapping("/desbloquear-empresas")
+    public String desbloquearEmpresas(@RequestParam("ids") String ids,
+                                   RedirectAttributes redirectAttributes) {
+        String[] empresaIds = ids.split(",");
+        for (String id : empresaIds) {
+            Long empresaId = Long.parseLong(id);
+            Empresa empresa = empresaService.findById(empresaId).orElseThrow(() -> new IllegalArgumentException("Empresa não encontrada."));
+            empresa.setBloqueada(false);
+            empresa.setOfertaEstagios(empresa.getOfertaEstagios());
+            empresaService.save(empresa);
+            redirectAttributes.addFlashAttribute("mensagem", "Empresas desbloqueadas com sucesso.");
+        }
+        return "redirect:/coordenadores/empresas";
 
+    }
 
 
     @GetMapping("/logout")

@@ -135,6 +135,7 @@ public class EmpresaController {
             alunos.add(aluno);
             this.candidaturaService.save((candidatura));
         }
+        System.out.println(alunos);
         estagio.setAluno(alunos);
         estagio.setDataInicio(LocalDate.now());
         estagio.setValor(oferta.getValorPago());

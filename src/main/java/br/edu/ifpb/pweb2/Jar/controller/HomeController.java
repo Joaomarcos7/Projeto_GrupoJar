@@ -8,8 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class HomeController {
 
     @GetMapping("/")
-    public ModelAndView home(ModelAndView model) {
-        model.setViewName("home");
-        return model;
+    public ModelAndView home() {
+        return new ModelAndView("layout"); // Renderiza o layout diretamente
     }
 }

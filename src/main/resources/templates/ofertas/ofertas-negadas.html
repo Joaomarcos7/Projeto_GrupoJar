@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Listagem de Ofertas de Estágio</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container {
             margin-top: 110px;
@@ -22,8 +22,8 @@
             min-width: 90rem;
             max-width: 90rem;
         }
-        .thead-red {
-            background-color: #f8d7da;
+        th {
+            background-color: #f8d7da !important;
         }
         .btn-container {
             margin-top: 20px;
@@ -42,7 +42,7 @@
 
     <h2>Ofertas Negadas</h2>
     <table class="table table-striped table-hover table-negadas">
-        <thead class="thead-red">
+        <thead>
         <tr>
             <th>ID</th>
             <th>Título</th>

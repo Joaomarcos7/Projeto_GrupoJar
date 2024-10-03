@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+import org.hibernate.annotations.ColumnDefault;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -55,4 +56,8 @@ public class Empresa extends User{
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<OfertaEstagio> ofertaEstagios = new HashSet<>();
 
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    private Boolean bloqueada = false;
 }
+
